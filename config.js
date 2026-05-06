@@ -3,11 +3,8 @@
 // Atur status chapter di sini
 
 const GAME_CONFIG = {
-    // Total chapter yang tersedia
     totalChapters: 5,
     
-    // Status setiap chapter (true = tersedia / coming soon, false = terkunci)
-    // Untuk chapter 1 selalu true karena ini chapter awal
     chapters: {
         1: {
             available: true,
@@ -36,6 +33,14 @@ const GAME_CONFIG = {
         }
     },
     
+    // URL Foto Karakter
+    characterImages: {
+        haruno: "https://files.catbox.moe/eyag0t.png",
+        juun: "https://files.catbox.moe/6s4c4j.png",
+        katsumi: "https://files.catbox.moe/sq34nd.png",
+        touya: "https://files.catbox.moe/jmn9ys.png"
+    },
+    
     comingSoon: {
         enabled: true,
         message: "🚧 Coming Soon! Selesaikan chapter sebelumnya untuk membuka 🚧"
@@ -54,36 +59,39 @@ const GAME_CONFIG = {
     characters: {
         haruno: {
             name: "HARUNO",
-            avatar: "https://files.catbox.moe/eyag0t.png",
+            avatar: "🐉",
+            imageUrl: "https://files.catbox.moe/eyag0t.png",
             trait: "berani · pelindung",
-            personality: "Berani namun pemarah. Dibalik amarahnya, dia selalu berkepala dingin saat situasi genting.",
+            personality: "Berani namun pemarah. Dibalik amarahnya, dia selalu berkepala dingin saat situasi genting. Bertindak sebagai pelindung tim.",
             voice: "Tegas dan berwibawa"
         },
         katsumi: {
             name: "KATSUMI",
-            avatar: "https://files.catbox.moe/sq34nd.png",
+            avatar: "👑",
+            imageUrl: "https://files.catbox.moe/sq34nd.png",
             trait: "ceria · jenius teka-teki",
-            personality: "Selalu ceria, ramah dengan siapapun, dan pintar dalam memecahkan teka-teki sulit.",
+            personality: "Selalu ceria, ramah dengan siapapun, dan sosok yang gaul yang selalu mengikuti tren. Sering menjadi pencair suasana namun bisa panik saat bahaya datang. Gadis yang pintar dan suka dengan teka-teki sulit.",
             voice: "Ceria dan energetik"
         },
         juun: {
             name: "JUUN",
-            avatar: "https://files.catbox.moe/6s4c4j.png",
+            avatar: "❄️",
+            imageUrl: "https://files.catbox.moe/6s4c4j.png",
             trait: "tenang · logis",
-            personality: "Ekspresi dingin tapi berbicara dengan ramah. Sangat logis dan observatif.",
+            personality: "Kurang bisa mengekspresikan diri, ekspresinya selalu terlihat dingin dan datar. Namun, selalu berbicara dengan nada yang ramah dan lemah lembut. Sangat logis dan observatif.",
             voice: "Lembut dan kalem"
         },
         touya: {
             name: "TOUYA",
-            avatar: "https://files.catbox.moe/jmn9ys.png",
+            avatar: "📚",
+            imageUrl: "https://files.catbox.moe/jmn9ys.png",
             trait: "penakut · mistis",
-            personality: "Penakut dan mudah gugup. Punya pengetahuan luas tentang hal-hal mistis.",
+            personality: "Penakut dan mudah gugup. Memiliki hobi membaca artikel sulit dan sangat suka mencari hal-hal yang berbau mistis/aneh. Punya pengetahuan luas tapi sering kewalahan dengan rasa takut.",
             voice: "Gugup dan gemetar"
         }
     }
 };
 
-// Fungsi global yang tersedia
 window.isChapterAvailable = function(chapterNumber) {
     if (chapterNumber === 1) return true;
     const completed = getCompletedChapters();
@@ -115,4 +123,8 @@ window.saveChapterProgress = function(chapter, data) {
 window.loadChapterProgress = function(chapter) {
     const saved = localStorage.getItem(GAME_CONFIG.storage.key + "_chapter" + chapter);
     return saved ? JSON.parse(saved) : null;
+};
+
+window.getCharacterImage = function(charKey) {
+    return GAME_CONFIG.characterImages[charKey] || "";
 };
