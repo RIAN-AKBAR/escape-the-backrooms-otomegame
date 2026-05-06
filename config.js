@@ -54,28 +54,28 @@ const GAME_CONFIG = {
     characters: {
         haruno: {
             name: "HARUNO",
-            avatar: "🐉",
+            avatar: "https://files.catbox.moe/eyag0t.png",
             trait: "berani · pelindung",
             personality: "Berani namun pemarah. Dibalik amarahnya, dia selalu berkepala dingin saat situasi genting.",
             voice: "Tegas dan berwibawa"
         },
         katsumi: {
             name: "KATSUMI",
-            avatar: "👑",
+            avatar: "https://files.catbox.moe/sq34nd.png",
             trait: "ceria · jenius teka-teki",
             personality: "Selalu ceria, ramah dengan siapapun, dan pintar dalam memecahkan teka-teki sulit.",
             voice: "Ceria dan energetik"
         },
         juun: {
             name: "JUUN",
-            avatar: "❄️",
+            avatar: "https://files.catbox.moe/6s4c4j.png",
             trait: "tenang · logis",
             personality: "Ekspresi dingin tapi berbicara dengan ramah. Sangat logis dan observatif.",
             voice: "Lembut dan kalem"
         },
         touya: {
             name: "TOUYA",
-            avatar: "📚",
+            avatar: "https://files.catbox.moe/jmn9ys.png",
             trait: "penakut · mistis",
             personality: "Penakut dan mudah gugup. Punya pengetahuan luas tentang hal-hal mistis.",
             voice: "Gugup dan gemetar"
