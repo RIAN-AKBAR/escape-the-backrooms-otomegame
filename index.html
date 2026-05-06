@@ -149,11 +149,12 @@
         .lobby-char-img {
             width: 100px;
             height: 100px;
-            border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 10px;
             display: block;
             border: 3px solid #e7c27d;
+            /* HILANGKAN BULATAN */
+            border-radius: 0;
         }
         .lobby-char-name {
             color: #f7e5b3;
@@ -193,10 +194,10 @@
         .popup-char-img {
             width: 120px;
             height: 120px;
-            border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 15px;
             border: 3px solid #e7b874;
+            border-radius: 0; /* persegi */
         }
         .close-popup {
             position: absolute;
@@ -342,16 +343,16 @@
         .active-avatar {
             width: min(160px, 40vw);
             height: min(160px, 40vw);
-            border-radius: 50%;
             object-fit: cover;
             margin: 0 auto;
             border: 4px solid #e7c27d;
             box-shadow: 0 0 30px rgba(231,194,125,0.3);
+            /* HILANGKAN BULATAN */
+            border-radius: 0;
         }
+        /* SEMBUNYIKAN NAMA KARAKTER DI BAWAH GAMBAR SAAT DIALOG */
         .active-name {
-            font-size: clamp(1rem, 5vw, 1.5rem);
-            color: #f7e5b3;
-            margin-top: 15px;
+            display: none;
         }
         .no-character {
             text-align: center;
@@ -561,7 +562,7 @@
         <div class="no-character" id="noCharacterMsg">✨ Karakter akan muncul saat dialog ✨</div>
         <div class="active-char hidden" id="activeChar">
             <img class="active-avatar" id="activeAvatar" alt="Character">
-            <div class="active-name" id="activeName"></div>
+            <!-- NAMA KARAKTER DIHILANGKAN (tidak ditampilkan) -->
         </div>
     </div>
     <div class="status-panel">
@@ -586,7 +587,9 @@
     <div id="popupContent"></div>
 </div>
 
+<script src="config.js"></script>
 <script>
+    // ======================== GAME STATE ========================
     let currentChapter = 1;
     let inventory = [];
     let health = 100, stamina = 90;
@@ -609,7 +612,6 @@
     const invSpan = document.getElementById('invList');
     const activeCharDiv = document.getElementById('activeChar');
     const activeAvatar = document.getElementById('activeAvatar');
-    const activeName = document.getElementById('activeName');
     const noCharacterMsg = document.getElementById('noCharacterMsg');
 
     let audioCtx = null, humGain = null, humOsc = null;
@@ -719,6 +721,7 @@
         popup.onclick = (e) => { if(e.target === popup) popup.classList.remove('show'); };
     }
     
+    // TAMPILKAN KARAKTER TANPA NAMA DI BAWAHNYA
     function showCharacter(characterName, imageUrl) {
         if (!characterName || characterName === "🎭 NARASI" || characterName === "🔐 TEKA-TEKI" || characterName === "🎒 SISTEM" || characterName === "⚠️ QUICK TIME EVENT") {
             activeCharDiv.classList.add('hidden');
@@ -727,7 +730,7 @@
             noCharacterMsg.classList.add('hidden');
             activeCharDiv.classList.remove('hidden');
             activeAvatar.src = imageUrl || 'https://via.placeholder.com/160?text=Character';
-            activeName.innerHTML = characterName;
+            // nama tidak perlu ditampilkan di bawah (sudah dihilangkan via CSS dan HTML)
         }
     }
     
