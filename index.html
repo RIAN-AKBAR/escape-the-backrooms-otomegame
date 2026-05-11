@@ -305,12 +305,11 @@
             box-shadow: 0 0 20px #e7b874;
         }
 
-        /* GAME SCREEN - KARAKTER KELUAR DARI BINGKAI & MEMENUHI LAYAR */
+        /* GAME SCREEN - KARAKTER FULL TIDAK TERPOTONG */
         .game-container {
             width: min(1400px, 96vw);
             height: 90vh;
-            background: #1a1710cc;
-            backdrop-filter: blur(12px);
+            background: #0a0804;
             border-radius: 36px;
             border: 1px solid #b89a5a;
             box-shadow: 0 25px 45px rgba(0,0,0,0.6);
@@ -321,7 +320,7 @@
             margin: 20px auto;
         }
 
-        /* AREA KARAKTER - FULLSCREEN DENGAN GAMBAR BESAR */
+        /* AREA KARAKTER - FULLSCREEN DENGAN GAMBAR BESAR TIDAK TERPOTONG */
         .single-character {
             flex: 3;
             display: flex;
@@ -330,64 +329,68 @@
             background: radial-gradient(ellipse at center, #1a1510 0%, #050302 100%);
             position: relative;
             min-height: 300px;
-            overflow: hidden;
+            overflow: visible;
         }
         
-        /* KARAKTER KELUAR DARI BINGKAI - GAMBAR BESAR MEMENUHI LAYAR */
+        /* KARAKTER TIDAK TERPOTONG - MENGGUNAKAN CONTAIN YANG TEPAT */
         .active-char {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             animation: fadeInUp 0.5s ease;
-            background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+            background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
+            overflow: visible;
         }
         
         @keyframes fadeInUp {
-            from { opacity: 0; transform: scale(0.95);}
+            from { opacity: 0; transform: scale(0.98);}
             to { opacity: 1; transform: scale(1);}
         }
         
-        /* GAMBAR KARAKTER - BESAR DAN KELUAR DARI BINGKAI */
+        /* GAMBAR KARAKTER - FULL TANPA TERPOTONG */
         .active-avatar {
             width: auto;
-            height: 85vh;
-            max-height: 85%;
-            min-height: 400px;
+            height: auto;
+            max-width: 90%;
+            max-height: 88%;
+            min-height: 300px;
             object-fit: contain;
-            object-position: center 55%;
-            margin: 0 auto;
-            filter: drop-shadow(0 0 40px rgba(231,194,125,0.2));
-            animation: characterFloat 3s ease-in-out infinite;
+            object-position: center;
+            filter: drop-shadow(0 0 40px rgba(231,194,125,0.15));
+            animation: characterFloat 4s ease-in-out infinite;
+            transition: all 0.3s ease;
         }
         
         @keyframes characterFloat {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
         
-        /* Efek masuk dramatis */
+        /* Efek masuk */
         @keyframes characterAppear {
-            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+            0% { opacity: 0; transform: scale(0.92) translateY(20px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         
-        .active-char.appearing {
-            animation: characterAppear 0.4s ease forwards;
+        .active-char.appearing .active-avatar {
+            animation: characterAppear 0.4s ease forwards, characterFloat 4s ease-in-out infinite;
         }
         
         .no-character {
             text-align: center;
             color: #8b7a54;
-            font-size: clamp(0.8rem, 4vw, 1.2rem);
-            padding: 20px;
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
+            padding: 30px;
             position: relative;
             z-index: 5;
             text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
         }
 
         /* STATUS PANEL - SEMI TRANSPARAN DI ATAS KARAKTER */
@@ -408,10 +411,10 @@
             margin-left: auto;
         }
         
-        /* DIALOG AREA - TETAP DI BAWAH DENGAN LATAR GELAP */
+        /* DIALOG AREA */
         .dialog-area {
             flex: 1;
-            margin: 15px;
+            margin: 12px 15px 15px 15px;
             background: #0a0805dd;
             backdrop-filter: blur(15px);
             border-radius: 40px;
@@ -437,13 +440,13 @@
         }
         .dialog-text {
             font-family: 'Source Code Pro', monospace;
-            font-size: clamp(0.8rem, 3.5vw, 1rem);
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
             line-height: 1.5;
             color: #f5efda;
             text-shadow: 0 0 2px black;
-            min-height: 60px;
+            min-height: 65px;
             overflow-y: auto;
-            max-height: 120px;
+            max-height: 130px;
         }
         .next-button {
             align-self: flex-end;
@@ -523,9 +526,18 @@
             text-align: center;
             padding: 20px;
         }
-        footer { font-size: 0.6rem; text-align: center; color: #67604b; padding: 8px; position: relative; z-index: 15; background: #0a0805aa; }
+        footer { 
+            font-size: 0.6rem; 
+            text-align: center; 
+            color: #67604b; 
+            padding: 8px; 
+            position: relative; 
+            z-index: 15; 
+            background: #0a0805aa; 
+        }
         .hidden { display: none; }
 
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .lobby-char-card {
                 width: calc(50% - 20px);
@@ -545,8 +557,8 @@
                 height: 70px;
             }
             .active-avatar {
-                height: 60vh;
-                min-height: 300px;
+                max-height: 82%;
+                min-height: 250px;
             }
         }
 
@@ -563,8 +575,19 @@
                 padding: 12px 15px;
             }
             .active-avatar {
-                height: 50vh;
-                min-height: 250px;
+                max-height: 75%;
+                min-height: 200px;
+            }
+        }
+        
+        /* Landscape mode */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .active-avatar {
+                max-height: 70%;
+                min-height: 180px;
+            }
+            .single-character {
+                min-height: 200px;
             }
         }
     </style>
