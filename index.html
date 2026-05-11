@@ -31,7 +31,7 @@
             height: 100%;
             background: repeating-radial-gradient(circle, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 2px, transparent 2px, transparent 6px);
             pointer-events: none;
-            z-index: 999;
+            z-index: 998;
             opacity: 0.5;
             mix-blend-mode: overlay;
         }
@@ -153,7 +153,6 @@
             margin: 0 auto 10px;
             display: block;
             border: 3px solid #e7c27d;
-            /* HILANGKAN BULATAN */
             border-radius: 0;
         }
         .lobby-char-name {
@@ -197,7 +196,7 @@
             object-fit: cover;
             margin: 0 auto 15px;
             border: 3px solid #e7b874;
-            border-radius: 0; /* persegi */
+            border-radius: 0;
         }
         .close-popup {
             position: absolute;
@@ -306,7 +305,7 @@
             box-shadow: 0 0 20px #e7b874;
         }
 
-        /* GAME SCREEN */
+        /* GAME SCREEN - KARAKTER KELUAR DARI BINGKAI & MEMENUHI LAYAR */
         .game-container {
             width: min(1400px, 96vw);
             height: 90vh;
@@ -322,47 +321,79 @@
             margin: 20px auto;
         }
 
+        /* AREA KARAKTER - FULLSCREEN DENGAN GAMBAR BESAR */
         .single-character {
-            flex: 2;
+            flex: 3;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(ellipse at center, #2a2419 0%, #0a0804 100%);
+            background: radial-gradient(ellipse at center, #1a1510 0%, #050302 100%);
             position: relative;
-            min-height: 200px;
-            padding: 20px;
+            min-height: 300px;
+            overflow: hidden;
         }
+        
+        /* KARAKTER KELUAR DARI BINGKAI - GAMBAR BESAR MEMENUHI LAYAR */
         .active-char {
-            text-align: center;
-            animation: fadeInUp 0.4s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInUp 0.5s ease;
+            background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
         }
+        
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px);}
-            to { opacity: 1; transform: translateY(0);}
+            from { opacity: 0; transform: scale(0.95);}
+            to { opacity: 1; transform: scale(1);}
         }
+        
+        /* GAMBAR KARAKTER - BESAR DAN KELUAR DARI BINGKAI */
         .active-avatar {
-            width: min(160px, 40vw);
-            height: min(160px, 40vw);
-            object-fit: cover;
+            width: auto;
+            height: 85vh;
+            max-height: 85%;
+            min-height: 400px;
+            object-fit: contain;
+            object-position: center 55%;
             margin: 0 auto;
-            border: 4px solid #e7c27d;
-            box-shadow: 0 0 30px rgba(231,194,125,0.3);
-            /* HILANGKAN BULATAN */
-            border-radius: 0;
+            filter: drop-shadow(0 0 40px rgba(231,194,125,0.2));
+            animation: characterFloat 3s ease-in-out infinite;
         }
-        /* SEMBUNYIKAN NAMA KARAKTER DI BAWAH GAMBAR SAAT DIALOG */
-        .active-name {
-            display: none;
+        
+        @keyframes characterFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
+        
+        /* Efek masuk dramatis */
+        @keyframes characterAppear {
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .active-char.appearing {
+            animation: characterAppear 0.4s ease forwards;
+        }
+        
         .no-character {
             text-align: center;
             color: #8b7a54;
             font-size: clamp(0.8rem, 4vw, 1.2rem);
             padding: 20px;
+            position: relative;
+            z-index: 5;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
+        /* STATUS PANEL - SEMI TRANSPARAN DI ATAS KARAKTER */
         .status-panel {
-            background: #0c0b08cc;
+            background: #0c0b08aa;
+            backdrop-filter: blur(10px);
             padding: 8px 15px;
             display: flex;
             gap: 15px;
@@ -370,19 +401,25 @@
             color: #f2e0b0;
             border-bottom: 1px solid #8b7a4b;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 10;
         }
         .inventory {
             margin-left: auto;
         }
+        
+        /* DIALOG AREA - TETAP DI BAWAH DENGAN LATAR GELAP */
         .dialog-area {
             flex: 1;
             margin: 15px;
-            background: #0a0805cc;
+            background: #0a0805dd;
+            backdrop-filter: blur(15px);
             border-radius: 40px;
-            backdrop-filter: blur(12px);
             border: 1px solid #b48d47;
             display: flex;
             flex-direction: column;
+            position: relative;
+            z-index: 15;
         }
         .dialog-box {
             padding: 15px 20px;
@@ -406,11 +443,11 @@
             text-shadow: 0 0 2px black;
             min-height: 60px;
             overflow-y: auto;
-            max-height: 150px;
+            max-height: 120px;
         }
         .next-button {
             align-self: flex-end;
-            background: #2a2419;
+            background: #2a2419cc;
             border: none;
             color: #ecd68a;
             padding: 8px 25px;
@@ -423,6 +460,7 @@
             gap: 8px;
             transition: 0.1s;
             font-size: clamp(0.8rem, 3.5vw, 1rem);
+            backdrop-filter: blur(5px);
         }
         .next-button:hover { background: #5f4a2e; transform: scale(1.02);}
         .actions-area {
@@ -433,9 +471,11 @@
             justify-content: center;
             flex-wrap: wrap;
             border-top: 2px solid #ac8e54;
+            position: relative;
+            z-index: 15;
         }
         .vn-btn {
-            background: #262011;
+            background: #262011cc;
             border: 2px solid #dbb062;
             color: #fff0cc;
             padding: 8px 20px;
@@ -463,14 +503,15 @@
             position: absolute;
             top: 15px;
             left: 15px;
-            background: #2a2419;
+            background: #2a2419cc;
             border: none;
             color: #ecd68a;
             padding: 6px 15px;
             border-radius: 30px;
             cursor: pointer;
             font-size: clamp(0.7rem, 3vw, 0.8rem);
-            z-index: 100;
+            z-index: 20;
+            backdrop-filter: blur(5px);
         }
         .gameover-overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
@@ -482,7 +523,7 @@
             text-align: center;
             padding: 20px;
         }
-        footer { font-size: 0.6rem; text-align: center; color: #67604b; padding: 8px; }
+        footer { font-size: 0.6rem; text-align: center; color: #67604b; padding: 8px; position: relative; z-index: 15; background: #0a0805aa; }
         .hidden { display: none; }
 
         @media (max-width: 768px) {
@@ -503,6 +544,10 @@
                 width: 70px;
                 height: 70px;
             }
+            .active-avatar {
+                height: 60vh;
+                min-height: 300px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -516,6 +561,10 @@
             }
             .dialog-box {
                 padding: 12px 15px;
+            }
+            .active-avatar {
+                height: 50vh;
+                min-height: 250px;
             }
         }
     </style>
@@ -562,7 +611,6 @@
         <div class="no-character" id="noCharacterMsg">✨ Karakter akan muncul saat dialog ✨</div>
         <div class="active-char hidden" id="activeChar">
             <img class="active-avatar" id="activeAvatar" alt="Character">
-            <!-- NAMA KARAKTER DIHILANGKAN (tidak ditampilkan) -->
         </div>
     </div>
     <div class="status-panel">
@@ -589,7 +637,6 @@
 
 <script src="config.js"></script>
 <script>
-    // ======================== GAME STATE ========================
     let currentChapter = 1;
     let inventory = [];
     let health = 100, stamina = 90;
@@ -721,7 +768,6 @@
         popup.onclick = (e) => { if(e.target === popup) popup.classList.remove('show'); };
     }
     
-    // TAMPILKAN KARAKTER TANPA NAMA DI BAWAHNYA
     function showCharacter(characterName, imageUrl) {
         if (!characterName || characterName === "🎭 NARASI" || characterName === "🔐 TEKA-TEKI" || characterName === "🎒 SISTEM" || characterName === "⚠️ QUICK TIME EVENT") {
             activeCharDiv.classList.add('hidden');
@@ -729,8 +775,9 @@
         } else {
             noCharacterMsg.classList.add('hidden');
             activeCharDiv.classList.remove('hidden');
-            activeAvatar.src = imageUrl || 'https://via.placeholder.com/160?text=Character';
-            // nama tidak perlu ditampilkan di bawah (sudah dihilangkan via CSS dan HTML)
+            activeAvatar.src = imageUrl || 'https://via.placeholder.com/500?text=Character';
+            activeCharDiv.classList.add('appearing');
+            setTimeout(() => activeCharDiv.classList.remove('appearing'), 500);
         }
     }
     
@@ -774,7 +821,6 @@
         currentTyping = true;
         speakerName.innerText = speaker;
         dialogText.innerHTML = "";
-        
         showCharacter(characterInfo?.name, characterInfo?.imageUrl);
         
         let idx = 0;
