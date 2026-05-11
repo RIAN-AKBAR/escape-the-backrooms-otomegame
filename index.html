@@ -605,7 +605,6 @@
             }
         }
     </style>
-    <script src="config.js"></script>
 </head>
 <body class="noise">
 
@@ -672,8 +671,77 @@
     <div id="popupContent"></div>
 </div>
 
-<script src="config.js"></script>
 <script>
+    // ======================== KONFIGURASI KARAKTER ========================
+    const GAME_CONFIG = {
+        totalChapters: 5,
+        chapters: {
+            1: { available: true, title: "The Awakening", description: "Kesadaran di lorong kuning tak berujung" },
+            2: { available: false, title: "The Whispering Walls", description: "Bisikan dari balik dinding" },
+            3: { available: false, title: "The Forgotten Memories", description: "Mengungkap masa lalu yang tersembunyi" },
+            4: { available: false, title: "The Truth Behind", description: "Menemukan kebenaran sebenarnya" },
+            5: { available: false, title: "The Final Exit", description: "Menemukan jalan keluar terakhir" }
+        },
+        comingSoon: { enabled: true, message: "🚧 Coming Soon! Selesaikan chapter sebelumnya untuk membuka 🚧" },
+        storage: { key: "backrooms_game_save", version: "1.0" },
+        characters: {
+            haruno: {
+                name: "HARUNO",
+                imageUrl: "https://files.catbox.moe/1u9izo.png",
+                trait: "berani · pelindung",
+                personality: "Berani namun pemarah. Dibalik amarahnya, dia selalu berkepala dingin saat situasi genting. Bertindak sebagai pelindung tim.",
+                voice: "Tegas dan berwibawa"
+            },
+            katsumi: {
+                name: "KATSUMI",
+                imageUrl: "https://files.catbox.moe/t6hf5b.png",
+                trait: "ceria · jenius teka-teki",
+                personality: "Selalu ceria, ramah dengan siapapun, dan sosok yang gaul yang selalu mengikuti tren. Gadis yang pintar dan suka dengan teka-teki sulit.",
+                voice: "Ceria dan energetik"
+            },
+            juun: {
+                name: "JUUN",
+                imageUrl: "https://files.catbox.moe/gx32p2.png",
+                trait: "tenang · logis",
+                personality: "Kurang bisa mengekspresikan diri, ekspresinya selalu terlihat dingin dan datar. Namun, selalu berbicara dengan nada yang ramah dan lemah lembut.",
+                voice: "Lembut dan kalem"
+            },
+            touya: {
+                name: "TOUYA",
+                imageUrl: "https://files.catbox.moe/froly4.png",
+                trait: "penakut · mistis",
+                personality: "Penakut dan mudah gugup. Memiliki hobi membaca artikel sulit dan sangat suka mencari hal-hal yang berbau mistis/aneh.",
+                voice: "Gugup dan gemetar"
+            }
+        }
+    };
+
+    // Fungsi global
+    window.isChapterAvailable = function(chapterNumber) {
+        if (chapterNumber === 1) return true;
+        const completed = getCompletedChapters();
+        return completed.includes(chapterNumber - 1) && GAME_CONFIG.chapters[chapterNumber]?.available === true;
+    };
+
+    window.completeChapter = function(chapterNumber) {
+        const completed = getCompletedChapters();
+        if (!completed.includes(chapterNumber)) {
+            completed.push(chapterNumber);
+            localStorage.setItem(GAME_CONFIG.storage.key + "_completed", JSON.stringify(completed));
+        }
+    };
+
+    window.getCompletedChapters = function() {
+        const saved = localStorage.getItem(GAME_CONFIG.storage.key + "_completed");
+        return saved ? JSON.parse(saved) : [];
+    };
+
+    window.resetProgress = function() {
+        localStorage.removeItem(GAME_CONFIG.storage.key + "_completed");
+        localStorage.removeItem(GAME_CONFIG.storage.key + "_chapter1");
+    };
+
+    // ======================== GAME STATE ========================
     let currentChapter = 1;
     let inventory = [];
     let health = 100, stamina = 90;
@@ -932,11 +1000,12 @@
         });
     }
     
+    // ======================== GAME STORY ========================
     const charImages = {
-        katsumi: "https://files.catbox.moe/sq34nd.png",
-        haruno: "https://files.catbox.moe/eyag0t.png",
-        touya: "https://files.catbox.moe/jmn9ys.png",
-        juun: "https://files.catbox.moe/6s4c4j.png"
+        katsumi: GAME_CONFIG.characters.katsumi.imageUrl,
+        haruno: GAME_CONFIG.characters.haruno.imageUrl,
+        touya: GAME_CONFIG.characters.touya.imageUrl,
+        juun: GAME_CONFIG.characters.juun.imageUrl
     };
     
     function startGame(chapterNum) {
