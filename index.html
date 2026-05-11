@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>THE BACKROOMS · Otome Horror</title>
+    <title>THE BACKROOMS · Otome Horror Visual Novel</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -12,16 +12,25 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-glow: #e7b874;
+            --horror-red: #8b0000;
+            --bg-dark: #0a0804;
+            --text-light: #f5efda;
         }
 
         body {
             min-height: 100vh;
             background: radial-gradient(circle at 20% 30%, #0a0804, #010100);
             font-family: 'Quicksand', 'Segoe UI', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
         }
 
+        /* EFFECTS */
         .noise::before {
             content: "";
             position: fixed;
@@ -29,11 +38,45 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-radial-gradient(circle, rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 2px, transparent 2px, transparent 6px);
+            background: repeating-radial-gradient(circle, rgba(0,0,0,0.4) 0px, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 4px);
             pointer-events: none;
             z-index: 998;
-            opacity: 0.5;
+            opacity: 0.4;
             mix-blend-mode: overlay;
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+            z-index: 997;
+            transition: opacity 0.3s;
+        }
+
+        .heartbeat-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(139,0,0,0.1);
+            pointer-events: none;
+            z-index: 996;
+            display: none;
+            animation: heartbeat 0.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.3; }
+        }
+
+        .breathing-screen {
+            transition: transform 0.1s ease-out;
         }
 
         /* LOADING SCREEN */
@@ -54,23 +97,19 @@
         .loading-logo {
             font-size: clamp(3rem, 10vw, 5rem);
             color: #e7b874;
-            text-shadow: 0 0 30px #ffaa44, 0 0 10px #1a0e00;
+            text-shadow: 0 0 30px #ffaa44;
             animation: pulseGlow 1.2s infinite;
             margin-bottom: 30px;
         }
         @keyframes pulseGlow {
-            0% { text-shadow: 0 0 5px #ffaa44; opacity: 0.7; transform: scale(1);}
+            0%, 100% { text-shadow: 0 0 5px #ffaa44; opacity: 0.7; transform: scale(1);}
             50% { text-shadow: 0 0 40px #ffcc66; opacity: 1; transform: scale(1.05);}
-            100% { text-shadow: 0 0 5px #ffaa44; opacity: 0.7; transform: scale(1);}
         }
         .loading-text {
             font-family: 'Source Code Pro', monospace;
             color: #d4bc7a;
             font-size: clamp(0.8rem, 4vw, 1.3rem);
             letter-spacing: 5px;
-            margin-top: 20px;
-            text-align: center;
-            padding: 0 20px;
         }
         .loading-bar {
             width: min(300px, 70vw);
@@ -85,7 +124,6 @@
             height: 100%;
             background: #e7b874;
             animation: loadProgress 2s ease forwards;
-            box-shadow: 0 0 10px #ffcc66;
         }
         @keyframes loadProgress {
             0% { width: 0%; }
@@ -118,11 +156,6 @@
             text-shadow: 0 0 10px #ffaa44;
             letter-spacing: 3px;
         }
-        .lobby-header p {
-            color: #bcae7a;
-            margin-top: 10px;
-            font-size: clamp(0.7rem, 3vw, 1rem);
-        }
         .characters-container {
             display: flex;
             justify-content: center;
@@ -153,131 +186,11 @@
             margin: 0 auto 10px;
             display: block;
             border: 3px solid #e7c27d;
-            border-radius: 0;
         }
         .lobby-char-name {
             color: #f7e5b3;
             font-size: clamp(0.9rem, 4vw, 1.3rem);
             font-weight: bold;
-        }
-        .lobby-char-trait {
-            color: #d4bc7a;
-            font-size: clamp(0.6rem, 3vw, 0.8rem);
-            margin: 5px 0;
-        }
-        .char-detail-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1a1610ee;
-            backdrop-filter: blur(15px);
-            border: 2px solid #e7b874;
-            border-radius: 20px;
-            padding: 30px;
-            width: min(400px, 85vw);
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 10001;
-            text-align: center;
-        }
-        .char-detail-popup.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9);}
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-        }
-        .popup-char-img {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            margin: 0 auto 15px;
-            border: 3px solid #e7b874;
-            border-radius: 0;
-        }
-        .close-popup {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: #e7b874;
-        }
-        .chapters-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 30px 0;
-        }
-        .chapter-card {
-            background: #1a1610cc;
-            border: 2px solid #6b5a3a;
-            border-radius: 16px;
-            padding: 20px min(35px, 5vw);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            min-width: min(140px, 30vw);
-        }
-        .chapter-card.unlocked {
-            border-color: #e7b874;
-            background: #2a2419cc;
-        }
-        .chapter-card.locked {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: grayscale(0.3);
-        }
-        .chapter-card.unlocked:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(231,184,116,0.3);
-        }
-        .chapter-number {
-            font-size: clamp(1rem, 5vw, 2rem);
-            color: #e7b874;
-            font-weight: bold;
-        }
-        .chapter-title {
-            color: #f7e5b3;
-            margin-top: 10px;
-            font-size: clamp(0.7rem, 3vw, 0.9rem);
-        }
-        .chapter-desc {
-            color: #bcae7a;
-            font-size: clamp(0.6rem, 2.5vw, 0.7rem);
-            margin-top: 5px;
-        }
-        .lock-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #ff6666;
-            font-size: 0.9rem;
-        }
-        .coming-soon-badge {
-            background: #a12f2f;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 0.6rem;
-            margin-top: 8px;
-        }
-        .reset-progress {
-            background: #4a2f2f;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 30px;
-            color: #ffccaa;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.2s;
-        }
-        .reset-progress:hover {
-            background: #6a3f3f;
         }
         .bottom-right {
             position: fixed;
@@ -285,8 +198,6 @@
             right: 20px;
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
         }
         .enter-game-btn {
             background: #e7b874;
@@ -299,13 +210,16 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .enter-game-btn:hover {
-            background: #ffcc88;
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #e7b874;
+        .reset-progress {
+            background: #4a2f2f;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #ffccaa;
+            cursor: pointer;
         }
 
-        /* GAME SCREEN - KARAKTER FULL DI SEMUA DEVICE */
+        /* GAME SCREEN */
         .game-container {
             width: 100vw;
             height: 100vh;
@@ -319,19 +233,16 @@
             z-index: 9500;
         }
 
-        /* AREA KARAKTER - FULLSCREEN */
-        .single-character {
+        /* CHARACTER AREA */
+        .character-stage {
             flex: 3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(ellipse at center, #1a1510 0%, #050302 100%);
             position: relative;
             overflow: hidden;
+            background: radial-gradient(ellipse at center, #1a1510 0%, #050302 100%);
+            cursor: pointer;
         }
-        
-        /* KARAKTER FULL TIDAK TERPOTONG */
-        .active-char {
+
+        .character-container {
             position: absolute;
             top: 0;
             left: 0;
@@ -340,52 +251,82 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            animation: fadeInUp 0.5s ease;
-            background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 100%);
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: scale(0.98);}
-            to { opacity: 1; transform: scale(1);}
-        }
-        
-        /* GAMBAR KARAKTER - FULL TANPA TERPOTONG */
-        .active-avatar {
+
+        .character-image {
             width: 100%;
             height: 100%;
             object-fit: contain;
             object-position: center 55%;
             filter: drop-shadow(0 0 30px rgba(231,194,125,0.15));
-            animation: characterFloat 4s ease-in-out infinite;
+            transition: transform 0.3s ease;
+            cursor: pointer;
         }
-        
-        @keyframes characterFloat {
+
+        /* Animasi karakter */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) translateY(0px); }
+            50% { transform: scale(1.008) translateY(-3px); }
+        }
+        @keyframes blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0; }
+        }
+        @keyframes floatIdle {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-8px); }
         }
-        
-        /* Efek masuk karakter */
-        @keyframes characterAppear {
-            0% { opacity: 0; transform: scale(0.92); }
-            100% { opacity: 1; transform: scale(1); }
+        @keyframes bounceReaction {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
-        
-        .active-char.appearing .active-avatar {
-            animation: characterAppear 0.4s ease forwards, characterFloat 4s ease-in-out infinite;
+        @keyframes shakeScreen {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, 0); }
+            75% { transform: translate(5px, 0); }
         }
-        
-        .no-character {
-            text-align: center;
-            color: #8b7a54;
-            font-size: clamp(1rem, 5vw, 1.3rem);
-            padding: 30px;
-            position: relative;
-            z-index: 5;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
-            background: rgba(0,0,0,0.4);
-            border-radius: 30px;
-            max-width: 80%;
-            margin: 0 auto;
+        @keyframes zoomGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(231,194,125,0)); }
+            100% { filter: drop-shadow(0 0 40px rgba(231,194,125,0.6)); }
+        }
+
+        .character-image.breathing {
+            animation: breathe 3s ease-in-out infinite;
+        }
+        .character-image.floating {
+            animation: floatIdle 4s ease-in-out infinite;
+        }
+        .character-image.bounce-effect {
+            animation: bounceReaction 0.2s ease-in-out;
+        }
+
+        .reaction-bubble {
+            position: absolute;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #e7b874;
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #ffdfaa;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            font-weight: bold;
+        }
+        .reaction-bubble.show {
+            opacity: 1;
+            animation: bubblePop 0.3s ease-out;
+        }
+        @keyframes bubblePop {
+            0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
         }
 
         /* STATUS PANEL */
@@ -395,119 +336,119 @@
             padding: 8px 20px;
             display: flex;
             gap: 20px;
-            font-size: clamp(0.75rem, 3.5vw, 0.9rem);
+            font-size: 0.8rem;
             color: #f2e0b0;
             border-bottom: 1px solid #8b7a4b;
             flex-wrap: wrap;
-            position: relative;
             z-index: 10;
+            position: relative;
         }
-        .inventory {
+        .affection-bar {
             margin-left: auto;
+            display: flex;
+            gap: 10px;
         }
-        
-        /* DIALOG AREA */
+        .affection-heart {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+        }
+
+        /* DIALOG AREA - CINEMATIC */
         .dialog-area {
             flex: 1;
-            margin: 10px 15px 15px 15px;
-            background: #0a0805dd;
-            backdrop-filter: blur(15px);
-            border-radius: 40px;
-            border: 1px solid #b48d47;
+            margin: 10px 15px 15px;
+            background: rgba(10,8,5,0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(180,141,71,0.5);
             display: flex;
             flex-direction: column;
             position: relative;
             z-index: 15;
+            transition: all 0.3s;
         }
         .dialog-box {
-            padding: 15px 22px;
+            padding: 18px 24px;
             flex: 1;
-            display: flex;
-            flex-direction: column;
         }
         .speaker-name {
             color: #ffdfaa;
-            font-size: clamp(0.9rem, 4vw, 1.1rem);
+            font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 10px;
             border-left: 4px solid #edb15d;
-            padding-left: 12px;
+            padding-left: 14px;
+            transition: text-shadow 0.2s;
+        }
+        .speaker-name.glow {
+            text-shadow: 0 0 8px #e7b874;
         }
         .dialog-text {
             font-family: 'Source Code Pro', monospace;
-            font-size: clamp(0.85rem, 3.8vw, 1rem);
+            font-size: 1rem;
             line-height: 1.5;
             color: #f5efda;
-            text-shadow: 0 0 2px black;
-            min-height: 65px;
-            overflow-y: auto;
+            min-height: 70px;
             max-height: 120px;
+            overflow-y: auto;
         }
         .next-button {
             align-self: flex-end;
-            background: #2a2419cc;
+            background: rgba(42,36,25,0.9);
             border: none;
             color: #ecd68a;
             padding: 8px 25px;
             margin: 5px 18px 15px 0;
             border-radius: 40px;
-            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: 0.1s;
-            font-size: clamp(0.8rem, 3.5vw, 1rem);
             backdrop-filter: blur(5px);
         }
-        .next-button:hover { background: #5f4a2e; transform: scale(1.02);}
         .actions-area {
-            background: #18140eb3;
+            background: rgba(24,20,14,0.7);
             padding: 12px 15px;
             display: flex;
             gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
             border-top: 2px solid #ac8e54;
-            position: relative;
             z-index: 15;
+            position: relative;
         }
         .vn-btn {
-            background: #262011cc;
+            background: rgba(38,32,17,0.9);
             border: 2px solid #dbb062;
             color: #fff0cc;
             padding: 8px 20px;
-            font-family: 'Quicksand', monospace;
-            font-weight: bold;
-            font-size: clamp(0.75rem, 3.5vw, 0.9rem);
             border-radius: 60px;
             cursor: pointer;
             transition: 0.1s;
+            font-weight: bold;
         }
         .vn-btn:hover { background: #5f482a; transform: translateY(-2px);}
         .qte-alert { background: #a12f2f; animation: pulseBtn 1s infinite; }
-        @keyframes pulseBtn { 0% { background: #a12f2f;} 100% { background: #d64b4b; }}
+        @keyframes pulseBtn { 0%,100% { background: #a12f2f;} 50% { background: #d64b4b; }}
         .puzzle-input {
             background: #32291b;
             border: 2px solid #e2b15e;
             padding: 8px 15px;
-            font-size: clamp(0.8rem, 3.5vw, 1rem);
             border-radius: 50px;
             color: #ffe3a3;
             text-align: center;
-            width: min(150px, 40vw);
         }
         .back-to-lobby {
             position: absolute;
             top: 15px;
             left: 15px;
-            background: #2a2419cc;
+            background: rgba(42,36,25,0.9);
             border: none;
             color: #ecd68a;
             padding: 6px 15px;
             border-radius: 30px;
             cursor: pointer;
-            font-size: clamp(0.7rem, 3vw, 0.8rem);
             z-index: 20;
             backdrop-filter: blur(5px);
         }
@@ -516,682 +457,413 @@
             background:#000000dd; backdrop-filter: blur(6px);
             display: flex; justify-content: center; align-items: center;
             z-index: 2000; flex-direction: column; gap: 24px;
-            font-size: clamp(1rem, 5vw, 1.5rem);
+            font-size: 1.5rem;
             color: #e7b874;
-            text-align: center;
-            padding: 20px;
-        }
-        footer { 
-            font-size: 0.6rem; 
-            text-align: center; 
-            color: #67604b; 
-            padding: 6px; 
-            position: relative; 
-            z-index: 15; 
-            background: #0a0805aa; 
         }
         .hidden { display: none; }
+        footer { font-size: 0.6rem; text-align: center; color: #67604b; padding: 6px; background: #0a0805aa; }
 
-        /* RESPONSIVE UNTUK SEMUA DEVICE */
         @media (max-width: 768px) {
-            .lobby-char-card {
-                width: calc(50% - 20px);
-                min-width: 140px;
-            }
-            .bottom-right {
-                position: relative;
-                justify-content: center;
-                margin-top: 20px;
-            }
-            .back-to-lobby {
-                font-size: 0.7rem;
-                padding: 4px 12px;
-            }
-            .lobby-char-img {
-                width: 70px;
-                height: 70px;
-            }
-            .active-avatar {
-                object-position: center 50%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .lobby-char-card {
-                width: calc(100% - 20px);
-                max-width: 250px;
-            }
-            .status-panel {
-                font-size: 0.65rem;
-                gap: 10px;
-                padding: 6px 12px;
-            }
-            .dialog-box {
-                padding: 12px 15px;
-            }
-            .active-avatar {
-                object-position: center 45%;
-            }
-        }
-        
-        /* Landscape mode di HP */
-        @media (orientation: landscape) and (max-height: 600px) {
-            .single-character {
-                flex: 2;
-            }
-            .dialog-text {
-                max-height: 70px;
-                min-height: 50px;
-            }
-            .status-panel {
-                padding: 4px 12px;
-            }
-            .active-avatar {
-                object-position: center 40%;
-            }
-        }
-        
-        /* Tablet */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .active-avatar {
-                object-position: center 50%;
-            }
-        }
-        
-        /* Desktop besar */
-        @media (min-width: 1200px) {
-            .active-avatar {
-                object-position: center 55%;
-            }
+            .status-panel { font-size: 0.7rem; padding: 6px 12px; gap: 12px; }
+            .dialog-box { padding: 12px 16px; }
+            .speaker-name { font-size: 0.9rem; }
+            .dialog-text { font-size: 0.85rem; }
+            .character-image { object-position: center 45%; }
         }
     </style>
 </head>
 <body class="noise">
+    <div class="vignette" id="vignette"></div>
+    <div class="heartbeat-overlay" id="heartbeatOverlay"></div>
 
-<!-- LOADING SCREEN -->
-<div class="loading-screen" id="loadingScreen">
-    <div class="loading-logo">
-        <i class="fas fa-door-open"></i>
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo"><i class="fas fa-door-open"></i></div>
+        <div class="loading-text">THE BACKROOMS</div>
+        <div class="loading-bar"><div class="loading-progress"></div></div>
+        <div class="loading-text" style="font-size:0.8rem;">Memuat lorong tak berujung...</div>
     </div>
-    <div class="loading-text">THE BACKROOMS</div>
-    <div class="loading-bar">
-        <div class="loading-progress"></div>
-    </div>
-    <div class="loading-text" style="font-size: clamp(0.6rem, 3vw, 0.8rem); letter-spacing: 2px;">Memuat lorong tak berujung...</div>
-</div>
 
-<!-- LOBBY SCREEN -->
-<div class="lobby-screen" id="lobbyScreen">
-    <div class="lobby-header">
-        <h1>🏚️ THE BACKROOMS 🏚️</h1>
-        <p>Horor Psikologis · Otome Visual Novel</p>
-    </div>
-    
-    <div class="characters-container" id="charactersContainer"></div>
-    
-    <div style="text-align: center;">
-        <h2 style="color: #e7b874; margin-bottom: 20px; font-size: clamp(1rem, 5vw, 1.5rem);">📖 PILIH CHAPTER</h2>
-    </div>
-    <div class="chapters-container" id="chaptersContainer"></div>
-    
-    <div class="bottom-right">
-        <button class="reset-progress" id="resetProgressBtn">↺ Reset Progress</button>
-        <button class="enter-game-btn" id="enterGameBtn">🎮 MULAI GAME 🎮</button>
-    </div>
-</div>
-
-<!-- GAME SCREEN -->
-<div class="game-container" id="gameContainer">
-    <button class="back-to-lobby" id="backToLobbyBtn">← Kembali ke Lobby</button>
-    <div class="single-character" id="singleCharacter">
-        <div class="no-character" id="noCharacterMsg">✨ Karakter akan muncul saat dialog ✨</div>
-        <div class="active-char hidden" id="activeChar">
-            <img class="active-avatar" id="activeAvatar" alt="Character">
+    <!-- LOBBY -->
+    <div class="lobby-screen" id="lobbyScreen">
+        <div class="lobby-header"><h1>🏚️ THE BACKROOMS 🏚️</h1><p>Horor Psikologis · Otome Visual Novel</p></div>
+        <div class="characters-container" id="charactersContainer"></div>
+        <div style="text-align:center;"><h2 style="color:#e7b874;">📖 PILIH CHAPTER</h2></div>
+        <div class="chapters-container" id="chaptersContainer"></div>
+        <div class="bottom-right">
+            <button class="reset-progress" id="resetProgressBtn">↺ Reset</button>
+            <button class="enter-game-btn" id="enterGameBtn">🎮 MULAI GAME 🎮</button>
         </div>
     </div>
-    <div class="status-panel">
-        <span>❤️ Kesehatan: <span id="healthVal">100</span>%</span>
-        <span>⚡ Stamina: <span id="staminaVal">90</span></span>
-        <span class="inventory">🎒 Inventori: <span id="invList">-</span></span>
-    </div>
-    <div class="dialog-area">
-        <div class="dialog-box">
-            <div class="speaker-name" id="speakerName">🎭 NARASI</div>
-            <div class="dialog-text" id="dialogText">Memulai...</div>
+
+    <!-- GAME SCREEN -->
+    <div class="game-container" id="gameContainer">
+        <button class="back-to-lobby" id="backToLobbyBtn">← Kembali</button>
+        <div class="character-stage" id="characterStage">
+            <div class="character-container" id="characterContainer">
+                <img class="character-image breathing floating" id="characterImage" alt="Character">
+            </div>
+            <div class="reaction-bubble" id="reactionBubble"></div>
         </div>
-        <button class="next-button" id="nextButton"><i class="fas fa-arrow-right"></i> NEXT</button>
+        <div class="status-panel">
+            <span>❤️ Kesehatan: <span id="healthVal">100</span>%</span>
+            <span>⚡ Stamina: <span id="staminaVal">90</span></span>
+            <span>🎒 Inventori: <span id="invList">-</span></span>
+            <div class="affection-bar" id="affectionBar"></div>
+        </div>
+        <div class="dialog-area">
+            <div class="dialog-box">
+                <div class="speaker-name" id="speakerName">🎭 NARASI</div>
+                <div class="dialog-text" id="dialogText">Memulai...</div>
+            </div>
+            <button class="next-button" id="nextButton"><i class="fas fa-arrow-right"></i> NEXT</button>
+        </div>
+        <div class="actions-area" id="actionPanel" style="display:none;"></div>
+        <footer>⚡ Dengungan lampu neon | Klik karakter untuk reaksi</footer>
     </div>
-    <div class="actions-area" id="actionPanel" style="display: none;"></div>
-    <footer>⚡ Dengungan lampu neon | [Klik NEXT untuk lanjut]</footer>
-</div>
 
-<!-- POPUP DETAIL KARAKTER -->
-<div class="char-detail-popup" id="charPopup">
-    <span class="close-popup" id="closePopup">&times;</span>
-    <div id="popupContent"></div>
-</div>
-
-<script>
-    // ======================== KONFIGURASI KARAKTER ========================
-    const GAME_CONFIG = {
-        totalChapters: 5,
-        chapters: {
-            1: { available: true, title: "The Awakening", description: "Kesadaran di lorong kuning tak berujung" },
-            2: { available: false, title: "The Whispering Walls", description: "Bisikan dari balik dinding" },
-            3: { available: false, title: "The Forgotten Memories", description: "Mengungkap masa lalu yang tersembunyi" },
-            4: { available: false, title: "The Truth Behind", description: "Menemukan kebenaran sebenarnya" },
-            5: { available: false, title: "The Final Exit", description: "Menemukan jalan keluar terakhir" }
-        },
-        comingSoon: { enabled: true, message: "🚧 Coming Soon! Selesaikan chapter sebelumnya untuk membuka 🚧" },
-        storage: { key: "backrooms_game_save", version: "1.0" },
-        characters: {
-            haruno: {
-                name: "HARUNO",
-                imageUrl: "https://files.catbox.moe/1u9izo.png",
-                trait: "berani · pelindung",
-                personality: "Berani namun pemarah. Dibalik amarahnya, dia selalu berkepala dingin saat situasi genting. Bertindak sebagai pelindung tim.",
-                voice: "Tegas dan berwibawa"
-            },
-            katsumi: {
-                name: "KATSUMI",
-                imageUrl: "https://files.catbox.moe/t6hf5b.png",
-                trait: "ceria · jenius teka-teki",
-                personality: "Selalu ceria, ramah dengan siapapun, dan sosok yang gaul yang selalu mengikuti tren. Gadis yang pintar dan suka dengan teka-teki sulit.",
-                voice: "Ceria dan energetik"
-            },
-            juun: {
-                name: "JUUN",
-                imageUrl: "https://files.catbox.moe/gx32p2.png",
-                trait: "tenang · logis",
-                personality: "Kurang bisa mengekspresikan diri, ekspresinya selalu terlihat dingin dan datar. Namun, selalu berbicara dengan nada yang ramah dan lemah lembut.",
-                voice: "Lembut dan kalem"
-            },
-            touya: {
-                name: "TOUYA",
-                imageUrl: "https://files.catbox.moe/froly4.png",
-                trait: "penakut · mistis",
-                personality: "Penakut dan mudah gugup. Memiliki hobi membaca artikel sulit dan sangat suka mencari hal-hal yang berbau mistis/aneh.",
-                voice: "Gugup dan gemetar"
-            }
-        }
-    };
-
-    // Fungsi global
-    window.isChapterAvailable = function(chapterNumber) {
-        if (chapterNumber === 1) return true;
-        const completed = getCompletedChapters();
-        return completed.includes(chapterNumber - 1) && GAME_CONFIG.chapters[chapterNumber]?.available === true;
-    };
-
-    window.completeChapter = function(chapterNumber) {
-        const completed = getCompletedChapters();
-        if (!completed.includes(chapterNumber)) {
-            completed.push(chapterNumber);
-            localStorage.setItem(GAME_CONFIG.storage.key + "_completed", JSON.stringify(completed));
-        }
-    };
-
-    window.getCompletedChapters = function() {
-        const saved = localStorage.getItem(GAME_CONFIG.storage.key + "_completed");
-        return saved ? JSON.parse(saved) : [];
-    };
-
-    window.resetProgress = function() {
-        localStorage.removeItem(GAME_CONFIG.storage.key + "_completed");
-        localStorage.removeItem(GAME_CONFIG.storage.key + "_chapter1");
-    };
-
-    // ======================== GAME STATE ========================
-    let currentChapter = 1;
-    let inventory = [];
-    let health = 100, stamina = 90;
-    let hasPisau = false, hasFurCloth = false;
-    let ranselOpened = false;
-    let sceneQueueData = [];
-    let waitingForInput = false, gamePaused = false, currentTyping = false;
-    let typingInterval = null;
-    let qteTimer = null;
-
-    const loadingScreen = document.getElementById('loadingScreen');
-    const lobbyScreen = document.getElementById('lobbyScreen');
-    const gameContainer = document.getElementById('gameContainer');
-    const dialogText = document.getElementById('dialogText');
-    const speakerName = document.getElementById('speakerName');
-    const nextBtn = document.getElementById('nextButton');
-    const actionPanel = document.getElementById('actionPanel');
-    const healthSpan = document.getElementById('healthVal');
-    const staminaSpan = document.getElementById('staminaVal');
-    const invSpan = document.getElementById('invList');
-    const activeCharDiv = document.getElementById('activeChar');
-    const activeAvatar = document.getElementById('activeAvatar');
-    const noCharacterMsg = document.getElementById('noCharacterMsg');
-
-    let audioCtx = null, humGain = null, humOsc = null;
-    function initAudio() {
-        if(audioCtx) return;
-        try {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            humGain = audioCtx.createGain();
-            humGain.gain.value = 0.15;
-            humOsc = audioCtx.createOscillator();
-            humOsc.type = "sawtooth";
-            humOsc.frequency.value = 58;
-            humOsc.connect(humGain);
-            humGain.connect(audioCtx.destination);
-            humOsc.start();
-        } catch(e) { console.log("Audio not supported"); }
-    }
-
-    setTimeout(() => {
-        loadingScreen.style.opacity = '0';
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            lobbyScreen.style.display = 'flex';
-            initLobby();
-        }, 1000);
-    }, 2000);
-
-    function initLobby() {
-        const charsContainer = document.getElementById('charactersContainer');
-        charsContainer.innerHTML = '';
-        for (const [key, char] of Object.entries(GAME_CONFIG.characters)) {
-            const card = document.createElement('div');
-            card.className = 'lobby-char-card';
-            card.innerHTML = `
-                <img class="lobby-char-img" src="${char.imageUrl}" alt="${char.name}" onerror="this.src='https://via.placeholder.com/100?text=${char.name.charAt(0)}'">
-                <div class="lobby-char-name">${char.name}</div>
-                <div class="lobby-char-trait">${char.trait}</div>
-                <div style="font-size:0.65rem; margin-top:8px; color:#bcae7a;">✨ Klik untuk detail ✨</div>
-            `;
-            card.onclick = () => showCharDetail(char);
-            charsContainer.appendChild(card);
-        }
-        renderChapters();
-        
-        document.getElementById('enterGameBtn').onclick = () => {
-            if (window.isChapterAvailable(currentChapter)) {
-                startGame(currentChapter);
-            } else {
-                alert(GAME_CONFIG.comingSoon.message);
-            }
+    <script>
+        // ==================== CONFIGURATION ====================
+        const CHARACTERS = {
+            haruno: { name: "Haruno", imageUrl: "https://files.catbox.moe/1u9izo.png", trait: "berani", reactions: { tap: "Hah?", body: "Fokus cari jalan keluar.", spam: "Jangan ganggu!", longpress: "..." } },
+            katsumi: { name: "Katsumi", imageUrl: "https://files.catbox.moe/t6hf5b.png", trait: "ceria", reactions: { tap: "Eh?! Hehe~", body: "Jangan sentuh terus dong~", spam: "Aaa... kamu jahil!", longpress: "Sayang banget sih~" } },
+            juun: { name: "Juun", imageUrl: "https://files.catbox.moe/gx32p2.png", trait: "tenang", reactions: { tap: "Ada apa?", body: "...", spam: "...kamu aneh.", longpress: "Apa yang kamu lakukan?" } },
+            touya: { name: "Touya", imageUrl: "https://files.catbox.moe/froly4.png", trait: "penakut", reactions: { tap: "K-kaget aku...", body: "Jangan kagetin aku!", spam: "HELP! STOP!", longpress: "Kenapa sih..." } }
         };
-        
-        document.getElementById('resetProgressBtn').onclick = () => {
-            if (confirm('Yakin ingin mereset semua progress? Chapter 2-5 akan terkunci kembali.')) {
-                window.resetProgress();
-                renderChapters();
-            }
+
+        // Affection System
+        let affection = { haruno: 0, katsumi: 0, juun: 0, touya: 0 };
+        let currentCharacter = null;
+        let currentExpression = "normal";
+        let lastTapTime = 0;
+        let tapCount = 0;
+        let longPressTimer = null;
+
+        // DOM Elements
+        const loadingScreen = document.getElementById('loadingScreen');
+        const lobbyScreen = document.getElementById('lobbyScreen');
+        const gameContainer = document.getElementById('gameContainer');
+        const characterImage = document.getElementById('characterImage');
+        const characterStage = document.getElementById('characterStage');
+        const reactionBubble = document.getElementById('reactionBubble');
+        const speakerName = document.getElementById('speakerName');
+        const dialogText = document.getElementById('dialogText');
+        const nextBtn = document.getElementById('nextButton');
+        const actionPanel = document.getElementById('actionPanel');
+        const healthSpan = document.getElementById('healthVal');
+        const staminaSpan = document.getElementById('staminaVal');
+        const invSpan = document.getElementById('invList');
+        const affectionBar = document.getElementById('affectionBar');
+        const heartbeatOverlay = document.getElementById('heartbeatOverlay');
+        const vignette = document.getElementById('vignette');
+
+        let sceneQueue = [];
+        let waitingForInput = false;
+        let gamePaused = false;
+        let currentTyping = false;
+        let typingInterval = null;
+
+        // ==================== EXPRESSION MANAGER ====================
+        const expressions = {
+            normal: { filter: "none", scale: 1 },
+            happy: { filter: "brightness(1.1) drop-shadow(0 0 10px #ffcc88)", scale: 1.02 },
+            angry: { filter: "brightness(0.9) contrast(1.2)", scale: 1 },
+            sad: { filter: "brightness(0.85) saturate(0.8)", scale: 0.98 },
+            shocked: { filter: "brightness(1.2) contrast(1.3)", scale: 1.05 },
+            blush: { filter: "brightness(1.05) drop-shadow(0 0 8px #ff6b6b)", scale: 1.01 },
+            scared: { filter: "brightness(0.8) saturate(0.7)", scale: 0.97 }
         };
-    }
-    
-    function renderChapters() {
-        const chaptersContainer = document.getElementById('chaptersContainer');
-        chaptersContainer.innerHTML = '';
-        for (let i = 1; i <= GAME_CONFIG.totalChapters; i++) {
-            const chapter = GAME_CONFIG.chapters[i];
-            const isAvailable = window.isChapterAvailable(i);
-            const card = document.createElement('div');
-            card.className = `chapter-card ${isAvailable ? 'unlocked' : 'locked'}`;
-            if (!isAvailable) {
-                card.innerHTML = `
-                    <div class="lock-icon"><i class="fas fa-lock"></i></div>
-                    <div class="chapter-number">Chapter ${i}</div>
-                    <div class="chapter-title">???</div>
-                    <div class="chapter-desc">Terkunci</div>
-                    <div class="coming-soon-badge">🔒 Selesaikan chapter ${i-1} dulu</div>
-                `;
-            } else {
-                card.innerHTML = `
-                    <div class="chapter-number">Chapter ${i}</div>
-                    <div class="chapter-title">${chapter.title}</div>
-                    <div class="chapter-desc">${chapter.description}</div>
-                    <div style="margin-top:8px; font-size:0.7rem;"><i class="fas fa-play"></i> Pilih</div>
-                `;
-                card.onclick = () => {
-                    currentChapter = i;
-                    document.querySelectorAll('.chapter-card').forEach(c => c.style.border = '');
-                    card.style.border = '3px solid #ffcc88';
-                    alert(`Chapter ${i} dipilih: ${chapter.title}\nKlik "MULAI GAME" untuk bermain.`);
-                };
-            }
-            chaptersContainer.appendChild(card);
+
+        function setExpression(expression) {
+            currentExpression = expression;
+            const expr = expressions[expression] || expressions.normal;
+            characterImage.style.filter = expr.filter;
+            characterImage.style.transform = `scale(${expr.scale})`;
+            // Efek zoom cinematic
+            if (expression === "shocked") screenShake(0.3);
+            if (expression === "scared") startHeartbeat();
+            else stopHeartbeat();
         }
-    }
-    
-    function showCharDetail(char) {
-        const popup = document.getElementById('charPopup');
-        const content = document.getElementById('popupContent');
-        content.innerHTML = `
-            <img class="popup-char-img" src="${char.imageUrl}" alt="${char.name}" onerror="this.src='https://via.placeholder.com/120?text=${char.name.charAt(0)}'">
-            <h2 style="color:#e7b874; font-size:clamp(1rem, 5vw, 1.5rem);">${char.name}</h2>
-            <p style="color:#d4bc7a; margin:10px 0; font-size:clamp(0.7rem, 3vw, 0.9rem);">${char.trait}</p>
-            <p style="color:#bcae7a; font-size:clamp(0.7rem, 3vw, 0.85rem); line-height:1.5;">${char.personality}</p>
-            <p style="color:#8b7a54; margin-top:15px; font-size:clamp(0.65rem, 3vw, 0.8rem);">🎭 ${char.voice}</p>
-        `;
-        popup.classList.add('show');
-        document.getElementById('closePopup').onclick = () => popup.classList.remove('show');
-        popup.onclick = (e) => { if(e.target === popup) popup.classList.remove('show'); };
-    }
-    
-    function showCharacter(characterName, imageUrl) {
-        if (!characterName || characterName === "🎭 NARASI" || characterName === "🔐 TEKA-TEKI" || characterName === "🎒 SISTEM" || characterName === "⚠️ QUICK TIME EVENT") {
-            activeCharDiv.classList.add('hidden');
-            noCharacterMsg.classList.remove('hidden');
-        } else {
-            noCharacterMsg.classList.add('hidden');
-            activeCharDiv.classList.remove('hidden');
-            activeAvatar.src = imageUrl || 'https://via.placeholder.com/800?text=Character';
-            activeCharDiv.classList.add('appearing');
-            setTimeout(() => activeCharDiv.classList.remove('appearing'), 500);
-        }
-    }
-    
-    function updateUI() {
-        healthSpan.innerText = Math.max(0, health);
-        staminaSpan.innerText = stamina;
-        invSpan.innerText = inventory.length ? inventory.join(", ") : "Kosong";
-    }
-    
-    function modifyHealth(amt) { 
-        health = Math.min(100, Math.max(0, health + amt)); 
-        updateUI(); 
-        if(health <= 0) gameOver("Kamu kehabisan tenaga..."); 
-    }
-    
-    function gameOver(reason) {
-        if(document.querySelector(".gameover-overlay")) return;
-        gamePaused = true;
-        const ov = document.createElement("div");
-        ov.className = "gameover-overlay";
-        ov.innerHTML = `<div>💀 GAME OVER 💀<br>${reason}</div><button class="vn-btn" id="restartBtn">⟳ Kembali ke Lobby</button>`;
-        document.body.appendChild(ov);
-        document.getElementById("restartBtn").onclick = () => location.reload();
-    }
-    
-    function completeChapterAndSave() {
-        window.completeChapter(currentChapter);
-        alert(`✨ Chapter ${currentChapter} selesai! ✨\nChapter ${currentChapter+1} sekarang terbuka (jika tersedia di config).`);
-        lobbyScreen.style.display = 'flex';
-        gameContainer.style.display = 'none';
-        renderChapters();
-    }
-    
-    function stopTyping() { 
-        if(typingInterval) clearInterval(typingInterval); 
-        currentTyping = false; 
-    }
-    
-    function typewriterStart(speaker, message, callback, characterInfo) {
-        if(typingInterval) stopTyping();
-        currentTyping = true;
-        speakerName.innerText = speaker;
-        dialogText.innerHTML = "";
-        showCharacter(characterInfo?.name, characterInfo?.imageUrl);
-        
-        let idx = 0;
-        function addLetter() {
-            if(idx < message.length) { 
-                dialogText.innerHTML += message.charAt(idx); 
-                idx++; 
-            } else { 
-                stopTyping(); 
-                currentTyping = false; 
-                if(callback) callback(); 
-            }
-        }
-        typingInterval = setInterval(addLetter, 28);
-    }
-    
-    function processQueue() {
-        if(gamePaused) return;
-        if(currentTyping) return;
-        if(waitingForInput) return;
-        if(sceneQueueData.length === 0) return;
-        const next = sceneQueueData.shift();
-        typewriterStart(next.speaker, next.message, () => {
-            if(next.onEnd) next.onEnd();
-            else { waitingForInput = true; nextBtn.disabled = false; nextBtn.style.opacity = "1"; }
-        }, next.characterInfo);
-    }
-    
-    function addScene(speaker, message, onEnd=null, characterInfo=null) {
-        sceneQueueData.push({ speaker, message, onEnd, characterInfo });
-        if(!waitingForInput && !currentTyping && sceneQueueData.length === 1) processQueue();
-    }
-    
-    function enableNext(enable) { 
-        nextBtn.disabled = !enable; 
-        nextBtn.style.opacity = enable ? "1" : "0.5"; 
-    }
-    
-    nextBtn.onclick = () => {
-        if(gamePaused) return;
-        if(currentTyping) { 
-            stopTyping(); 
-            if(sceneQueueData[0]) dialogText.innerHTML = sceneQueueData[0].message; 
-            currentTyping = false; 
-            return; 
-        }
-        if(waitingForInput) { 
-            waitingForInput = false; 
-            enableNext(false); 
-            processQueue(); 
-        }
-    };
-    enableNext(false);
-    
-    function pauseForChoices(choices) {
-        gamePaused = true;
-        enableNext(false);
-        actionPanel.style.display = "flex";
-        actionPanel.innerHTML = "";
-        choices.forEach(ch => {
-            const btn = document.createElement("button");
-            btn.innerText = ch.label;
-            btn.classList.add("vn-btn");
-            if(ch.qteStyle) btn.classList.add("qte-alert");
-            btn.onclick = () => {
-                actionPanel.style.display = "none";
-                gamePaused = false;
-                ch.callback();
-                processQueue();
-            };
-            actionPanel.appendChild(btn);
-        });
-    }
-    
-    // ======================== GAME STORY ========================
-    const charImages = {
-        katsumi: GAME_CONFIG.characters.katsumi.imageUrl,
-        haruno: GAME_CONFIG.characters.haruno.imageUrl,
-        touya: GAME_CONFIG.characters.touya.imageUrl,
-        juun: GAME_CONFIG.characters.juun.imageUrl
-    };
-    
-    function startGame(chapterNum) {
-        initAudio();
-        lobbyScreen.style.display = 'none';
-        gameContainer.style.display = 'flex';
-        
-        inventory = []; hasPisau=false; hasFurCloth=false; ranselOpened=false; health=100; stamina=90;
-        updateUI();
-        sceneQueueData = [];
-        waitingForInput = false; gamePaused = false; currentTyping = false;
-        enableNext(false);
-        actionPanel.style.display = "none";
-        
-        const chars = {
-            katsumi: { name: "Katsumi", imageUrl: charImages.katsumi },
-            haruno: { name: "Haruno", imageUrl: charImages.haruno },
-            touya: { name: "Touya", imageUrl: charImages.touya },
-            juun: { name: "Juun", imageUrl: charImages.juun }
-        };
-        
-        addScene("🎭 NARASI", "Suara dengungan lampu neon pelan. Cahaya kuning redup memenuhi ruangan. Empat orang tergeletak di lantai dingin…", null, null);
-        addScene("Katsumi", "Aduh… kepalaku sakit… (perlahan membuka mata) …eh? Ini… di mana?", null, chars.katsumi);
-        addScene("Haruno", "Huh? Tempat apaan ini?!", null, chars.haruno);
-        addScene("Touya", "Aneh. Seharusnya aku masih di perpustakaan… lagi belajar… Kenapa aku bisa di sini…?", null, chars.touya);
-        addScene("Juun", "...kalian semua siapa? Dan ini… tempat apa?", null, chars.juun);
-        addScene("Katsumi", "Hehe… sepertinya kita semua sama-sama bingung, ya?", null, chars.katsumi);
-        addScene("Haruno", "Jangan bercanda. Siapa yang bawa gue ke sini?!", null, chars.haruno);
-        addScene("Touya", "A-aku juga nggak tahu! Sumpah! Ini nggak masuk akal…", null, chars.touya);
-        addScene("Juun", "Kalau tidak ada yang saling mengenal… berarti kita semua korban.", null, chars.juun);
-        addScene("Katsumi", "…korban?", null, chars.katsumi);
-        addScene("Touya", "Tempat ini… nggak normal…", null, chars.touya);
-        addScene("Haruno", "Apapun ini… kita cari jalan keluar.", null, chars.haruno);
-        addScene("🎭 NARASI", "Lampu berkedip lebih lama. Keempatnya berdiri dalam diam, dikelilingi lorong kuning tak berujung.", null, null);
-        addScene("Katsumi", "Eh… itu apa?", null, chars.katsumi);
-        addScene("🎭 NARASI", "Di lantai, tepat di dekat mereka, tergeletak sebuah ransel kulit tua.", null, null);
-        addScene("Haruno", "…jangan sentuh dulu.", null, chars.haruno);
-        addScene("Touya", "Tapi… dari tadi nggak ada, kan?", null, chars.touya);
-        addScene("Juun", "Kalau ini jebakan… kita sudah berada di dalamnya sejak awal.", null, chars.juun);
-        
-        addScene("🎒 SISTEM", "Apa yang akan kamu lakukan?", () => {
-            pauseForChoices([
-                { label: "📦 BUKA RANSEL", callback: () => {
-                    ranselOpened = true;
-                    inventory = ["Air", "Roti", "Senter", "Tali", "Pisau", "Obat"];
-                    hasPisau = true;
-                    updateUI();
-                    addRegroupSequence(chars);
-                }},
-                { label: "👀 PERIKSA SEKELILING", callback: () => {
-                    addScene("Touya", "Dinding kuning semua... Tapi ransel itu pasti berguna.", null, chars.touya);
-                    addScene("Haruno", "Kita buka saja.", null, chars.haruno);
-                    ranselOpened = true;
-                    inventory = ["Air", "Roti", "Senter", "Tali", "Pisau", "Obat"];
-                    hasPisau = true;
-                    updateUI();
-                    addRegroupSequence(chars);
-                }}
-            ]);
-        });
-    }
-    
-    function addRegroupSequence(chars) {
-        addScene("Juun", "Isi: air, roti, senter, tali, pisau, obat.", null, chars.juun);
-        addScene("Katsumi", "Ini kayak perlengkapan bertahan hidup.", null, chars.katsumi);
-        addScene("Haruno", "Siapapun yang nyiapin ini… berarti mereka juga tahu tempat ini berbahaya.", null, chars.haruno);
-        addScene("Katsumi", "Kalau gitu kenalan dulu ya? Aku Katsumi.", null, chars.katsumi);
-        addScene("Haruno", "Haruno.", null, chars.haruno);
-        addScene("Touya", "T-Touya…", null, chars.touya);
-        addScene("Juun", "Juun.", null, chars.juun);
-        addScene("Haruno", "Mulai sekarang kita satu tim. Kalau ada yang bertindak sendiri—bisa mati.", null, chars.haruno);
-        addScene("🎭 NARASI", "Haruno menggendong ransel. Ia melangkah maju ke arah lorong.", null, null);
-        addAnomaliSequence(chars);
-    }
-    
-    function addAnomaliSequence(chars) {
-        addScene("🎭 NARASI", "Tetes. Sesuatu jatuh di lantai. Suara basah. Semua berhenti.", null, null);
-        addScene("Katsumi", "…itu apa?", null, chars.katsumi);
-        addScene("🎭 NARASI", "Cairan kental menetes dari atas. Bau busuk menusuk hidung.", null, null);
-        addScene("Touya", "Jangan bilang…", null, chars.touya);
-        addScene("🎭 NARASI", "Di langit-langit, sesuatu bergerak. Sosok aneh merayap terbalik.", null, null);
-        addScene("Haruno", "JANGAN DIAM! LARI!!", null, chars.haruno);
-        
-        addScene("⚠️ QUICK TIME EVENT", "Klik tombol LARI sebelum monster menangkap!", () => {
-            gamePaused = true;
-            actionPanel.style.display = "flex";
-            actionPanel.innerHTML = "";
-            const qteBtn = document.createElement("button");
-            qteBtn.innerText = "🏃‍♀️ LARI CEPAT!";
-            qteBtn.classList.add("vn-btn", "qte-alert");
-            let qteClicked = false;
-            qteBtn.onclick = () => {
-                if(qteClicked) return;
-                qteClicked = true;
-                clearTimeout(qteTimer);
-                actionPanel.style.display = "none";
-                gamePaused = false;
-                afterQTE(chars, true);
-            };
-            actionPanel.appendChild(qteBtn);
-            qteTimer = setTimeout(() => {
-                if(!qteClicked) {
-                    qteClicked = true;
-                    actionPanel.style.display = "none";
-                    gamePaused = false;
-                    afterQTE(chars, false);
-                }
-            }, 3000);
-        });
-    }
-    
-    function afterQTE(chars, success) {
-        if(success) {
-            addScene("🎭 NARASI", "Kalian berhasil lari! Namun Katsumi terpisah dan terjebak di jalan buntu!", null, null);
-            addScene("Haruno", "MENJAUH!! (Haruno menusuk monster dengan PISAU!)", null, chars.haruno);
-            addScene("Juun", "Bisa berdiri?", null, chars.juun);
-            addScene("Katsumi", "I-iya…", null, chars.katsumi);
-        } else {
-            modifyHealth(-35);
-            addScene("🎭 NARASI", "Monster menyerang! Kalian terluka, tapi selamat.", null, null);
-            addScene("Haruno", "Cepat! Cari tempat aman!", null, chars.haruno);
-        }
-        addScene("🎭 NARASI", "Mereka berlari dan menemukan pintu putih.", null, null);
-        addPuzzleSequence(chars);
-        processQueue();
-    }
-    
-    function addPuzzleSequence(chars) {
-        addScene("🎭 NARASI", "Mereka masuk ke ruangan dengan angka 9 di langit-langit. Lukisan terbalik.", null, null);
-        addScene("Katsumi", "Ini kayak buku harian… (membuka) kosong semua?", null, chars.katsumi);
-        addScene("Touya", "(membaca) Pintu merah adalah angka kematian… Carilah angka dan kain berbulu… 3… 9—", null, chars.touya);
-        
-        if(!hasFurCloth) {
-            addScene("Katsumi", "Lihat! Di sudut ada boneka kecil berbulu! Itu pasti kain berbulu.", null, chars.katsumi);
-            inventory.push("Kain Berbulu");
-            hasFurCloth = true;
-            updateUI();
-        }
-        
-        addScene("🔐 TEKA-TEKI", "Masukkan kode angka dari petunjuk (3 & 9):", () => {
-            gamePaused = true;
-            actionPanel.style.display = "flex";
-            actionPanel.innerHTML = "";
-            const wrapper = document.createElement("div");
-            wrapper.style.display = "flex"; 
-            wrapper.style.gap = "12px";
-            wrapper.style.flexWrap = "wrap";
-            wrapper.style.justifyContent = "center";
-            const inputBox = document.createElement("input");
-            inputBox.type = "text"; 
-            inputBox.placeholder = "Kode 2 angka..."; 
-            inputBox.classList.add("puzzle-input");
-            const submitBtn = document.createElement("button");
-            submitBtn.innerText = "BUKA JALAN"; 
-            submitBtn.classList.add("vn-btn");
-            wrapper.appendChild(inputBox); 
-            wrapper.appendChild(submitBtn);
-            actionPanel.appendChild(wrapper);
+
+        // ==================== CHARACTER DISPLAY ====================
+        function showCharacter(charId, emotion = "normal") {
+            const char = CHARACTERS[charId];
+            if (!char) return;
+            currentCharacter = charId;
+            characterImage.src = char.imageUrl;
+            characterImage.classList.remove('hidden');
+            setExpression(emotion);
             
-            const check = () => {
-                let val = inputBox.value.trim();
-                if(val === "39" || val === "3 9" || val === "3-9") {
+            // Transition cinematic
+            const container = document.getElementById('characterContainer');
+            container.style.opacity = '0';
+            container.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                container.style.transition = 'all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
+                container.style.opacity = '1';
+                container.style.transform = 'scale(1)';
+            }, 50);
+            
+            updateAffectionBar();
+        }
+
+        function hideCharacter() {
+            const container = document.getElementById('characterContainer');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                characterImage.classList.add('hidden');
+                container.style.opacity = '1';
+            }, 300);
+        }
+
+        // ==================== INTERACTION SYSTEM ====================
+        function showReaction(message) {
+            reactionBubble.textContent = message;
+            reactionBubble.classList.remove('show');
+            void reactionBubble.offsetWidth;
+            reactionBubble.classList.add('show');
+            setTimeout(() => reactionBubble.classList.remove('show'), 1500);
+        }
+
+        function characterReaction(type) {
+            if (!currentCharacter) return;
+            const char = CHARACTERS[currentCharacter];
+            let message = char.reactions[type] || "...";
+            showReaction(message);
+            characterImage.classList.add('bounce-effect');
+            setTimeout(() => characterImage.classList.remove('bounce-effect'), 200);
+            // Tambah affection sedikit
+            if (type === "tap") affection[currentCharacter] = Math.min(100, affection[currentCharacter] + 1);
+            if (type === "longpress") affection[currentCharacter] = Math.min(100, affection[currentCharacter] + 3);
+            updateAffectionBar();
+        }
+
+        // Touch/Klik event
+        let touchStartTime = 0;
+        characterStage.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            touchStartTime = Date.now();
+            longPressTimer = setTimeout(() => {
+                characterReaction("longpress");
+                touchStartTime = 0;
+            }, 800);
+        });
+        characterStage.addEventListener('touchend', (e) => {
+            clearTimeout(longPressTimer);
+            if (touchStartTime && Date.now() - touchStartTime < 300) {
+                tapCount++;
+                if (tapCount >= 3) {
+                    characterReaction("spam");
+                    tapCount = 0;
+                } else {
+                    characterReaction("tap");
+                    setTimeout(() => tapCount = 0, 500);
+                }
+            }
+            touchStartTime = 0;
+        });
+        characterStage.addEventListener('click', () => characterReaction("tap"));
+
+        // ==================== AFFECTION SYSTEM ====================
+        function updateAffectionBar() {
+            affectionBar.innerHTML = Object.entries(affection).map(([key, val]) => 
+                `<span class="affection-heart"><i class="fas fa-heart"></i> ${CHARACTERS[key].name}: ${val}</span>`
+            ).join('');
+        }
+
+        // ==================== EFFECTS ====================
+        function screenShake(intensity = 0.5) {
+            gameContainer.style.animation = `shakeScreen ${intensity}s ease-in-out`;
+            setTimeout(() => gameContainer.style.animation = '', intensity * 1000);
+        }
+
+        function startHeartbeat() {
+            heartbeatOverlay.style.display = 'block';
+        }
+        function stopHeartbeat() {
+            heartbeatOverlay.style.display = 'none';
+        }
+
+        function cinematicZoom(zoomIn = true) {
+            const container = document.getElementById('characterContainer');
+            container.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
+            container.style.transform = zoomIn ? 'scale(1.08)' : 'scale(1)';
+            setTimeout(() => container.style.transform = 'scale(1)', zoomIn ? 3000 : 500);
+        }
+
+        // ==================== TYPEWRITER SYSTEM ====================
+        function typewriterStart(speaker, message, callback, charId, emotion) {
+            if (typingInterval) clearInterval(typingInterval);
+            currentTyping = true;
+            speakerName.innerText = speaker;
+            if (charId) showCharacter(charId, emotion);
+            else hideCharacter();
+            
+            dialogText.innerHTML = "";
+            let idx = 0;
+            function addLetter() {
+                if (idx < message.length) {
+                    dialogText.innerHTML += message.charAt(idx);
+                    idx++;
+                } else {
+                    clearInterval(typingInterval);
+                    currentTyping = false;
+                    if (callback) callback();
+                }
+            }
+            typingInterval = setInterval(addLetter, 35);
+        }
+
+        // ==================== SCENE QUEUE ====================
+        function addScene(speaker, message, onEnd = null, charId = null, emotion = "normal") {
+            sceneQueue.push({ speaker, message, onEnd, charId, emotion });
+            if (!waitingForInput && !currentTyping && !gamePaused) processQueue();
+        }
+
+        function processQueue() {
+            if (gamePaused || currentTyping || waitingForInput || sceneQueue.length === 0) return;
+            const next = sceneQueue.shift();
+            typewriterStart(next.speaker, next.message, () => {
+                if (next.onEnd) next.onEnd();
+                else { waitingForInput = true; nextBtn.disabled = false; }
+            }, next.charId, next.emotion);
+        }
+
+        function enableNext(enable) { nextBtn.disabled = !enable; }
+        nextBtn.onclick = () => {
+            if (gamePaused || currentTyping) {
+                if (currentTyping) { clearInterval(typingInterval); currentTyping = false; dialogText.innerHTML = sceneQueue[0]?.message || ""; }
+                return;
+            }
+            if (waitingForInput) { waitingForInput = false; enableNext(false); processQueue(); }
+        };
+        enableNext(false);
+
+        // ==================== GAME STORY ====================
+        let inventory = [], health = 100, stamina = 90, hasPisau = false, hasFurCloth = false;
+        function updateUI() {
+            healthSpan.innerText = Math.max(0, health);
+            staminaSpan.innerText = stamina;
+            invSpan.innerText = inventory.length ? inventory.join(", ") : "Kosong";
+        }
+
+        function startGame() {
+            lobbyScreen.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            inventory = []; health = 100; stamina = 90; hasPisau = false; hasFurCloth = false;
+            updateUI();
+            sceneQueue = [];
+            waitingForInput = false; gamePaused = false; currentTyping = false;
+            enableNext(false);
+            actionPanel.style.display = "none";
+            affection = { haruno: 0, katsumi: 0, juun: 0, touya: 0 };
+            updateAffectionBar();
+
+            addScene("🎭 NARASI", "Suara dengungan lampu neon pelan. Empat orang tergeletak di lantai dingin...", null, null);
+            addScene("Katsumi", "Aduh… kepalaku sakit… (perlahan membuka mata) …eh? Ini… di mana?", null, "katsumi", "scared");
+            addScene("Haruno", "Huh? Tempat apaan ini?!", null, "haruno", "angry");
+            addScene("Touya", "Aneh. Seharusnya aku masih di perpustakaan…", null, "touya", "scared");
+            addScene("Juun", "...kalian semua siapa? Dan ini… tempat apa?", null, "juun", "normal");
+            addScene("Katsumi", "Hehe… sepertinya kita semua sama-sama bingung, ya?", null, "katsumi", "happy");
+            addScene("Haruno", "Jangan bercanda. Siapa yang bawa gue ke sini?!", null, "haruno", "angry");
+            addScene("Juun", "Kalau tidak ada yang saling mengenal… berarti kita semua korban.", null, "juun", "normal");
+            addScene("🎭 NARASI", "Lampu berkedip. Di lantai tergeletak sebuah ransel kulit tua.", null, null);
+            addScene("🎒 SISTEM", "Apa yang akan kamu lakukan?", () => {
+                gamePaused = true;
+                actionPanel.style.display = "flex";
+                actionPanel.innerHTML = `
+                    <button class="vn-btn" id="choiceBuka">📦 BUKA RANSEL</button>
+                    <button class="vn-btn" id="choicePeriksa">👀 PERIKSA SEKELILING</button>
+                `;
+                document.getElementById('choiceBuka').onclick = () => {
                     actionPanel.style.display = "none";
                     gamePaused = false;
-                    addScene("🎭 NARASI", "Kain berbulu hangat di tangan. Angka 39! Pintu rahasia terbuka! Cahaya keemasan menerobos...", null, null);
-                    addScene("Haruno", "Kita berhasil... Kita hidup!", null, chars.haruno);
-                    addScene("✨ CHAPTER 1 SELESAI ✨", "Kalian keluar dari lorong kuning. Chapter 1 selesai!", () => {
-                        completeChapterAndSave();
-                    });
+                    inventory = ["Air", "Roti", "Senter", "Tali", "Pisau", "Obat"];
+                    hasPisau = true;
+                    updateUI();
+                    addScene("Juun", "Isi: air, roti, senter, tali, pisau, obat.", null, "juun", "normal");
+                    addScene("Katsumi", "Ini kayak perlengkapan bertahan hidup.", null, "katsumi", "happy");
+                    addScene("Haruno", "Kita cari jalan keluar.", null, "haruno", "normal");
+                    addScene("🎭 NARASI", "Haruno menggendong ransel. Mereka melangkah.", null, null);
+                    addFinalScene();
                     processQueue();
-                } else {
-                    addScene("Juun", "Salah... Petunjuk: 3 dan 9 berurutan.", null, chars.juun);
-                }
-            };
-            submitBtn.onclick = check;
-            inputBox.addEventListener("keypress", (e) => { if(e.key === "Enter") check(); });
-        });
-    }
-    
-    document.getElementById('backToLobbyBtn').onclick = () => {
-        if(confirm('Kembali ke lobby? Progress chapter saat ini tidak akan tersimpan.')) {
-            lobbyScreen.style.display = 'flex';
-            gameContainer.style.display = 'none';
-            renderChapters();
+                };
+                document.getElementById('choicePeriksa').onclick = () => {
+                    actionPanel.style.display = "none";
+                    gamePaused = false;
+                    addScene("Touya", "Dinding kuning semua... Tapi ransel itu pasti berguna.", null, "touya", "scared");
+                    inventory = ["Air", "Roti", "Senter", "Tali", "Pisau", "Obat"];
+                    hasPisau = true;
+                    updateUI();
+                    addFinalScene();
+                    processQueue();
+                };
+            });
         }
-    };
-</script>
+
+        function addFinalScene() {
+            addScene("🎭 NARASI", "Tiba-tiba cairan kental menetes dari atas. Bau busuk!", null, null);
+            addScene("Haruno", "JANGAN DIAM! LARI!!", null, "haruno", "angry");
+            addScene("🎭 NARASI", "Mereka berlari dan menemukan pintu putih. Ruangan dengan angka 9.", null, null);
+            addScene("Touya", "(membaca) Pintu merah adalah angka kematian… Carilah angka dan kain berbulu… 3… 9—", null, "touya", "scared");
+            addScene("Katsumi", "Lihat! Di sudut ada kain berbulu!", null, "katsumi", "happy");
+            addScene("🔐 TEKA-TEKI", "Masukkan kode angka (3 & 9):", () => {
+                gamePaused = true;
+                actionPanel.style.display = "flex";
+                actionPanel.innerHTML = `
+                    <input type="text" id="puzzleInput" class="puzzle-input" placeholder="Kode...">
+                    <button class="vn-btn" id="submitPuzzle">BUKA JALAN</button>
+                `;
+                document.getElementById('submitPuzzle').onclick = () => {
+                    let val = document.getElementById('puzzleInput').value.trim();
+                    if (val === "39" || val === "3 9" || val === "3-9") {
+                        actionPanel.style.display = "none";
+                        gamePaused = false;
+                        addScene("🎭 NARASI", "Angka 39! Pintu rahasia terbuka! Cahaya keemasan...", null, null);
+                        addScene("Haruno", "Kita berhasil!", null, "haruno", "happy");
+                        addScene("✨ SELESAI ✨", "Chapter 1 selesai! Kamu berhasil keluar.", () => {
+                            alert("✨ Chapter 1 selesai! ✨\nTerima kasih telah bermain!");
+                            lobbyScreen.style.display = 'flex';
+                            gameContainer.style.display = 'none';
+                        });
+                        processQueue();
+                    } else {
+                        alert("Salah! Coba lagi.");
+                    }
+                };
+            });
+        }
+
+        // ==================== INIT LOBBY ====================
+        function initLobby() {
+            const container = document.getElementById('charactersContainer');
+            container.innerHTML = '';
+            for (const [key, char] of Object.entries(CHARACTERS)) {
+                const card = document.createElement('div');
+                card.className = 'lobby-char-card';
+                card.innerHTML = `
+                    <img class="lobby-char-img" src="${char.imageUrl}">
+                    <div class="lobby-char-name">${char.name}</div>
+                    <div style="font-size:0.7rem; color:#bcae7a;">${char.trait}</div>
+                `;
+                container.appendChild(card);
+            }
+            document.getElementById('enterGameBtn').onclick = startGame;
+            document.getElementById('resetProgressBtn').onclick = () => location.reload();
+            document.getElementById('backToLobbyBtn')?.addEventListener('click', () => {
+                lobbyScreen.style.display = 'flex';
+                gameContainer.style.display = 'none';
+            });
+        }
+
+        setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                lobbyScreen.style.display = 'flex';
+                initLobby();
+            }, 1000);
+        }, 2000);
+    </script>
 </body>
 </html>
