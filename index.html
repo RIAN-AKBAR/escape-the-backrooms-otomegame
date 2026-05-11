@@ -305,22 +305,21 @@
             box-shadow: 0 0 20px #e7b874;
         }
 
-        /* GAME SCREEN - KARAKTER FULL TIDAK TERPOTONG */
+        /* GAME SCREEN - KARAKTER FULL DI SEMUA DEVICE */
         .game-container {
-            width: min(1400px, 96vw);
-            height: 90vh;
+            width: 100vw;
+            height: 100vh;
             background: #0a0804;
-            border-radius: 36px;
-            border: 1px solid #b89a5a;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.6);
             display: none;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
-            margin: 20px auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9500;
         }
 
-        /* AREA KARAKTER - FULLSCREEN DENGAN GAMBAR BESAR TIDAK TERPOTONG */
+        /* AREA KARAKTER - FULLSCREEN */
         .single-character {
             flex: 3;
             display: flex;
@@ -328,11 +327,10 @@
             align-items: center;
             background: radial-gradient(ellipse at center, #1a1510 0%, #050302 100%);
             position: relative;
-            min-height: 300px;
-            overflow: visible;
+            overflow: hidden;
         }
         
-        /* KARAKTER TIDAK TERPOTONG - MENGGUNAKAN CONTAIN YANG TEPAT */
+        /* KARAKTER FULL TIDAK TERPOTONG */
         .active-char {
             position: absolute;
             top: 0;
@@ -343,8 +341,7 @@
             justify-content: center;
             align-items: center;
             animation: fadeInUp 0.5s ease;
-            background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
-            overflow: visible;
+            background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 100%);
         }
         
         @keyframes fadeInUp {
@@ -354,27 +351,23 @@
         
         /* GAMBAR KARAKTER - FULL TANPA TERPOTONG */
         .active-avatar {
-            width: auto;
-            height: auto;
-            max-width: 90%;
-            max-height: 88%;
-            min-height: 300px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            object-position: center;
-            filter: drop-shadow(0 0 40px rgba(231,194,125,0.15));
+            object-position: center 55%;
+            filter: drop-shadow(0 0 30px rgba(231,194,125,0.15));
             animation: characterFloat 4s ease-in-out infinite;
-            transition: all 0.3s ease;
         }
         
         @keyframes characterFloat {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
         }
         
-        /* Efek masuk */
+        /* Efek masuk karakter */
         @keyframes characterAppear {
-            0% { opacity: 0; transform: scale(0.92) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
         }
         
         .active-char.appearing .active-avatar {
@@ -384,23 +377,25 @@
         .no-character {
             text-align: center;
             color: #8b7a54;
-            font-size: clamp(0.9rem, 4vw, 1.2rem);
+            font-size: clamp(1rem, 5vw, 1.3rem);
             padding: 30px;
             position: relative;
             z-index: 5;
             text-shadow: 0 0 10px rgba(0,0,0,0.5);
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 30px;
+            max-width: 80%;
+            margin: 0 auto;
         }
 
-        /* STATUS PANEL - SEMI TRANSPARAN DI ATAS KARAKTER */
+        /* STATUS PANEL */
         .status-panel {
-            background: #0c0b08aa;
+            background: #0c0b08cc;
             backdrop-filter: blur(10px);
-            padding: 8px 15px;
+            padding: 8px 20px;
             display: flex;
-            gap: 15px;
-            font-size: clamp(0.7rem, 3vw, 0.8rem);
+            gap: 20px;
+            font-size: clamp(0.75rem, 3.5vw, 0.9rem);
             color: #f2e0b0;
             border-bottom: 1px solid #8b7a4b;
             flex-wrap: wrap;
@@ -414,7 +409,7 @@
         /* DIALOG AREA */
         .dialog-area {
             flex: 1;
-            margin: 12px 15px 15px 15px;
+            margin: 10px 15px 15px 15px;
             background: #0a0805dd;
             backdrop-filter: blur(15px);
             border-radius: 40px;
@@ -425,7 +420,7 @@
             z-index: 15;
         }
         .dialog-box {
-            padding: 15px 20px;
+            padding: 15px 22px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -440,13 +435,13 @@
         }
         .dialog-text {
             font-family: 'Source Code Pro', monospace;
-            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            font-size: clamp(0.85rem, 3.8vw, 1rem);
             line-height: 1.5;
             color: #f5efda;
             text-shadow: 0 0 2px black;
             min-height: 65px;
             overflow-y: auto;
-            max-height: 130px;
+            max-height: 120px;
         }
         .next-button {
             align-self: flex-end;
@@ -454,7 +449,7 @@
             border: none;
             color: #ecd68a;
             padding: 8px 25px;
-            margin: 5px 15px 15px 0;
+            margin: 5px 18px 15px 0;
             border-radius: 40px;
             font-weight: bold;
             cursor: pointer;
@@ -484,7 +479,7 @@
             padding: 8px 20px;
             font-family: 'Quicksand', monospace;
             font-weight: bold;
-            font-size: clamp(0.7rem, 3.5vw, 0.9rem);
+            font-size: clamp(0.75rem, 3.5vw, 0.9rem);
             border-radius: 60px;
             cursor: pointer;
             transition: 0.1s;
@@ -530,14 +525,14 @@
             font-size: 0.6rem; 
             text-align: center; 
             color: #67604b; 
-            padding: 8px; 
+            padding: 6px; 
             position: relative; 
             z-index: 15; 
             background: #0a0805aa; 
         }
         .hidden { display: none; }
 
-        /* RESPONSIVE */
+        /* RESPONSIVE UNTUK SEMUA DEVICE */
         @media (max-width: 768px) {
             .lobby-char-card {
                 width: calc(50% - 20px);
@@ -557,8 +552,7 @@
                 height: 70px;
             }
             .active-avatar {
-                max-height: 82%;
-                min-height: 250px;
+                object-position: center 50%;
             }
         }
 
@@ -570,24 +564,44 @@
             .status-panel {
                 font-size: 0.65rem;
                 gap: 10px;
+                padding: 6px 12px;
             }
             .dialog-box {
                 padding: 12px 15px;
             }
             .active-avatar {
-                max-height: 75%;
-                min-height: 200px;
+                object-position: center 45%;
             }
         }
         
-        /* Landscape mode */
+        /* Landscape mode di HP */
         @media (orientation: landscape) and (max-height: 600px) {
-            .active-avatar {
-                max-height: 70%;
-                min-height: 180px;
-            }
             .single-character {
-                min-height: 200px;
+                flex: 2;
+            }
+            .dialog-text {
+                max-height: 70px;
+                min-height: 50px;
+            }
+            .status-panel {
+                padding: 4px 12px;
+            }
+            .active-avatar {
+                object-position: center 40%;
+            }
+        }
+        
+        /* Tablet */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .active-avatar {
+                object-position: center 50%;
+            }
+        }
+        
+        /* Desktop besar */
+        @media (min-width: 1200px) {
+            .active-avatar {
+                object-position: center 55%;
             }
         }
     </style>
@@ -798,7 +812,7 @@
         } else {
             noCharacterMsg.classList.add('hidden');
             activeCharDiv.classList.remove('hidden');
-            activeAvatar.src = imageUrl || 'https://via.placeholder.com/500?text=Character';
+            activeAvatar.src = imageUrl || 'https://via.placeholder.com/800?text=Character';
             activeCharDiv.classList.add('appearing');
             setTimeout(() => activeCharDiv.classList.remove('appearing'), 500);
         }
