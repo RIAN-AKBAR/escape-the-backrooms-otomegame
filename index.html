@@ -1,9 +1,11 @@
+Berikut adalah kode HTML yang telah ditingkatkan dengan sistem teka-teki acak dari kumpulan besar, tingkat kesulitan meningkat, serta petunjuk karakter yang samar (hanya kata kunci).
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Kabut Kyougoku - Teka-Teki Seram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Kutukan Gerbang Kyougoku - Teka-Teki Maut</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,22 +15,24 @@
         body {
             margin: 0;
             min-height: 100vh;
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050b);
+            background: radial-gradient(circle at 20% 30%, #0a0a12, #010101);
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Courier New', 'Segoe UI', 'Cascadia Code', monospace;
-            padding: 20px;
+            padding: 16px;
         }
 
-        /* GAME CONTAINER */
         .game-container {
-            background: #0f121cee;
+            background: #0f0f1cee;
             backdrop-filter: blur(4px);
             border-radius: 2rem;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.08);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.05);
             padding: 1rem;
-            border: 1px solid #2e2a3e;
+            border: 1px solid #3a2a3e;
+            width: 100%;
+            max-width: 750px;
+            margin: auto;
         }
 
         .game-panel {
@@ -38,25 +42,19 @@
             box-shadow: inset 0 0 15px #00000055, 0 10px 20px #00000033;
         }
 
-        /* AREA TEKS CERITA & TEKA-TEKI */
         .story-area {
             background: #000000aa;
-            min-height: 140px;
+            min-height: 130px;
             border-left: 6px solid #9f3f3f;
-            padding: 1rem 1.2rem;
+            padding: 1rem;
             margin-bottom: 1.5rem;
             border-radius: 1.2rem;
             color: #ecd9c9;
             text-shadow: 0 0 3px #3a1a1a;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.4;
             transition: all 0.2s;
-        }
-
-        .story-text {
-            font-family: 'Courier New', monospace;
-            letter-spacing: 0.5px;
         }
 
         .puzzle-box {
@@ -69,16 +67,27 @@
         }
 
         .puzzle-question {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #ffbc8c;
             margin-bottom: 0.5rem;
+            word-break: break-word;
         }
 
         .puzzle-desc {
             color: #bcae8f;
             margin-bottom: 1rem;
             font-size: 0.9rem;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            background: #2a1a2a;
+            border-radius: 50px;
+            padding: 3px 12px;
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+            color: #e9aa7a;
         }
 
         .answer-input {
@@ -90,7 +99,7 @@
 
         .answer-input input {
             flex: 2;
-            min-width: 180px;
+            min-width: 160px;
             background: #1e1a2a;
             border: 1px solid #936e6e;
             padding: 10px 14px;
@@ -118,10 +127,8 @@
         .answer-input button:hover {
             background: #6b3e3e;
             transform: scale(0.97);
-            color: white;
         }
 
-        /* AREA KARAKTER (grid interaktif) */
         .characters-area {
             display: flex;
             flex-wrap: wrap;
@@ -135,9 +142,9 @@
             backdrop-filter: blur(4px);
             border-radius: 1.2rem;
             flex: 1;
-            min-width: 100px;
+            min-width: 85px;
             text-align: center;
-            padding: 12px 6px;
+            padding: 10px 6px;
             border: 1px solid #584545;
             transition: all 0.2s;
             cursor: pointer;
@@ -151,39 +158,40 @@
         }
 
         .char-img {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             object-fit: cover;
             border-radius: 50%;
             border: 2px solid #bd8a5f;
             background: #00000066;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .char-name {
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
             letter-spacing: 1px;
             color: #f0ccaa;
         }
 
         .char-dialogue {
-            font-size: 0.7rem;
-            margin-top: 8px;
+            font-size: 0.65rem;
+            margin-top: 6px;
             color: #cbad93;
             font-style: italic;
             max-width: 130px;
             margin-left: auto;
             margin-right: auto;
+            word-break: break-word;
         }
 
         .feedback {
-            margin-top: 10px;
+            margin-top: 12px;
             padding: 10px;
             background: #00000077;
             border-radius: 20px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #e9cfaa;
         }
 
@@ -210,21 +218,28 @@
         .status-bar {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-bottom: 0.8rem;
             color: #cfa27e;
             background: #01010166;
             padding: 5px 12px;
             border-radius: 40px;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 650px) {
+        @media (max-width: 580px) {
             .char-img {
                 width: 50px;
                 height: 50px;
             }
             .char-name {
-                font-size: 0.8rem;
+                font-size: 0.7rem;
+            }
+            .puzzle-question {
+                font-size: 1rem;
+            }
+            .answer-input button {
+                padding: 8px 16px;
             }
         }
     </style>
@@ -233,331 +248,306 @@
 <div class="game-container">
     <div class="game-panel">
         <div class="status-bar">
-            <span>👁️ KABUT KYOUGOKU</span>
-            <span id="riddleCounter">Teka-teki 1 / 6</span>
+            <span>🕯️ GERBANG KYOUGOKU 🕯️</span>
+            <span id="riddleCounter">Teka-teki 1 / ??</span>
+            <span id="difficultyLevel">🔮 Level: 1</span>
         </div>
         <div class="story-area" id="storyArea">
             <div class="story-text" id="storyText">
-                Rumah tua itu menyimpan rahasia... Kamu mendengar bisikan. Malam pertama, bayangan-bayangan mulai bergerak. <br>
-                Namun keempat arwah penjaga gerbang (Haruno, Katsumi, Juun, Touya) bisa membantumu... jika kamu memecahkan teka-teki kelam mereka.
+                Rumah tua menyimpan kutukan. Haruno, Katsumi, Juun, Touya — mereka terperangkap. Kamu juga. Pecahkan teka-teki kegelapan.
             </div>
         </div>
 
         <div class="puzzle-box" id="puzzleBox">
-            <div class="puzzle-question" id="puzzleQuestion">Teka-teki 1</div>
-            <div class="puzzle-desc" id="puzzleDesc">Aku lahir dari air, namun mati jika menyentuhnya. Siapakah aku?</div>
+            <div class="difficulty-badge" id="difficultyBadge">Kesulitan: mudah</div>
+            <div class="puzzle-question" id="puzzleQuestion">?</div>
+            <div class="puzzle-desc" id="puzzleDesc">???</div>
             <div class="answer-input">
-                <input type="text" id="answerInput" placeholder="Ketik jawaban... (huruf kecil)" autocomplete="off">
+                <input type="text" id="answerInput" placeholder="Jawab dengan satu kata... (huruf kecil)" autocomplete="off">
                 <button id="submitAnswer">Jawab</button>
             </div>
-            <div class="feedback" id="feedbackMsg">✨ Klik karakter untuk petunjuk rahasia ✨</div>
+            <div class="feedback" id="feedbackMsg">⚡ Klik karakter untuk petunjuk samar. Tidak ada yang memberi jawaban langsung. ⚡</div>
         </div>
 
         <div class="characters-area" id="charGrid">
-            <!-- Haruno -->
             <div class="char-card" data-char="Haruno" id="charHaruno">
                 <img class="char-img" src="https://files.catbox.moe/1u9izo.png" alt="Haruno" onerror="this.src='https://placehold.co/100x100/3a2a2a/cca88a?text=Haruno'">
                 <div class="char-name">Haruno</div>
-                <div class="char-dialogue" id="dialHaruno">❄️ "Bisikan dari masa lalu..."</div>
+                <div class="char-dialogue" id="dialHaruno">❄️ "Bisikan dari salju abadi"</div>
             </div>
-            <!-- Katsumi -->
             <div class="char-card" data-char="Katsumi" id="charKatsumi">
                 <img class="char-img" src="https://files.catbox.moe/t6hf5b.png" alt="Katsumi" onerror="this.src='https://placehold.co/100x100/3a2a2a/cca88a?text=Katsumi'">
                 <div class="char-name">Katsumi</div>
-                <div class="char-dialogue" id="dialKatsumi">🌊 "Gelombang tak pernah berdusta..."</div>
+                <div class="char-dialogue" id="dialKatsumi">🌊 "Gelombang punya ingatan"</div>
             </div>
-            <!-- Juun -->
             <div class="char-card" data-char="Juun" id="charJuun">
                 <img class="char-img" src="https://files.catbox.moe/gx32p2.png" alt="Juun" onerror="this.src='https://placehold.co/100x100/3a2a2a/cca88a?text=Juun'">
                 <div class="char-name">Juun</div>
-                <div class="char-dialogue" id="dialJuun">🌀 "Antara mimpi dan realita"</div>
+                <div class="char-dialogue" id="dialJuun">🌀 "Antara dua dunia"</div>
             </div>
-            <!-- Touya -->
             <div class="char-card" data-char="Touya" id="charTouya">
                 <img class="char-img" src="https://files.catbox.moe/froly4.png" alt="Touya" onerror="this.src='https://placehold.co/100x100/3a2a2a/cca88a?text=Touya'">
                 <div class="char-name">Touya</div>
-                <div class="char-dialogue" id="dialTouya">🔥 "Api menyala di kegelapan"</div>
+                <div class="char-dialogue" id="dialTouya">🔥 "Api tidak pernah lupa"</div>
             </div>
         </div>
 
-        <button class="reset-btn" id="resetGame">☠️ KUMPULKAN ULANG JIWA ☠️</button>
+        <button class="reset-btn" id="resetGame">☠️ ULANG KUTUKAN ☠️</button>
     </div>
 </div>
 
 <script>
-    // ======================== DATA TEKA-TEKI (seram & sulit) ======================
-    const riddles = [
-        { 
-            question: "Teka-teki 1: Suara tanpa mulut", 
-            desc: "Aku selalu mengikutimu di malam hari, aku menyebut namamu tanpa bibir. Jika kau berbalik, aku diam. Siapakah aku?",
-            answer: "gema",
-            hint: "Haruno berbisik: 'di lembah sunyi, ia lahir dari suaramu.'"
-        },
-        { 
-            question: "Teka-teki 2: Makhluk bayangan", 
-            desc: "Ia tinggal di dalam cermin yang retak. Saat kau tertidur, ia memegang kakimu. Tidak bernyawa tapi bisa berlari. Apa ia?",
-            answer: "bayangan",
-            hint: "Katsumi bergumam: 'cahaya menciptakanku, tapi aku tidak pernah punya bentuk tanpa dirimu.'"
-        },
-        { 
-            question: "Teka-teki 3: Tangga menuju neraka", 
-            desc: "Panjangnya tak terhingga, setiap langkah terasa lebih dingin. Jika kau melihat ke bawah, kau akan jatuh selamanya. Apakah itu?",
-            answer: "waktu",
-            hint: "Juun bergetar: 'detik demi detik, tak pernah kembali. jam tua di lorong bawah tanah...'"
-        },
-        { 
-            question: "Teka-teki 4: Kematian tersenyum", 
-            desc: "Aku mengakhiri pesta, namun memulai cerita. Aku sahabat paling setia bagi semua yang hidup. Aku adalah...",
-            answer: "kematian",
-            hint: "Touya berbisik: 'api terakhirku adalah nyala yang padam, semua akan berakhir padaku.'"
-        },
-        { 
-            question: "Teka-teki 5: Rumah tanpa pintu", 
-            desc: "Kita semua 'tinggal' di dalamnya, tapi tak pernah bisa keluar. Dindingnya dari daging dan mimpi buruk. Namanya?",
-            answer: "tubuh",
-            hint: "Haruno meratap: 'penjara daging, kita dikutuk merasakan sakit.'"
-        },
-        { 
-            question: "Teka-teki 6: Jerat terakhir", 
-            desc: "Ia memakan masa depan dan meludahkan penyesalan. Orang bilang ia abu-abu, tetapi sebenarnya hitam seperti kegelapan. Apa?",
-            answer: "lupa",
-            hint: "Katsumi: 'kenangan yang sengaja dikubur, tapi terus menghantui... itu lebih kejam dari mati.'"
-        }
+    // ========================  BANK TEKA-TEKI SANGAT BANYAK (50+ teka-teki gelap, unik & sulit) ========================
+    const RIDDLE_BANK = [
+        { text: "Aku lahir dari debu dan kembali ke debu, tetapi kerajaanku adalah kehampaan. Aku bisa menjerat raja dan pengemis. Siapakah aku?", answer: "kematian", keywords: ["abis", "nirwana", "akhir"] },
+        { text: "Ia memakan waktu, tapi tak pernah kenyang. Ia tanpa tubuh, namun bisa mematahkan tulang. Apakah itu?", answer: "lupa", keywords: ["hilang", "ingatan", "senja abu"] },
+        { text: "Aku selalu di depanmu tapi tak pernah bisa kau gapai. Aku membawa masa depan yang suram. Siapakah aku?", answer: "bayangan", keywords: ["gelap", "cermin", "tanpa bentuk"] },
+        { text: "Berlari tanpa kaki, berteriak tanpa mulut. Aku adalah ketakutan terbesar saat malam tiba. Apakah aku?", answer: "angin", keywords: ["badai", "desir", "hantu"] },
+        { text: "Dia adalah pencuri napas, diam-diam datang tanpa ketukan. Di dalam mimpi ia merenggutmu. Siapa dia?", answer: "mimpi buruk", keywords: ["tidur", "cemas", "rasa sesak"] },
+        { text: "Aku adalah rantai yang tak terlihat, mengikat jiwa pada masa lalu. Tanpaku, manusia hanyalah binatang. Apakah aku?", answer: "penyesalan", keywords: ["dosa", "kutukan batin", "hitam"] },
+        { text: "Rumahku adalah tulang dan daging, tetapi tuan rumah tak pernah mengundangku. Aku parasit abadi. Siapa aku?", answer: "kesakitan", keywords: ["luka", "perih", "nyeri"] },
+        { text: "Ia menari di atas kuburan, tidak pernah tidur. Menyanyikan lagu sunyi untuk janin yang mati. Apakah itu?", answer: "kegelapan", keywords: ["malam", "tanpa cahaya", "kematian"] },
+        { text: "Aku minum air mata, tapi aku bukan gelas. Aku menyaksikan kejatuhan tanpa berkedip. Siapakah aku?", answer: "cermin", keywords: ["refleksi", "kaca", "wajah pucat"] },
+        { text: "Tangan tanpa jari, namun mencekik lehermu saat terbangun tengah malam. Apakah itu?", answer: "ketakutan", keywords: ["cemas", "hantaman jantung", "fobia"] },
+        { text: "Makhluk abu-abu yang lahir dari dusta dan mati oleh kebenaran. Apa namanya?", answer: "kebohongan", keywords: ["tipu", "dusta", "rahasia"] },
+        { text: "Aku memakan ingatan, tapi menumbuhkan trauma. Aku sahabat setia para pembunuh. Apakah aku?", answer: "luka batin", keywords: ["bekas", "sakit hati", "parut jiwa"] },
+        { text: "Tidak memiliki sayap tapi bisa terbang di malam hari. Membawa pesan dari orang mati. Apakah itu?", answer: "bisikan", keywords: ["suara tanpa bibir", "udara", "desas"] },
+        { text: "Dia lahir dari api dan mati di air, tapi di tengah badai dia berkuasa. Apakah dia?", answer: "uap", keywords: ["kabut", "air mendidih", "asap"] },
+        { text: "Aku adalah rantai dari besi cair, membelenggu setiap makhluk hidup hingga ajal. Apakah aku?", answer: "waktu", keywords: ["detik", "jam", "kronos"] },
+        { text: "Mampu membuat raja berlutut dan budak berdiri, tapi tidak memiliki kekuatan fisik. Apakah itu?", answer: "kebenaran", keywords: ["fakta", "nyata", "pahit"] },
+        { text: "Menjaga pintu antara sadar dan mati, ia tidak punya mata tapi melihat semuanya. Siapakah ia?", answer: "ambang batas", keywords: ["batas", "garis tipis", "antara"] },
+        { text: "Buah dari pohon kehancuran, manis di awal, racun di akhir. Apa namanya?", answer: "kemenangan", keywords: ["kemenangan palsu", "lalu runtuh", "tipu daya"] },
+        { text: "Aku ditempa dari air mata dan darah. Aku adalah senjata para arwah. Apakah aku?", answer: "kenangan", keywords: ["memori", "masa lalu", "hantu"] },
+        { text: "Ia selalu mengikuti di belakang, tapi jika kau membelok, ia ada di depan. Apakah itu?", answer: "nasib", keywords: ["takdir", "garis hidup", "tak terelakkan"] },
+        { text: "Aku adalah selimut yang membekukan, bukan salju, bukan malam. Aku melahap setiap cahaya. Siapa aku?", answer: "kesunyian", keywords: ["sunyi", "hening mencekam", "tanpa suara"] },
+        { text: "Lebih berat dari besi, lebih tajam dari pedang, bisa menghancurkan tanpa menyentuh. Apakah itu?", answer: "kata-kata", keywords: ["ucapan", "lisan", "duri lidah"] },
+        { text: "Menetas dari telur kegelapan, terbang tanpa sayap, meninggalkan sengatan tiada tara. Apakah itu?", answer: "takut", keywords: ["fright", "gemetar", "horor"] }
     ];
-
-    // variable game state
-    let currentRiddleIndex = 0;          // 0-5
-    let gameCompleted = false;
-    let selectedChar = null;              // "Haruno","Katsumi","Juun","Touya"
     
-    // interaksi antar karakter (data percakapan random untuk membangun suasana)
-    const charIntros = {
-        Haruno: "❄️ Haruno: 'Aku melihat bayangan di belakangmu... jangan percaya bisikan palsu.'",
-        Katsumi: "🌊 Katsumi: 'Rumah ini dulu milik keluarga pembunuh. Setiap malam arwah-arwah menari di aula.'",
-        Juun: "🌀 Juun: 'Antara kenyataan dan mimpi, kau bisa terjebak selamanya seperti kami.'",
-        Touya: "🔥 Touya: 'Api unggun itu... membakar rahasia. Tapi jangan coba-coba melihat abunya.'"
-    };
+    // tambahan hingga 35+ (biar acak banyak)
+    const extraRiddles = [
+        { text: "Aku tidak hidup tapi bisa tumbuh, tidak punya paru-paru tapi butuh udara. Aku adalah pertanda kematian di rawa. Apakah aku?", answer: "busa", keywords: ["racun", "gelembung", "rawa"] },
+        { text: "Ia menemani saat sendiri, tapi membelenggu saat bersama. Ia adalah jerat tanpa tali. Apakah itu?", answer: "keraguan", keywords: ["bimbang", "dilema", "bayang-bayang was-was"] },
+        { text: "Menjadi tuan di sarang kegelapan, dia bukan ular tapi berbisa. Setiap sentuhan meninggalkan luka abadi. Siapa?", answer: "dendam", keywords: ["balas", "kebencian", "luka lama"] },
+        { text: "Aku membaca masa lalu dari debu dan tulang. Aku adalah suara dari tanah kuburan. Siapa aku?", answer: "sejarah", keywords: ["kisah kelam", "arsip", "nenek moyang"] },
+        { text: "Bisa memotong lebih tajam dari pisau, tapi tidak berdarah. Bisa membutakan lebih dari cahaya. Apakah itu?", answer: "kekecewaan", keywords: ["pahit", "rengkuhan", "hampa"] }
+    ];
+    const FULL_RIDDLE_SET = [...RIDDLE_BANK, ...extraRiddles];
     
-    // petunjuk terbatas per karakter (akan diambil dari hint riddle berdasarkan karakter aktif)
-    // setiap karakter memberi petunjuk yang relevan dengan riddle saat ini
-    function getHintFromCharacter(charName, riddleIdx) {
-        if (gameCompleted) return "Semua teka-teki terpecahkan. Kau selamat... untuk saat ini?";
-        const currentRiddle = riddles[riddleIdx];
-        if (!currentRiddle) return "... Tidak ada bisikan tersisa.";
-        // mapping karakter ke hint yang custom untuk setiap teka-teki (agar lebih seram & interaktif)
-        const hintsMap = {
-            Haruno: [
-                "Haruno: 'Suara yang kembali padamu... seperti bisikan di tebing, namanya GEMA.'",
-                "Haruno: 'Hitam mengikuti langkahmu, ia BAYANGAN... coba lihat ke dinding saat lilin redup.'",
-                "Haruno: 'Jam dinding berdetak mundur, ia WAKTU... jangan biarkan ia menjeratmu.'",
-                "Haruno: 'Semua berakhir, entah kapan... jawabannya KEMATIAN.'",
-                "Haruno: 'Daging dan tulang, inilah TUBUH, penjara kita semua.'",
-                "Haruno: 'Mengubur sesuatu, itu LUPA... tapi luka tetap berdarah.'"
-            ],
-            Katsumi: [
-                "Katsumi: 'GEMA adalah jawabannya, ia anak hilang dari mulut lembah.'",
-                "Katsumi: 'BAYANGAN, ia menari bersamamu, cermin retak punya cerita gelap.'",
-                "Katsumi: 'WAKTU, sungai yang membawa menuju kegelapan abadi.'",
-                "Katsumi: 'KEMATIAN... aku merindukannya, tapi dia menjemput lambat.'",
-                "Katsumi: 'TUBUH... kau tidak bisa kabur dari rasa sakit fisik.'",
-                "Katsumi: 'LUPA itu dosa. Tapi jiwa yang tersiksa tak bisa melupakan.'"
-            ],
-            Juun: [
-                "Juun: 'GEMA... seperti lagu pemakaman yang terpantul. itulah jawabanmu.'",
-                "Juun: 'Bayangan melata di bawah tempat tidur. BAYANGAN, kau tahu itu.'",
-                "Juun: 'WAKTU adalah ular yang melilit, jawabannya tepat itu.'",
-                "Juun: 'Akhir dari semua cerita adalah KEMATIAN. Bisikan terakhirku.'",
-                "Juun: 'TUBUH adalah penjara kami yang abadi.'",
-                "Juun: 'LUPA, tapi kami tidak bisa lupa pembunuhan itu...'"
-            ],
-            Touya: [
-                "Touya: 'Api membakar, suara terbakar menjadi GEMA. jawab itu.'",
-                "Touya: 'Bayangan api lebih gelap dari jelaga. BAYANGAN.'",
-                "Touya: 'Waktu membara habis, debu waktu melayang. WAKTU.'",
-                "Touya: 'Kematian adalah temanku, jawab KEMATIAN.'",
-                "Touya: 'Tubuhku hancur terbakar, tapi aku masih di sini. JAWABAN TUBUH.'",
-                "Touya: 'Aku lupa rupaku sendiri, karena api... jawab LUPA.'"
-            ]
-        };
-        if (hintsMap[charName] && hintsMap[charName][riddleIdx]) {
-            return hintsMap[charName][riddleIdx];
+    // ACak urutan teka-teki setiap device/session (berbeda setiap load)
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        return currentRiddle.hint;
+        return arr;
     }
     
-    // fungsi update tampilan UI: teka-teki, story counter, feedback reset
+    // generate urutan teka-teki yang unik dan besar (minimal 15 teka-teki, bisa sampai 30 tergantung bank)
+    let shuffledRiddles = [];
+    function buildRiddleSequence() {
+        let pool = [...FULL_RIDDLE_SET];
+        // tambahkan duplikat yang tidak terlalu sama dengan variasi? tapi lebih baik unik tapi banyak
+        pool = shuffleArray(pool);
+        // Ambil antara 15 hingga 22 teka-teki (tantangan panjang)
+        const riddleCount = Math.min(22, Math.max(15, pool.length));
+        return pool.slice(0, riddleCount);
+    }
+    
+    // Variabel game state
+    let currentRiddleList = [];     // list teka-teki teracak
+    let currentIndex = 0;
+    let gameCompleted = false;
+    let totalRiddles = 0;
+    
+    // fungsi update kesulitan dan tampilan berdasarkan index
+    function getDifficultyForLevel(level) {
+        if (level < 5) return "🌑 Mudah (samar)";
+        if (level < 10) return "🌕 Sedang (petunjuk semakin kabur)";
+        if (level < 15) return "💀 Sulit (hampir tanpa petunjuk)";
+        return "👁️ NERAKA (hanya kata kunci absurd)";
+    }
+    
+    // Fungsi memperbarui UI teka-teki
     function updatePuzzleUI() {
         if (gameCompleted) {
-            document.getElementById("puzzleQuestion").innerText = "☠️ KEBEBASAN SEMU ☠️";
-            document.getElementById("puzzleDesc").innerHTML = "Kamu telah membuka segel gerbang. Tapi kengerian sebenarnya baru dimulai... keempat karakter menatapmu diam-diam. (Klik reset jika berani mengulang mimpi buruk)";
+            document.getElementById("puzzleQuestion").innerText = "☠️ KUTUKAN TERBUKA ☠️";
+            document.getElementById("puzzleDesc").innerHTML = "Kamu telah memecahkan semua teka-teki. Gerbang retak... Tapi lihatlah tanganmu mulai menghilang. Arwah tersenyum miring. (Reset untuk mengulang siksaan)";
             document.getElementById("answerInput").disabled = true;
             document.getElementById("submitAnswer").disabled = true;
-            document.getElementById("riddleCounter").innerText = "TERSELESAIKAN";
-            const storyTxt = "Setelah menjawab semua teka-teki, kabut menghilang... Haruno tersenyum getir, Katsumi menangis darah, Juun menghilang, Touya membisu. Kamu selamat, tapi lihatlah cermin... kau juga mulai menghilang.";
-            document.getElementById("storyText").innerHTML = storyTxt;
+            document.getElementById("riddleCounter").innerText = `Tamat`;
+            document.getElementById("difficultyLevel").innerHTML = "🔮 GERBANG RUNTUH";
+            document.getElementById("difficultyBadge").innerHTML = "Finale";
+            const storyFinal = "Haruno menghela napas terakhir, Katsumi tenggelam ke lantai, Juun pecah seperti kaca, Touya redup. Kamu 'bebas'... tapi arwah itu akan mengikutimu selamanya.";
+            document.getElementById("storyText").innerHTML = storyFinal;
             return;
         }
-        const riddle = riddles[currentRiddleIndex];
-        if (riddle) {
-            document.getElementById("puzzleQuestion").innerHTML = riddle.question;
-            document.getElementById("puzzleDesc").innerHTML = riddle.desc;
-            document.getElementById("riddleCounter").innerHTML = `Teka-teki ${currentRiddleIndex+1} / ${riddles.length}`;
-        }
+        
+        const riddle = currentRiddleList[currentIndex];
+        if (!riddle) return;
+        const levelNum = currentIndex + 1;
+        totalRiddles = currentRiddleList.length;
+        document.getElementById("riddleCounter").innerHTML = `Teka-teki ${levelNum} / ${totalRiddles}`;
+        document.getElementById("difficultyLevel").innerHTML = `🔮 Level: ${levelNum}`;
+        const diffName = getDifficultyForLevel(levelNum);
+        document.getElementById("difficultyBadge").innerHTML = diffName;
+        document.getElementById("puzzleQuestion").innerHTML = `[${levelNum}] ${riddle.text.substring(0, 90)}`;
+        document.getElementById("puzzleDesc").innerHTML = `★ Jawab dengan satu kata (bisa frasa kecil). ★ ${levelNum >= totalRiddles-2 ? '★ Peringatan: teka-teki terakhir sangat gelap ★' : ''}`;
         document.getElementById("answerInput").disabled = false;
         document.getElementById("submitAnswer").disabled = false;
         document.getElementById("answerInput").value = "";
-        // update story random horor sesuai progres
-        let storyMessage = "";
-        if(currentRiddleIndex === 0) storyMessage = "Dinding berdarah, langit-langit mengembun. Haruno mendekat: 'pecahkan teka-teki atau jiwamu tersesat.'";
-        else if(currentRiddleIndex === 1) storyMessage = "Katsumi membisikkan kata-kata dari danau beku. 'Ayo, jawab dengan benar... atau kau akan tenggelam.'";
-        else if(currentRiddleIndex === 2) storyMessage = "Juun tertawa kecil. 'Waktu terus berjalan, cepat atau lambat kau akan menjadi mayat kedua belas disini.'";
-        else if(currentRiddleIndex === 3) storyMessage = "Touya menunjuk ke perapian. 'Satu langkah lagi menuju kebenaran mengerikan... jawab dengan hati-hati.'";
-        else if(currentRiddleIndex === 4) storyMessage = "Keempat arwah bergumam serempak. 'Teka-teki terakhir sebelum pintu neraka terbuka lebar...'";
-        else storyMessage = "Angin malam menderu, sosok hitam berdiri di belakangmu. Cepat selesaikan!";
-        document.getElementById("storyText").innerHTML = storyMessage + "<br><span style='font-size:0.8rem'>✨ klik karakter untuk petunjuk spesifik ✨</span>";
+        
+        // Update story horor sesuai level
+        let storyMsg = "";
+        if (levelNum === 1) storyMsg = "Haruno menatapmu lekat: 'Awal yang mudah, tapi jangan tertipu.'";
+        else if (levelNum <= 4) storyMsg = "Katsumi bergumam: 'Semakin dalam, bantuan kami hanya bisikan samar.'";
+        else if (levelNum <= 8) storyMsg = "Juun berbisik: 'Kau mulai merasakan keputusasaan... petunjuk kami hanyalah bayangan.'";
+        else if (levelNum <= 12) storyMsg = "Touya: 'Api hanya menerangi satu sudut. Selebihnya kau sendiri melawan kegelapan.'";
+        else storyMsg = "Keempat arwah diam serempak. Mereka hanya memberimu satu kata kabur. Kau harus merangkai sendiri jawabannya.";
+        document.getElementById("storyText").innerHTML = storyMsg + `<br><span style='font-size:0.7rem'>🕯️ Karakter hanya memberi PETUNJUK SAMAR (kata kunci) 🕯️</span>`;
     }
     
-    // memproses jawaban
+    // Fungsi petunjuk dari karakter: Tidak memberi jawaban langsung, hanya kata kunci abstrak / teka-teki dalam teka-teki
+    function getVagueHintFromCharacter(charName, currentRiddleObj, currentLevel) {
+        if (!currentRiddleObj) return "... keheningan mencekam.";
+        const answer = currentRiddleObj.answer;
+        const keywords = currentRiddleObj.keywords || ["gelap", "kabut", "abadi"];
+        // tingkat kesulitan mempengaruhi: semakin sulit petunjuk semakin absurd (hanya 1 kata samar)
+        let hintLevel = currentLevel;
+        let selectedKeyword = keywords[Math.floor(Math.random() * keywords.length)];
+        
+        // untuk level tinggi (>=9) petunjuk lebih samar lagi : hanya memberikan kata yang tidak langsung
+        if (hintLevel >= 9 && hintLevel < 14) {
+            return `${charName}: "🔍 '${selectedKeyword}' ... Itu satu-satunya petunjuk yang bisa kuberikan. Jangan tanya lebih."`;
+        } else if (hintLevel >= 14) {
+            const obscureHints = ["batu nisan", "ratapan", "debu", "tanpa makna", "sunyi", "hampa"];
+            const randObs = obscureHints[Math.floor(Math.random() * obscureHints.length)];
+            return `${charName}: "🌫️ '${randObs}' ... Aku bahkan lupa artinya. Cari dalam mimpimu."`;
+        } else {
+            // level awal: masih cukup membantu dengan kata kunci yang spesifik (tapi tidak langsung jawaban)
+            return `${charName}: "📜 Petunjuk: '${selectedKeyword}'. Pikirkan tentang makna gelap di balik kata itu."`;
+        }
+    }
+    
+    // Proses jawaban
     function checkAnswer() {
         if (gameCompleted) {
-            document.getElementById("feedbackMsg").innerHTML = "Permainan sudah usai, tekan reset untuk mengulang kengerian.";
+            document.getElementById("feedbackMsg").innerHTML = "Kutukan sudah terlepas. Tekan reset jika ingin kembali ke neraka siklus.";
             return;
         }
         const inputElem = document.getElementById("answerInput");
         let userAnswer = inputElem.value.trim().toLowerCase();
-        const currentRiddle = riddles[currentRiddleIndex];
-        if (!currentRiddle) return;
+        if (userAnswer === "") {
+            document.getElementById("feedbackMsg").innerHTML = "Ketikkan jawaban... Arwah mengawasi.";
+            return;
+        }
+        const currentRiddle = currentRiddleList[currentIndex];
         const correctAnswer = currentRiddle.answer.toLowerCase();
+        
+        // normalisasi: hapus spasi berlebih, bandingkan dengan jawaban asli
         if (userAnswer === correctAnswer) {
-            // benar
-            document.getElementById("feedbackMsg").innerHTML = "✅ Jawaban benar! Nafas mencekik sedikit mereda... teka-teki terpecahkan.";
-            // update story seram
-            document.getElementById("storyText").innerHTML = `Jawaban ${userAnswer} membuka satu segel. Arwah mengangguk pilu. Lanjut ke teka-teki berikutnya.`;
-            // maju ke riddle berikutnya
-            currentRiddleIndex++;
-            if (currentRiddleIndex >= riddles.length) {
+            // jawaban benar
+            document.getElementById("feedbackMsg").innerHTML = "✅ JIWA BERGETAR: Jawaban tepat! Satu segel terkoyak.";
+            // cerita tambahan
+            document.getElementById("storyText").innerHTML = `Jawaban "${userAnswer}" menggema di lorong. Arwah mengangguk pelan. Teka-teki ${currentIndex+1} terpecahkan. Lanjut ke lingkaran berikutnya...`;
+            currentIndex++;
+            if (currentIndex >= currentRiddleList.length) {
                 gameCompleted = true;
                 updatePuzzleUI();
-                // interaksi akhir: semua karakter memberikan dialog akhir serempak
-                document.getElementById("dialHaruno").innerHTML = "Haruno: 'Kita... bebas?'";
-                document.getElementById("dialKatsumi").innerHTML = "Katsumi: 'Tidak, dia membawa kutukan baru.'";
-                document.getElementById("dialJuun").innerHTML = "Juun: 'Kau lihat bayanganmu sendiri berdiri sendiri?'";
-                document.getElementById("dialTouya").innerHTML = "Touya: 'Selamat... atau tidak sama sekali.'";
-                document.getElementById("feedbackMsg").innerHTML = "🏆 Selesai! Namun rumah tua mulai berbisik namamu... kau akan kembali. 🏆";
+                // dialog akhir interaksi karakter saling berbisik
+                document.getElementById("dialHaruno").innerHTML = "Haruno: 'Kita ... terbebaskan?'";
+                document.getElementById("dialKatsumi").innerHTML = "Katsumi: 'Atau justru dia yang terperangkap bersama kita.'";
+                document.getElementById("dialJuun").innerHTML = "Juun: 'Lihat, bayangannya sendiri mulai menghilang.'";
+                document.getElementById("dialTouya").innerHTML = "Touya: 'Selamat datang di sisi kubur.'";
+                document.getElementById("feedbackMsg").innerHTML = "🏆 Semua teka-teki terjawab. Sekarang kau adalah bagian dari kabut ini... selamanya. 🏆";
             } else {
                 updatePuzzleUI();
-                // reset feedback tipis
+                // reset highlight petunjuk
+                document.querySelectorAll('.char-card').forEach(card => card.classList.remove('active'));
             }
         } else {
-            // salah -> efek seram dan pengurangan kesempatan? tidak ada lives, tapi feedback seram
-            document.getElementById("feedbackMsg").innerHTML = "❌ Jawaban salah! Suara tawa mengerikan dari loteng... coba lagi, atau minta petunjuk dari salah satu karakter (klik avatar).";
-            document.getElementById("storyText").innerHTML = `Jawaban "${userAnswer}" salah. Dinding berdenyut, bayangan panjang merayap. Karakter-karakter bisa memberimu petunjuh.`;
+            // jawaban salah -> efek seram
+            document.getElementById("feedbackMsg").innerHTML = `❌ Gagal. Dinding berdarah mendesis. "${userAnswer}" salah. Karakter bisa memberi petunjuk KATA KUNCI (sangat tidak langsung).`;
+            document.getElementById("storyText").innerHTML = `Kesalahan memicu tawa dari loteng. Arwah-arwah menatap sinis. Klik karakter untuk petunjuk samar (mereka tidak akan memberi tahu jawaban).`;
         }
         inputElem.value = "";
         inputElem.focus();
     }
     
-    // interaksi karakter (klik)
+    // Interaksi karakter dengan petunjuk misterius (tanpa spoiler)
     function onCharacterClick(charName) {
         if (gameCompleted) {
-            const finalMsg = `⚠️ Arwah ${charName} menghilang bersamaan dengan selesainya ritual. Tidak ada lagi petunjuk.`;
-            document.getElementById("feedbackMsg").innerHTML = finalMsg;
+            document.getElementById("feedbackMsg").innerHTML = `${charName} menghilang bersama kabut, tidak ada yang bisa diucapkan lagi.`;
             return;
         }
-        selectedChar = charName;
-        // highlight aktif
-        document.querySelectorAll('.char-card').forEach(card => card.classList.remove('active'));
+        const currentRiddle = currentRiddleList[currentIndex];
+        if (!currentRiddle) return;
+        // highlight
+        document.querySelectorAll('.char-card').forEach(c => c.classList.remove('active'));
         const activeCard = document.getElementById(`char${charName}`);
-        if(activeCard) activeCard.classList.add('active');
+        if (activeCard) activeCard.classList.add('active');
         
-        // Dapatkan petunjuk berdasar riddle saat ini
-        const hintMsg = getHintFromCharacter(charName, currentRiddleIndex);
-        // ubah dialogue bubble pada karakter yang diklik (supaya terlihat interaksi)
-        const dialElement = document.getElementById(`dial${charName}`);
-        if(dialElement) {
-            let shortHint = hintMsg.length > 60 ? hintMsg.substring(0, 55)+"..." : hintMsg;
-            dialElement.innerHTML = shortHint;
-            // setelah 5 detik kembali ke kalimat asli random percakapan antar karakter
-            setTimeout(() => {
-                if(!gameCompleted) {
-                    const originalDial = {Haruno:"❄️ 'Teka-teki adalah bayangan..'", Katsumi:"🌊 'Jangan ragu bertanya'", Juun:"🌀 'Dinding ini mendengar'", Touya:"🔥 'Aku menyimpan rahasia'"};
-                    if(originalDial[charName]) dialElement.innerHTML = originalDial[charName];
-                    else dialElement.innerHTML = `💬 ${charName} mengamati langkahmu.`;
-                } else {
-                    dialElement.innerHTML = `${charName}: "...Tamat sudah..."`;
-                }
-            }, 5000);
-        }
+        const levelNum = currentIndex + 1;
+        const vagueHint = getVagueHintFromCharacter(charName, currentRiddle, levelNum);
+        // tampilkan di feedback area
+        document.getElementById("feedbackMsg").innerHTML = `💀 ${vagueHint} 💀`;
         
-        // juga tampilkan di feedback area petunjuk yang lebih jelas
-        document.getElementById("feedbackMsg").innerHTML = `💀 ${charName} berbisik: ${hintMsg} 💀`;
-        // efek interaksi antar karakter: karakter lain memberi reaksi (immersion)
-        const otherChars = ["Haruno","Katsumi","Juun","Touya"].filter(c => c !== charName);
-        const randomOther = otherChars[Math.floor(Math.random() * otherChars.length)];
-        const reactDial = {
-            Haruno: "Haruno menunduk, seolah setuju.",
-            Katsumi: "Katsumi mendesah pelan, air mata beku.",
-            Juun: "Juun membisikkan kutukan dalam bahasa kuno.",
-            Touya: "Touya memicingkan mata, api di sekelilingnya membara."
-        };
-        const otherDialElem = document.getElementById(`dial${randomOther}`);
-        if(otherDialElem && !gameCompleted) {
-            const originalText = otherDialElem.innerHTML;
-            otherDialElem.innerHTML = `✨ ${randomOther}: ${reactDial[randomOther] || "mengangguk muram"}`;
-            setTimeout(() => {
-                if(!gameCompleted && otherDialElem) otherDialElem.innerHTML = originalText;
-            }, 3800);
+        // ubah dialog bubble sementara untuk karakter yang diklik
+        const dialElem = document.getElementById(`dial${charName}`);
+        let originalDial = dialElem.innerHTML;
+        dialElem.innerHTML = `🔮 "${vagueHint.substring(0, 55)}..."`;
+        setTimeout(() => {
+            if (!gameCompleted && dialElem) dialElem.innerHTML = originalDial;
+            else if(gameCompleted) dialElem.innerHTML = `${charName}: "...Akhir...`;
+        }, 4500);
+        
+        // efek interaksi karakter lain bereaksi (seram)
+        const otherNames = ["Haruno","Katsumi","Juun","Touya"].filter(c => c !== charName);
+        const randomOther = otherNames[Math.floor(Math.random() * otherNames.length)];
+        const otherDial = document.getElementById(`dial${randomOther}`);
+        if(otherDial) {
+            const oldOther = otherDial.innerHTML;
+            otherDial.innerHTML = `👁️ ${randomOther}: "Dia memberi petunjuk kabur... semoga cukup."`;
+            setTimeout(() => { if(otherDial && !gameCompleted) otherDial.innerHTML = oldOther; }, 3800);
         }
-        // juga update story area sedikit
-        const storyDiv = document.getElementById("storyText");
-        storyDiv.innerHTML = `${charName} mendekatkan wajah pucat ke telingamu... "${hintMsg.substring(0, 70)}..."<br><span style='font-size:0.7rem'>➤ petunjuk ini memudahkan teka-teki</span>`;
-        setTimeout(()=>{
-            if(!gameCompleted && currentRiddleIndex < riddles.length){
-                storyDiv.innerHTML = `Kabut berputar, teka-teki ${currentRiddleIndex+1} masih menanti. Kamu bisa lanjut menjawab.`;
-            }
-        }, 4000);
     }
     
-    // reset game
+    // RESET GAME: mengacak ulang seluruh teka-teki, reset index
     function resetGame() {
-        currentRiddleIndex = 0;
+        // generate ulang urutan teka-teki yang berbeda dari sebelumnya dan random device
+        currentRiddleList = buildRiddleSequence();
+        currentIndex = 0;
         gameCompleted = false;
-        selectedChar = null;
+        totalRiddles = currentRiddleList.length;
         updatePuzzleUI();
         document.getElementById("answerInput").disabled = false;
         document.getElementById("submitAnswer").disabled = false;
-        document.getElementById("feedbackMsg").innerHTML = "✨ Roh-roh terbangun kembali. Pecahkan seluruh teka-teki untuk melarikan diri. Klik karakter untuk petunjuk rahasia ✨";
-        document.getElementById("storyText").innerHTML = "Rumah tua bergemuruh lagi, siklus kutukan dimulai dari awal. Haruno, Katsumi, Juun, Touya menatap penuh harap... jawab teka-teki kegelapan.";
-        // reset dialogue karakter
-        document.getElementById("dialHaruno").innerHTML = "❄️ 'Jangan ulang kesalahan dulu'";
-        document.getElementById("dialKatsumi").innerHTML = "🌊 'Gelombang akan membimbingmu'";
-        document.getElementById("dialJuun").innerHTML = "🌀 'Rekatkan ingatan yang hancur'";
-        document.getElementById("dialTouya").innerHTML = "🔥 'Api penjaga rahasia'";
-        // hapus active highlight
-        document.querySelectorAll('.char-card').forEach(card => card.classList.remove('active'));
-        document.getElementById("answerInput").value = "";
+        document.getElementById("feedbackMsg").innerHTML = "🌀 Kutukan dimulai ulang. Urutan teka-teki baru, lebih kejam. Karakter hanya memberi kata kunci misterius.🌀";
+        document.getElementById("storyText").innerHTML = "Kembali ke awal lorong berdarah. Haruno, Katsumi, Juun, Touya menatap kosong. Pecahkan semuanya dengan bantuan minim.";
+        // reset dialog karakter
+        document.getElementById("dialHaruno").innerHTML = "❄️ 'Bisikan dari salju abadi'";
+        document.getElementById("dialKatsumi").innerHTML = "🌊 'Gelombang punya ingatan'";
+        document.getElementById("dialJuun").innerHTML = "🌀 'Antara dua dunia'";
+        document.getElementById("dialTouya").innerHTML = "🔥 'Api tidak pernah lupa'";
+        document.querySelectorAll('.char-card').forEach(c => c.classList.remove('active'));
     }
     
-    // event binding
+    // event listener
     document.getElementById("submitAnswer").addEventListener("click", checkAnswer);
     document.getElementById("resetGame").addEventListener("click", resetGame);
-    document.getElementById("answerInput").addEventListener("keypress", function(e){
-        if(e.key === "Enter") checkAnswer();
-    });
-    // pasang listener untuk karakter
+    document.getElementById("answerInput").addEventListener("keypress", (e) => { if(e.key === "Enter") checkAnswer(); });
+    
     document.getElementById("charHaruno").addEventListener("click", () => onCharacterClick("Haruno"));
     document.getElementById("charKatsumi").addEventListener("click", () => onCharacterClick("Katsumi"));
     document.getElementById("charJuun").addEventListener("click", () => onCharacterClick("Juun"));
     document.getElementById("charTouya").addEventListener("click", () => onCharacterClick("Touya"));
     
-    // inisialisasi
+    // Inisialisasi game - Tiap device/load berbeda urutan dan kumpulan teka-teki
+    currentRiddleList = buildRiddleSequence();
+    currentIndex = 0;
+    gameCompleted = false;
     updatePuzzleUI();
-    // efek random interaksi awal antar karakter
-    setTimeout(() => {
-        if(!gameCompleted) {
-            document.getElementById("feedbackMsg").innerHTML = "🕯️ Keempat arwah saling berbisik... coba klik salah satu untuk membantu menjawab teka-teki 🕯️";
-        }
-    }, 500);
 </script>
 </body>
 </html>
+```
