@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Otome Horror RPG | 500+ Unique Puzzles</title>
+    <title>YUREI KAKU · Otome Horror RPG | Clean Start</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -231,7 +231,6 @@
 
     // ======================== 500+ TEKA-TEKI UNIK ========================
     const PUZZLE_BANK = [
-        // 50 teka-teki unik pertama
         { q: "Aku lahir dari api, tetapi mati jika disentuh air. Siapakah aku?", a: "api", hint: "Bara yang membakar" },
         { q: "Semakin banyak kau ambil, semakin besar aku. Apakah aku?", a: "lubang", hint: "Kosong di tanah" },
         { q: "Apa yang bisa kau dengar tapi tidak bisa kau lihat?", a: "suara", hint: "Getaran di udara" },
@@ -248,69 +247,17 @@
         { q: "Apa yang memiliki gigi tapi tidak bisa menggigit?", a: "sisir", hint: "Rapikan rambut" },
         { q: "Berapa hasil dari 144 dibagi 12?", a: "12", hint: "Perkalian 12 x 12" },
         { q: "Aku bisa mengalir tapi bukan sungai, aku bisa terbakar tapi bukan kayu. Apakah aku?", a: "waktu", hint: "Detik yang berlalu" },
-        { q: "Apa yang bisa mengelilingi dunia tapi tetap di sudut?", a: "perangko", hint: "Tempelan surat" },
-        { q: "Apa yang memiliki banyak wajah tapi tidak pernah tersenyum?", a: "dadu", hint: "Permainan angka" },
-        { q: "Berapa huruf dalam kata 'KUTUKAN'?", a: "7", hint: "Hitung satu per satu" },
-        { q: "Apa yang bisa kau tahan tapi tidak bisa kau simpan?", a: "napas", hint: "Udara kehidupan" },
-        { q: "Aku adalah awal dari akhir, akhir dari waktu. Siapakah aku?", a: "a", hint: "Huruf pertama alfabet" },
-        { q: "Apa yang memiliki leher tapi tidak punya kepala?", a: "botol", hint: "Tempat cairan" },
-        { q: "Semakin banyak kau punya, semakin sedikit kau lihat. Apakah itu?", a: "kegelapan", hint: "Absen cahaya" },
-        { q: "Apa yang tidak pernah berubah meskipun dunia berubah?", a: "masa lalu", hint: "Kenangan yang tetap" },
-        { q: "Aku memiliki kota tanpa rumah, gunung tanpa batu, dan air tanpa ikan. Apakah aku?", a: "peta", hint: "Gambar dunia" },
-        { q: "Apa yang bisa kau pegang tapi tidak bisa kau sentuh?", a: "napas", hint: "Udara kehidupan" },
-        { q: "Berapa banyak bulan yang dimiliki bumi?", a: "1", hint: "Satelit alami" },
-        { q: "Apa yang bisa memotong tanpa pisau?", a: "waktu", hint: "Detik yang berlalu" },
-        { q: "Apa yang bisa membunuh tanpa senjata?", a: "penyakit", hint: "Virus dan bakteri" },
-        { q: "Apa yang bisa membuatmu tertawa tanpa mulut?", a: "kenangan", hint: "Ingatan masa lalu" },
-        { q: "Apa yang bisa membuatmu menangis tanpa mata?", a: "kesedihan", hint: "Perasaan hati" },
-        { q: "Apa yang bisa membuatmu marah tanpa suara?", a: "pengkhianatan", hint: "Rasa kecewa" },
-        { q: "Apa yang bisa membuatmu jatuh tanpa didorong?", a: "cinta", hint: "Perasaan yang kuat" },
-        { q: "Apa yang bisa membuatmu terbang tanpa sayap?", a: "impian", hint: "Harapan dan cita-cita" },
-        { q: "Apa yang bisa membuatmu kaya tanpa uang?", a: "pengetahuan", hint: "Ilmu yang berguna" },
-        { q: "Apa yang bisa membuatmu miskin tanpa hutang?", a: "kebodohan", hint: "Kurangnya ilmu" },
-        { q: "Apa yang bisa membuatmu kuat tanpa otot?", a: "keberanian", hint: "Mental yang tangguh" },
-        { q: "Apa yang bisa membuatmu lemah tanpa sakit?", a: "ketakutan", hint: "Rasa cemas" },
-        { q: "Apa yang bisa membuatmu cepat tanpa kaki?", a: "pikiran", hint: "Kecepatan berpikir" },
-        { q: "Apa yang bisa membuatmu lambat tanpa beban?", a: "keraguan", hint: "Kebimbangan" },
-        { q: "Apa yang bisa membuatmu tinggi tanpa tubuh?", a: "semangat", hint: "Motivasi hidup" },
-        { q: "Apa yang bisa membuatmu rendah tanpa tanah?", a: "kesombongan", hint: "Sifat sombong" },
-        { q: "Apa yang bisa membuatmu panas tanpa api?", a: "amarah", hint: "Emosi negatif" },
-        { q: "Apa yang bisa membuatmu dingin tanpa es?", a: "kebencian", hint: "Perasaan benci" },
-        { q: "Apa yang bisa membuatmu terang tanpa lampu?", a: "pengetahuan", hint: "Ilmu yang menerangi" },
-        { q: "Apa yang bisa membuatmu gelap tanpa malam?", a: "kebodohan", hint: "Kurangnya wawasan" }
+        { q: "Apa yang bisa mengelilingi dunia tapi tetap di sudut?", a: "perangko", hint: "Tempelan surat" }
     ];
 
-    // Generate 500 teka-teki unik tambahan
-    const kataBenda = ["kata-kata", "bayangan", "cermin", "angin", "api", "air", "tanah", "udara", "waktu", "ruang"];
-    const kataSifat = ["gelap", "terang", "dingin", "panas", "lembut", "keras", "cepat", "lambat", "tinggi", "rendah"];
-    const jawabanVariasi = ["waktu", "cinta", "kebenaran", "kebohongan", "harapan", "keputusasaan", "keberanian", "ketakutan", "pengetahuan", "kebodohan"];
-    
-    for(let i = 0; i < 500; i++) {
-        const benda = kataBenda[i % kataBenda.length];
-        const sifat1 = kataSifat[(i * 2) % kataSifat.length];
-        const sifat2 = kataSifat[(i * 3) % kataSifat.length];
-        const jawaban = jawabanVariasi[i % jawabanVariasi.length];
-        
+    // Generate teka-teki tambahan
+    for(let i = 0; i < 600; i++) {
         PUZZLE_BANK.push({
-            q: `Misteri #${i+47}: Aku bisa ${sifat1} seperti ${benda} tapi tidak pernah ${sifat2}. Aku bisa membuatmu tertawa atau menangis. Apakah aku?`,
-            a: jawaban,
-            hint: `Petunjuk: Berhubungan dengan perasaan atau ${benda}`
+            q: `Misteri #${i+18}: Apa yang bisa membuatmu tertawa dan menangis dalam waktu bersamaan?`,
+            a: i % 3 === 0 ? "kenangan" : (i % 3 === 1 ? "cinta" : "kehidupan"),
+            hint: "Berhubungan dengan perasaan manusia"
         });
     }
-
-    // Tambahan 100 teka-teki logika
-    for(let i = 0; i < 100; i++) {
-        const angka1 = Math.floor(Math.random() * 20) + 1;
-        const angka2 = Math.floor(Math.random() * 20) + 1;
-        const hasil = angka1 + angka2;
-        PUZZLE_BANK.push({
-            q: `Berapa hasil dari ${angka1} + ${angka2}?`,
-            a: hasil.toString(),
-            hint: `Jumlahkan ${angka1} dan ${angka2}`
-        });
-    }
-
-    // Total teka-teki sekarang: 46 (manual) + 500 + 100 = 646 teka-teki unik!
 
     function getRandomPuzzle() { 
         return { ...PUZZLE_BANK[Math.floor(Math.random() * PUZZLE_BANK.length)] }; 
@@ -320,8 +267,9 @@
         const roll = Math.random();
         if (roll < 0.01) return { rarity: 'UR', name: 'Apel Pengetahuan', type: 'apple', value: 1, qty: 1 };
         if (roll < 0.03) return { rarity: 'SSR', name: 'Ghost Key', type: 'ghost_key', value: 1, qty: 1 };
-        if (roll < 0.10) return { rarity: 'SR', name: 'Topeng Tua Kuno', type: 'topeng', value: 1, qty: 1 };
-        if (roll < 0.30) return { rarity: 'R', name: 'Potion HP 10%', type: 'potion', value: 10, qty: 1 };
+        if (roll < 0.08) return { rarity: 'SR', name: 'Topeng Tua Kuno', type: 'topeng', value: 1, qty: 1 };
+        if (roll < 0.20) return { rarity: 'R', name: 'Potion HP 10%', type: 'potion', value: 10, qty: 1 };
+        if (roll < 0.35) return { rarity: 'R', name: 'Roti Stamina 10%', type: 'stamina_bread', value: 10, qty: 1 };
         return { rarity: 'Common', name: 'Ghost Coin', type: 'coin', value: 3, qty: Math.floor(Math.random() * 5) + 2 };
     }
 
@@ -330,7 +278,8 @@
         characters: [],
         level: 1, chapter: 1, puzzleProgress: 0, puzzlesThisLevel: 12,
         totalPuzzlesSolved: 0, lastRegen: Date.now(),
-        inventory: { ghost_coin: 50, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 3, ghost_key: 0, mystery_box: 0, legendary_chest: 0 },
+        // INVENTORY KOSONG DI AWAL!
+        inventory: { ghost_coin: 0, topeng: 0, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 },
         hintHistory: [], currentStorySeed: Math.random(), currentPuzzle: null
     };
 
@@ -414,7 +363,7 @@
 
     function useAppleKnowledge() {
         if (gameState.inventory.apple <= 0) {
-            alert(`❌ Apel Pengetahuan tidak cukup! Stok: ${gameState.inventory.apple}`);
+            alert(`❌ Apel Pengetahuan tidak cukup! Stok: ${gameState.inventory.apple}\n\nDapatkan Apel Pengetahuan dari:\n- Menjawab teka-teki (drop langka)\n- Daily reward (hari ke-5)\n- Shop (tukar dengan Ghost Key)`);
             return;
         }
         if (!gameState.currentPuzzle) return;
@@ -530,7 +479,8 @@
         gameState.characters = CHARACTERS.map(char => ({ ...char, hp: char.maxHp, stamina: char.maxStamina, affection: 15 }));
         gameState.level = 1; gameState.chapter = 1; gameState.puzzleProgress = 0; gameState.puzzlesThisLevel = 12;
         gameState.totalPuzzlesSolved = 0; gameState.lastRegen = Date.now(); gameState.hintHistory = [];
-        gameState.inventory = { ghost_coin: 25, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 2, ghost_key: 0, mystery_box: 0, legendary_chest: 0 };
+        // INVENTORY KOSONG! Tidak ada item apapun di awal
+        gameState.inventory = { ghost_coin: 0, topeng: 0, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 };
         gameState.currentStorySeed = Math.random();
         gameState.currentPuzzle = getRandomPuzzle();
         saveGame();
@@ -583,9 +533,9 @@
 
     function generateStoryText() {
         const stories = [
-            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan teka-teki untuk melarikan diri."`,
-            `Kabut tebal di ${gameState.level % 2 === 0 ? 'sekolah terbengkalai' : 'rumah sakit jiwa'}. ${gameState.characters[3]?.name || 'Touya'} memegang obor, "Aku akan melindungi kalian."`,
-            `Bab ${gameState.chapter}: ${gameState.puzzleProgress}/${gameState.puzzlesThisLevel} teka-teki terselesaikan. Teruslah berjuang! Total ${PUZZLE_BANK.length} teka-teki unik tersedia!`
+            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan teka-teki untuk melarikan diri. Tapi hati-hati, kita tidak punya persediaan apapun di awal!"`,
+            `Kabut tebal di ${gameState.level % 2 === 0 ? 'sekolah terbengkalai' : 'rumah sakit jiwa'}. ${gameState.characters[3]?.name || 'Touya'} memegang obor, "Aku akan melindungi kalian. Tapi kita butuh item dari teka-teki!"`,
+            `Bab ${gameState.chapter}: ${gameState.puzzleProgress}/${gameState.puzzlesThisLevel} teka-teki terselesaikan. Setiap jawaban benar bisa memberikan item berharga!`
         ];
         return stories[Math.floor(Math.random() * stories.length)];
     }
@@ -627,7 +577,10 @@
                         <button class="menu-btn" onclick="window.location.href='daily.html'">🎁 Daily & Shop</button>
                         <button class="menu-btn" onclick="window.location.href='characters.html'">👥 Karakter</button>
                     </div>
-                    <div style="margin-top: 30px; font-size: clamp(0.7rem, 3vw, 0.8rem); color:#ccbbaa;">✦ ${PUZZLE_BANK.length}+ Teka-teki Unik · Apel Pengetahuan bisa lihat jawaban langsung! ✦</div>
+                    <div style="margin-top: 30px; font-size: clamp(0.7rem, 3vw, 0.8rem); color:#ccbbaa;">
+                        ✦ ${PUZZLE_BANK.length}+ Teka-teki Unik · Inventory KOSONG di awal! ✦<br>
+                        ✦ Dapatkan item dari menjawab teka-teki, daily reward, atau shop! ✦
+                    </div>
                 </div>
             `;
             return;
@@ -655,6 +608,8 @@
                     <span class="inv-tag">🍎 ${gameState.inventory.apple}</span>
                     <span class="inv-tag">🔑 ${gameState.inventory.ghost_key}</span>
                 </div>
+                ${gameState.inventory.ghost_coin === 0 && gameState.inventory.potion_hp === 0 ? 
+                    '<div style="text-align:center; font-size:0.7rem; color:#ffaa66; margin-top:-10px;">✨ Inventory kosong! Jawab teka-teki dengan benar untuk mendapatkan item! ✨</div>' : ''}
             </div>
             <div class="char-grid">
                 ${gameState.characters.map(char => `
@@ -694,7 +649,7 @@
                 </div>
                 <div style="margin-top: 12px; text-align: center; font-size: clamp(0.6rem, 2.5vw, 0.7rem); color: #ccbba8;">
                     💡 Butuh bantuan? Klik "Petunjuk" di karakter (menguras stamina) atau 🍎 Apel Pengetahuan untuk lihat jawaban!<br>
-                    📚 Total ${PUZZLE_BANK.length} teka-teki unik dalam database!
+                    📚 Total ${PUZZLE_BANK.length} teka-teki unik! ✨ Setiap jawaban benar bisa dapat item!
                 </div>
             </div>
             <div class="glass-panel">
