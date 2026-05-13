@@ -47,12 +47,18 @@
         .nav-btn:hover { background: #c96a8a; border-color: white; }
         h1, h2, h3 { color: #f5e6d0; margin-bottom: 16px; text-shadow: 0 1px 2px black; }
         
-        /* Skin Customization Section */
+        /* Skin Customization Section - PERBAIKAN WARNA TEKS */
         .skin-customization {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5);
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(255,180,120,0.3);
+        }
+        .skin-customization h3 { 
+            color: #ffdfc4; 
+            margin-bottom: 15px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
         .active-skin-display {
             display: flex;
@@ -60,9 +66,9 @@
             gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             padding: 15px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.4);
             border-radius: 20px;
         }
         .active-skin-image {
@@ -73,8 +79,19 @@
             border: 3px solid #ffcc66;
             box-shadow: 0 0 15px rgba(255,200,100,0.5);
         }
-        .active-skin-info h4 { color: #ffcc66; margin-bottom: 5px; }
-        .active-skin-info p { color: #ddccbb; }
+        .active-skin-info h4 { 
+            color: #ffcc66; 
+            margin-bottom: 5px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+        }
+        .active-skin-info p { 
+            color: #e8ddce; 
+            margin: 5px 0;
+        }
+        .active-skin-info .skin-desc {
+            color: #ccbbaa;
+            font-size: 0.8rem;
+        }
         .reset-skin-btn {
             background: #5a3a5a;
             border: 1px solid #ffaa88;
@@ -83,8 +100,21 @@
             color: #ffefdf;
             cursor: pointer;
             transition: all 0.2s;
+            font-weight: bold;
         }
-        .reset-skin-btn:hover { background: #ff6688; transform: scale(1.02); }
+        .reset-skin-btn:hover { background: #ff6688; transform: scale(1.02); color: white; }
+        .no-skin-message {
+            text-align: center;
+            padding: 20px;
+        }
+        .no-skin-message p { 
+            color: #e8ddce; 
+            margin: 5px 0;
+        }
+        .no-skin-message .subtext {
+            color: #ccbbaa;
+            font-size: 0.8rem;
+        }
         
         .char-grid {
             display: grid;
@@ -141,7 +171,7 @@
             background: rgba(0,0,0,0.3); border-radius: 16px; padding: 12px; margin-top: 12px;
         }
         .relationship-item { margin: 8px 0; font-size: 0.8rem; border-left: 3px solid #ff88aa; padding-left: 10px; color: #ddddcc; }
-        .quotes-box { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 10px; margin-top: 10px; font-style: italic; }
+        .quotes-box { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 10px; margin-top: 10px; font-style: italic; color: #e8ddce; }
         
         .char-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -154,6 +184,25 @@
         .modal-close { position: sticky; top: 0; text-align: right; }
         .modal-close button { background: #ff6688; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; color: white; font-weight: bold; }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1999; }
+        
+        /* Skin Available Badge */
+        .skin-available-badge {
+            background: #3a6a3a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #d4ffd4;
+            display: inline-block;
+        }
+        .skin-active-badge {
+            background: #ffcc66;
+            color: #1a0a2a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+        }
         
         @media (max-width: 750px) { .char-grid { grid-template-columns: 1fr; } .char-image { width: 100px; height: 100px; } }
     </style>
@@ -208,7 +257,6 @@
             } catch(e) {}
         }
         
-        // Also check main game save
         const mainSave = localStorage.getItem('yureiKakuSave');
         if (mainSave) {
             try {
@@ -415,14 +463,14 @@
                             <img src="${activeSkinInfo.image}" class="active-skin-image" alt="${activeSkinInfo.skinName}">
                             <div class="active-skin-info">
                                 <h4>✨ ${activeSkinInfo.skinName} ✨</h4>
-                                <p>Karakter: ${activeSkin}</p>
-                                <p>Skin ini sedang digunakan dalam permainan!</p>
+                                <p>Karakter: <strong style="color:#ffdfc4;">${activeSkin}</strong></p>
+                                <p class="skin-desc">Skin ini sedang digunakan dalam permainan!</p>
                             </div>
                             <button class="reset-skin-btn" onclick="resetToOriginal('${activeSkin}')">🔄 Reset ke Original</button>
                         ` : `
-                            <div style="text-align:center; padding:20px;">
+                            <div class="no-skin-message">
                                 <p>🌸 Tidak ada skin yang sedang aktif</p>
-                                <p style="font-size:0.8rem;">Buka skin di menu Events lalu aktifkan!</p>
+                                <p class="subtext">Buka skin di menu Events lalu aktifkan!</p>
                             </div>
                         `}
                     </div>
@@ -461,13 +509,13 @@
                                     <h4>💞 Hubungan Singkat</h4>
                                     ${Object.entries(char.relationships).slice(0,2).map(([name, rel]) => `<div class="relationship-item"><strong>${name}:</strong> ${rel.substring(0,80)}...</div>`).join('')}
                                 </div>
-                                ${hasSkin && !isActive ? `<div style="margin-top:10px; text-align:center;"><span style="background:#3a6a3a; padding:4px 12px; border-radius:20px; font-size:0.7rem;">✨ Skin tersedia! Aktifkan di menu Events ✨</span></div>` : ''}
-                                ${isActive ? `<div style="margin-top:10px; text-align:center;"><span style="background:#ffcc66; color:#1a0a2a; padding:4px 12px; border-radius:20px; font-size:0.7rem;">✦ SKIN AKTIF ✦</span></div>` : ''}
+                                ${hasSkin && !isActive ? `<div style="margin-top:10px; text-align:center;"><span class="skin-available-badge">✨ Skin tersedia! Aktifkan di menu Events ✨</span></div>` : ''}
+                                ${isActive ? `<div style="margin-top:10px; text-align:center;"><span class="skin-active-badge">✦ SKIN AKTIF ✦</span></div>` : ''}
                             </div>
                         `;
                     }).join('')}
                 </div>
-                <div style="text-align:center; margin-top:20px; font-size:0.75rem; color:#aa9988;">
+                <div style="text-align:center; margin-top:20px; font-size:0.75rem; color:#ccbbaa;">
                     💡 Tips: Klik gambar karakter untuk memperbesar! Skin yang dibeli di Events akan muncul di sini.
                 </div>
             </div>
