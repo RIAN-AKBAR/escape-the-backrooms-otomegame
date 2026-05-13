@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>YUREI KAKU · Event Permanen | Skin Shop · Daily Riddle · Cursed Box</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0a1a 0%, #1a0a2a 100%);
+            font-family: 'Courier New', 'Segoe UI', 'Poppins', monospace;
+            padding: clamp(8px, 2vw, 20px);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .particle {
+            position: fixed;
+            background: rgba(200,180,150,0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatParticle linear infinite;
+            z-index: 0;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .event-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .event-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .event-header h1 {
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            color: #ffdfc4;
+            text-shadow: 0 0 15px rgba(255,140,140,0.5);
+        }
+        .back-btn {
+            background: rgba(30,20,45,0.9);
+            border: 1px solid #e8aa88;
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #ffefdf;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: #c96a8a; transform: scale(1.02); }
+        .event-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: rgba(0,0,0,0.4);
+            padding: 12px 20px;
+            border-radius: 60px;
+            margin-bottom: 24px;
+        }
+        .event-nav-btn {
+            background: rgba(30,20,45,0.8);
+            border: 1px solid #ffaa88;
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #ffefdf;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        .event-nav-btn:hover, .event-nav-btn.active {
+            background: #c96a8a;
+            border-color: white;
+            transform: scale(1.02);
+        }
+        .event-glass-panel {
+            background: rgba(10, 8, 22, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(220, 180, 140, 0.4);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .event-title {
+            color: #ffdfc4;
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+            border-left: 4px solid #ff88aa;
+            padding-left: 16px;
+        }
+        .event-subtitle {
+            color: #ccbbaa;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .skin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .skin-card {
+            background: rgba(0,0,0,0.45);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .skin-card:hover { transform: translateY(-3px); }
+        .skin-card.owned { opacity: 0.85; border-color: #88ff88; }
+        .skin-card.active { border-color: #ffcc66; box-shadow: 0 0 20px rgba(255,200,100,0.3); }
+        .skin-avatar { font-size: 3rem; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; background: rgba(255,255,255,0.05); }
+        .skin-name { font-weight: bold; color: #ffdfc4; margin-bottom: 8px; }
+        .skin-price { margin: 12px 0; }
+        .price-value { color: #ffcc66; font-weight: bold; }
+        .owned-badge { color: #88ff88; font-weight: bold; }
+        .active-glow { position: absolute; top: -8px; right: -8px; background: #ffcc66; color: #1a0a2a; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+        .soul-gem-display {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .gem-count { color: #ffcc66; font-size: 1.5rem; }
+        .gem-progress-bar {
+            background: #2a1a3a;
+            border-radius: 20px;
+            height: 8px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .gem-progress-fill {
+            background: linear-gradient(90deg, #ffcc66, #ffaa44);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .daily-riddles { display: flex; flex-direction: column; gap: 16px; }
+        .daily-riddle-card {
+            background: rgba(0,0,0,0.4);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+        .daily-riddle-card.solved { background: rgba(0,80,0,0.3); border-left: 4px solid #88ff88; }
+        .riddle-header { display: flex; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .difficulty-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+        .difficulty-badge.easy { background: #2a5a2a; color: #88ff88; }
+        .difficulty-badge.medium { background: #8a6a2a; color: #ffcc66; }
+        .difficulty-badge.hard { background: #8a2a2a; color: #ff8888; }
+        .solved-badge { color: #88ff88; font-weight: bold; }
+        .riddle-question { color: #ffdfc4; margin-bottom: 12px; }
+        .riddle-answer-area { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+        .daily-input {
+            background: #1e1828;
+            border: 1px solid #b88866;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: #fff5e8;
+            flex: 1;
+            min-width: 180px;
+        }
+        .riddle-hint { color: #aa9988; font-size: 0.75rem; margin-top: 8px; font-style: italic; }
+        .riddle-solved { color: #88ff88; text-align: center; padding: 8px; }
+        .daily-progress { margin-bottom: 16px; }
+        .daily-progress-bar { background: #2a1a3a; border-radius: 20px; height: 8px; margin-top: 5px; overflow: hidden; }
+        .daily-progress-fill { background: linear-gradient(90deg, #88ff88, #66cc66); height: 100%; width: 0%; transition: width 0.3s; }
+        .perfect-banner { background: linear-gradient(90deg, #ffcc66, #ffaa44); color: #1a0a2a; padding: 10px; border-radius: 12px; text-align: center; margin-top: 16px; font-weight: bold; }
+        .cursed-box-container { text-align: center; }
+        .cursed-box {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #2a1a3a, #1a0a2a);
+            border-radius: 30px;
+            margin: 0 auto 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid #aa6688;
+            transition: all 0.3s;
+        }
+        .cursed-box:hover { transform: scale(1.02); border-color: #ff88aa; box-shadow: 0 0 30px rgba(255,100,100,0.3); }
+        .cursed-box.opened { opacity: 0.6; cursor: default; filter: grayscale(0.3); }
+        .cursed-box.opened:hover { transform: none; }
+        .box-icon { font-size: 4rem; margin-bottom: 10px; }
+        .box-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            animation: boxPulse 2s infinite;
+        }
+        @keyframes boxPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(255,100,100,0.3); }
+            50% { box-shadow: 0 0 25px rgba(255,100,100,0.6); }
+        }
+        .box-status { font-size: 0.8rem; color: #ccaa88; }
+        .clickable { color: #ffcc66; animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.6} }
+        .box-streak { margin: 12px 0; color: #ffaa88; font-weight: bold; }
+        .box-info { color: #aa9988; font-size: 0.75rem; }
+        .event-btn {
+            background: #2a1a3a;
+            border: 1px solid #c99070;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ffefdf;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+            margin: 4px;
+        }
+        .event-btn:hover { background: #c96a8a; border-color: white; transform: scale(1.02); }
+        .event-btn.small { padding: 5px 12px; font-size: 0.75rem; }
+        .buy-btn { background: #5a3a5a; }
+        .equip-btn { background: #3a6a3a; }
+        .event-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10,6,22,0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 16px 20px;
+            z-index: 2000;
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #ff88aa;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .event-popup.success { border-left-color: #88ff88; }
+        .event-popup.error { border-left-color: #ff8888; }
+        .event-popup.cursed { border-left-color: #ff4488; background: rgba(40,10,20,0.98); }
+        .popup-icon { font-size: 1.8rem; }
+        .popup-content { flex: 1; }
+        .popup-title { font-weight: bold; color: #ffdfc4; margin-bottom: 4px; }
+        .popup-message { font-size: 0.8rem; color: #ccbbaa; }
+        .popup-close { background: none; border: none; color: #aa9988; cursor: pointer; font-size: 1rem; }
+        @media (max-width: 650px) {
+            .skin-grid { grid-template-columns: 1fr; }
+            .cursed-box { width: 140px; height: 140px; }
+            .box-icon { font-size: 3rem; }
+            .event-nav { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="event-container" id="eventApp"></div>
+
+<script>
+    // ======================== EVENT SYSTEM CORE ========================
+    const EventSystem = {
+        soulGems: 0,
+        ownedSkins: { Haruno: false, Katsumi: false, Juun: false, Touya: false },
+        activeSkin: null,
+        dailyRiddles: [],
+        dailySolved: [],
+        dailyLastReset: null,
+        dailyPerfectCount: 0,
+        cursedBoxLastOpen: null,
+        cursedBoxStreak: 0,
+        eventCompleted: false,
+        totalSoulGemsEarned: 0,
+        totalBoxesOpened: 0,
+        
+        load: function() {
+            const saved = localStorage.getItem('yureiEventSystem');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    this.soulGems = data.soulGems || 0;
+                    this.ownedSkins = data.ownedSkins || { Haruno: false, Katsumi: false, Juun: false, Touya: false };
+                    this.activeSkin = data.activeSkin || null;
+                    this.dailyRiddles = data.dailyRiddles || [];
+                    this.dailySolved = data.dailySolved || [];
+                    this.dailyLastReset = data.dailyLastReset || null;
+                    this.dailyPerfectCount = data.dailyPerfectCount || 0;
+                    this.cursedBoxLastOpen = data.cursedBoxLastOpen || null;
+                    this.cursedBoxStreak = data.cursedBoxStreak || 0;
+                    this.eventCompleted = data.eventCompleted || false;
+                    this.totalSoulGemsEarned = data.totalSoulGemsEarned || 0;
+                    this.totalBoxesOpened = data.totalBoxesOpened || 0;
+                } catch(e) { console.log('Error loading events'); }
+            }
+            this.checkDailyReset();
+            this.syncWithMainGame();
+        },
+        
+        save: function() {
+            const saveData = {
+                soulGems: this.soulGems,
+                ownedSkins: this.ownedSkins,
+                activeSkin: this.activeSkin,
+                dailyRiddles: this.dailyRiddles,
+                dailySolved: this.dailySolved,
+                dailyLastReset: this.dailyLastReset,
+                dailyPerfectCount: this.dailyPerfectCount,
+                cursedBoxLastOpen: this.cursedBoxLastOpen,
+                cursedBoxStreak: this.cursedBoxStreak,
+                eventCompleted: this.eventCompleted,
+                totalSoulGemsEarned: this.totalSoulGemsEarned,
+                totalBoxesOpened: this.totalBoxesOpened
+            };
+            localStorage.setItem('yureiEventSystem', JSON.stringify(saveData));
+            this.syncToMainGame();
+        },
+        
+        syncWithMainGame: function() {
+            const mainSave = localStorage.getItem('yureiKakuSave');
+            if (mainSave) {
+                try {
+                    const data = JSON.parse(mainSave);
+                    // Keep soul gems separate
+                } catch(e) {}
+            }
+        },
+        
+        syncToMainGame: function() {
+            const mainSave = localStorage.getItem('yureiKakuSave');
+            if (mainSave) {
+                try {
+                    const data = JSON.parse(mainSave);
+                    data.eventSkins = this.ownedSkins;
+                    data.activeSkin = this.activeSkin;
+                    localStorage.setItem('yureiKakuSave', JSON.stringify(data));
+                } catch(e) {}
+            }
+        },
+        
+        addSoulGems: function(amount, source) {
+            this.soulGems += amount;
+            this.totalSoulGemsEarned += amount;
+            this.save();
+            if (window.updateEventUI) window.updateEventUI();
+            return true;
+        },
+        
+        removeSoulGems: function(amount) {
+            if (this.soulGems >= amount) {
+                this.soulGems -= amount;
+                this.save();
+                if (window.updateEventUI) window.updateEventUI();
+                return true;
+            }
+            return false;
+        },
+        
+        buySkin: function(character, price) {
+            if (!this.ownedSkins[character] && this.soulGems >= price) {
+                this.soulGems -= price;
+                this.ownedSkins[character] = true;
+                this.save();
+                this.checkEventCompletion();
+                if (window.updateEventUI) window.updateEventUI();
+                return true;
+            }
+            return false;
+        },
+        
+        equipSkin: function(character) {
+            if (this.ownedSkins[character]) {
+                this.activeSkin = character;
+                this.save();
+                if (window.updateEventUI) window.updateEventUI();
+                return true;
+            }
+            return false;
+        },
+        
+        getActiveSkin: function() { return this.activeSkin; },
+        
+        checkEventCompletion: function() {
+            const allOwned = Object.values(this.ownedSkins).every(v => v === true);
+            if (allOwned && !this.eventCompleted) {
+                this.eventCompleted = true;
+                if (window.showEventCompletion) window.showEventCompletion();
+            }
+            return allOwned;
+        },
+        
+        generateDailyRiddles: function() {
+            const riddles = [
+                { easy: { q: "Apa yang bisa kau lihat tapi tidak bisa kau pegang?", a: "bayangan", hint: "Hitam di belakangmu" } },
+                { easy: { q: "Apa yang selalu jatuh tapi tidak pernah terluka?", a: "hujan", hint: "Dari langit" } },
+                { easy: { q: "Apa yang bisa kau dengar tapi tidak bisa kau lihat?", a: "suara", hint: "Getaran di udara" } },
+                { medium: { q: "Aku memiliki banyak kunci tapi tidak bisa membuka pintu. Apakah aku?", a: "piano", hint: "Alat musik" } },
+                { medium: { q: "Berapa jumlah kaki laba-laba jika ada 3 laba-laba?", a: "24", hint: "Setiap laba-laba 8 kaki" } },
+                { medium: { q: "Apa yang bisa pecah tanpa disentuh?", a: "janji", hint: "Komitmen" } },
+                { hard: { q: "Aku adalah awal dari akhir, akhir dari waktu. Siapakah aku?", a: "a", hint: "Huruf pertama alfabet" } },
+                { hard: { q: "Apa yang memiliki leher tapi tidak punya kepala?", a: "botol", hint: "Tempat minum" } },
+                { hard: { q: "Apa yang bisa kamu pegang tapi tidak bisa kamu lempar?", a: "pilek", hint: "Penyakit" } }
+            ];
+            const selected = [];
+            const difficulties = ['easy', 'medium', 'hard'];
+            for (let i = 0; i < 3; i++) {
+                const diff = difficulties[i];
+                const available = riddles.filter(r => r[diff]);
+                const random = available[Math.floor(Math.random() * available.length)];
+                selected.push({
+                    id: Date.now() + i + Math.random(),
+                    difficulty: diff,
+                    question: random[diff].q,
+                    answer: random[diff].a,
+                    hint: random[diff].hint,
+                    solved: false
+                });
+            }
+            return selected;
+        },
+        
+        checkDailyReset: function() {
+            const today = new Date().toDateString();
+            if (this.dailyLastReset !== today) {
+                this.dailyRiddles = this.generateDailyRiddles();
+                this.dailySolved = [];
+                this.dailyLastReset = today;
+                this.dailyPerfectCount = 0;
+                this.save();
+            }
+        },
+        
+        submitDailyAnswer: function(index, answer) {
+            const riddle = this.dailyRiddles[index];
+            if (!riddle || riddle.solved) return false;
+            
+            if (answer.toLowerCase().trim() === riddle.answer.toLowerCase()) {
+                riddle.solved = true;
+                this.dailySolved.push(index);
+                
+                let rewards = [];
+                if (riddle.difficulty === 'easy') rewards = [{ type: 'soul_gem', value: 5, name: '5 Permata Jiwa' }];
+                else if (riddle.difficulty === 'medium') rewards = [{ type: 'soul_gem', value: 10, name: '10 Permata Jiwa' }];
+                else rewards = [{ type: 'soul_gem', value: 15, name: '15 Permata Jiwa' }];
+                
+                const bonusRoll = Math.random();
+                if (bonusRoll < 0.3) {
+                    const itemBonus = [
+                        { type: 'ghost_coin', value: 5, name: '+5 Ghost Coin' },
+                        { type: 'potion', value: 10, name: 'Potion 10%' }
+                    ];
+                    rewards.push(itemBonus[Math.floor(Math.random() * itemBonus.length)]);
+                }
+                
+                if (this.dailySolved.length === 3) {
+                    this.dailyPerfectCount++;
+                    rewards.push({ type: 'soul_gem', value: 10, name: 'Bonus Perfect Clear! +10 Permata' });
+                }
+                
+                this.save();
+                return rewards;
+            }
+            return false;
+        },
+        
+        canOpenCursedBox: function() {
+            const today = new Date().toDateString();
+            return this.cursedBoxLastOpen !== today;
+        },
+        
+        openCursedBox: function() {
+            if (!this.canOpenCursedBox()) return { success: false, message: 'Kotak kutukan sudah dibuka hari ini! Kembali besok.' };
+            
+            this.cursedBoxLastOpen = new Date().toDateString();
+            this.cursedBoxStreak++;
+            this.totalBoxesOpened++;
+            
+            const now = new Date();
+            const hour = now.getHours();
+            const isLuckyHour = (hour >= 0 && hour <= 1);
+            let multiplier = isLuckyHour ? 2 : 1;
+            if (this.cursedBoxStreak >= 7) multiplier *= 1.5;
+            
+            const roll = Math.random();
+            let reward = null;
+            let isCursed = false;
+            
+            if (roll < 0.05) {
+                reward = { type: 'soul_gem', name: 'LEGENDARY CHEST', value: Math.floor(50 * multiplier), rarity: 'legendary' };
+            } else if (roll < 0.15) {
+                reward = { type: 'apple', name: 'Apel Pengetahuan', value: 1, rarity: 'epic' };
+            } else if (roll < 0.35) {
+                reward = { type: 'ghost_key', name: 'Ghost Key', value: 1, rarity: 'rare' };
+            } else if (roll < 0.60) {
+                const goodRewards = [
+                    { type: 'soul_gem', name: 'Permata Jiwa', value: Math.floor((Math.random() * 20 + 10) * multiplier), rarity: 'good' },
+                    { type: 'topeng', name: 'Topeng Tua Kuno', value: 1, rarity: 'good' }
+                ];
+                reward = goodRewards[Math.floor(Math.random() * goodRewards.length)];
+            } else if (roll < 0.85) {
+                const commonRewards = [
+                    { type: 'ghost_coin', name: 'Ghost Coin', value: Math.floor(Math.random() * 15 + 5), rarity: 'common' },
+                    { type: 'potion', name: 'Potion 10%', value: 10, rarity: 'common' }
+                ];
+                reward = commonRewards[Math.floor(Math.random() * commonRewards.length)];
+            } else {
+                isCursed = true;
+                reward = { type: 'curse', name: 'Kutukan Kecil', value: -5, message: 'Kutukan kecil mengurangi 5 HP!' };
+            }
+            
+            this.save();
+            return { success: true, reward: reward, isCursed: isCursed, streak: this.cursedBoxStreak, multiplier: multiplier > 1 };
+        }
+    };
+    
+    // ======================== UI FUNCTIONS ========================
+    let currentPopup = null;
+    
+    function showEventPopup(title, message, type = 'info') {
+        if (currentPopup) currentPopup.remove();
+        const popup = document.createElement('div');
+        popup.className = `event-popup ${type}`;
+        popup.innerHTML = `
+            <div class="popup-icon">${type === 'success' ? '🎉' : type === 'error' ? '❌' : type === 'cursed' ? '☠️' : '✨'}</div>
+            <div class="popup-content">
+                <div class="popup-title">${title}</div>
+                <div class="popup-message">${message}</div>
+            </div>
+            <button class="popup-close" onclick="this.parentElement.remove()">✕</button>
+        `;
+        document.body.appendChild(popup);
+        currentPopup = popup;
+        setTimeout(() => { if (popup) popup.remove(); currentPopup = null; }, 4000);
+    }
+    
+    function showEventCompletion() {
+        showEventPopup('🎉 EVENT COMPLETED! 🎉', 'Semua Jiwa Terkutuk telah terkumpul! Semua skin telah dibuka!', 'success');
+    }
+    
+    function buySkin(character, price) {
+        if (EventSystem.buySkin(character, price)) {
+            showEventPopup('🎉 SKIN DIDAPATKAN! 🎉', `${character} Skin sekarang milikmu!`, 'success');
+            renderEventPage();
+        } else {
+            showEventPopup('❌ Gagal!', `Permata Jiwa tidak cukup! Butuh ${price} 💎`, 'error');
+        }
+    }
+    
+    function equipSkin(character) {
+        EventSystem.equipSkin(character);
+        renderEventPage();
+        showEventPopup('✨ Skin Aktif! ✨', `${character} Skin sekarang digunakan! Efek visual berubah.`, 'success');
+    }
+    
+    function submitDailyAnswer(index) {
+        const input = document.getElementById(`dailyAnswer_${index}`);
+        if (!input) return;
+        
+        const result = EventSystem.submitDailyAnswer(index, input.value);
+        if (result) {
+            let rewardText = '';
+            result.forEach(r => {
+                if (r.type === 'soul_gem') {
+                    EventSystem.addSoulGems(r.value, 'daily_riddle');
+                    rewardText += ` +${r.value} Permata Jiwa`;
+                }
+            });
+            showEventPopup('✅ JAWABAN BENAR! ✅', rewardText || 'Mendapatkan hadiah!', 'success');
+            renderEventPage();
+        } else {
+            showEventPopup('❌ JAWABAN SALAH! ❌', 'Coba lagi!', 'error');
+            input.value = '';
+        }
+    }
+    
+    function openCursedBox() {
+        const result = EventSystem.openCursedBox();
+        if (result.success) {
+            if (result.isCursed) {
+                showEventPopup('☠️ TERKUTUK! ☠️', result.reward.message || 'Kotak berisi kutukan...', 'cursed');
+            } else {
+                let rewardText = '';
+                if (result.reward.type === 'soul_gem') {
+                    EventSystem.addSoulGems(result.reward.value, 'cursed_box');
+                    rewardText = `+${result.reward.value} Permata Jiwa`;
+                    if (result.multiplier) rewardText += ' (x2 Lucky Hour!)';
+                } else {
+                    rewardText = `+${result.reward.name}`;
+                }
+                showEventPopup('🎁 KOTAK TERBUKA! 🎁', rewardText, 'success');
+            }
+            renderEventPage();
+        } else {
+            showEventPopup('⏳ Belum bisa!', result.message || 'Kembali besok untuk membuka kotak lagi!', 'error');
+        }
+    }
+    
+    function updateEventUI() {
+        const gemDisplay = document.querySelector('.gem-count');
+        if (gemDisplay) gemDisplay.textContent = EventSystem.soulGems;
+        const progressFill = document.querySelector('.gem-progress-fill');
+        if (progressFill) progressFill.style.width = `${Math.min(100, (EventSystem.soulGems / 1300) * 100)}%`;
+    }
+    
+    function renderSkinShop() {
+        const skinPrices = { Haruno: 1200, Katsumi: 1250, Juun: 1200, Touya: 1300 };
+        const skinNames = { Haruno: 'Haruno · Jiwa Es', Katsumi: 'Katsumi · Jiwa Laut', Juun: 'Juun · Jiwa Senja', Touya: 'Touya · Jiwa Api' };
+        const skinColors = { Haruno: '#88aaff', Katsumi: '#66ddcc', Juun: '#cc88ff', Touya: '#ff8866' };
+        const skinAvatars = { Haruno: '❄️', Katsumi: '🌊', Juun: '🌀', Touya: '🔥' };
+        
+        return `
+            <div class="event-glass-panel">
+                <h2 class="event-title">🎭 SKIN JIWA TERKUTUK 🎭</h2>
+                <p class="event-subtitle">Kumpulkan Permata Jiwa untuk membuka skin eksklusif!</p>
+                <div class="skin-grid">
+                    ${Object.entries(skinPrices).map(([char, price]) => `
+                        <div class="skin-card ${EventSystem.ownedSkins[char] ? 'owned' : ''} ${EventSystem.activeSkin === char ? 'active' : ''}" style="border-left-color: ${skinColors[char]}">
+                            <div class="skin-avatar" style="background: ${skinColors[char]}20">${skinAvatars[char]}</div>
+                            <div class="skin-name">${skinNames[char]}</div>
+                            <div class="skin-price">
+                                ${EventSystem.ownedSkins[char] ? '<span class="owned-badge">✓ OWNED</span>' : `<span class="price-value">💎 ${price}</span>`}
+                            </div>
+                            ${EventSystem.ownedSkins[char] ? 
+                                `<button class="event-btn equip-btn" onclick="equipSkin('${char}')" ${EventSystem.activeSkin === char ? 'disabled' : ''}>
+                                    ${EventSystem.activeSkin === char ? '✦ ACTIVE ✦' : '✨ Equip'}
+                                </button>` :
+                                `<button class="event-btn buy-btn" onclick="buySkin('${char}', ${price})">🔮 Beli</button>`
+                            }
+                            ${EventSystem.activeSkin === char ? '<div class="active-glow">ACTIVE</div>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="soul-gem-display">
+                    💎 Permata Jiwa: <span class="gem-count">${EventSystem.soulGems}</span>
+                    <div class="gem-progress-bar">
+                        <div class="gem-progress-fill" style="width: ${Math.min(100, (EventSystem.soulGems / 1300) * 100)}%"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function renderDailyRiddles() {
+        const difficulties = { easy: '🟢 Mudah', medium: '🟡 Sedang', hard: '🔴 Sulit' };
+        const completedCount = EventSystem.dailySolved.length;
+        
+        return `
+            <div class="event-glass-panel">
+                <h2 class="event-title">🌙 TEKA-TEKI ARWAH HARIAN 🌙</h2>
+                <div class="daily-progress">
+                    <span>Progress: ${completedCount}/3</span>
+                    <div class="daily-progress-bar">
+                        <div class="daily-progress-fill" style="width: ${(completedCount/3)*100}%"></div>
+                    </div>
+                </div>
+                <div class="daily-riddles">
+                    ${EventSystem.dailyRiddles.map((riddle, idx) => `
+                        <div class="daily-riddle-card ${riddle.solved ? 'solved' : ''}">
+                            <div class="riddle-header">
+                                <span class="difficulty-badge ${riddle.difficulty}">${difficulties[riddle.difficulty]}</span>
+                                ${riddle.solved ? '<span class="solved-badge">✓ SOLVED</span>' : ''}
+                            </div>
+                            <div class="riddle-question">📖 ${riddle.question}</div>
+                            ${!riddle.solved ? `
+                                <div class="riddle-answer-area">
+                                    <input type="text" id="dailyAnswer_${idx}" class="daily-input" placeholder="Ketik jawaban..." autocomplete="off">
+                                    <button class="event-btn small" onclick="submitDailyAnswer(${idx})">✨ Jawab</button>
+                                </div>
+                                <div class="riddle-hint">💡 ${riddle.hint}</div>
+                            ` : `<div class="riddle-solved">✓ Teka-teki telah terjawab!</div>`}
+                        </div>
+                    `).join('')}
+                </div>
+                ${completedCount === 3 ? `<div class="perfect-banner">✨ PERFECT CLEAR! Bonus Permata sudah diberikan! ✨</div>` : ''}
+            </div>
+        `;
+    }
+    
+    function renderCursedBox() {
+        const canOpen = EventSystem.canOpenCursedBox();
+        return `
+            <div class="event-glass-panel">
+                <h2 class="event-title">🔮 KOTAK KUTUKAN 🔮</h2>
+                <div class="cursed-box-container">
+                    <div class="cursed-box ${!canOpen ? 'opened' : ''}" onclick="${canOpen ? 'openCursedBox()' : ''}">
+                        <div class="box-glow"></div>
+                        <div class="box-icon">📦</div>
+                        <div class="box-status">
+                            ${canOpen ? '<span class="clickable">✦ Klik untuk membuka ✦</span>' : '<span>✓ Sudah dibuka hari ini</span>'}
+                        </div>
+                    </div>
+                    <div class="box-streak">🔥 Streak: ${EventSystem.cursedBoxStreak} hari</div>
+                    <div class="box-info">💀 Bisa berisi hadiah langka... atau kutukan!</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    let currentTab = 'skins';
+    
+    function showEventTab(tab) {
+        currentTab = tab;
+        const contents = document.querySelectorAll('#tabContent > div');
+        const btns = document.querySelectorAll('.event-nav-btn');
+        const tabMap = { skins: 0, daily: 1, cursed: 2 };
+        contents.forEach((el, idx) => {
+            el.style.display = idx === tabMap[tab] ? 'block' : 'none';
+        });
+        btns.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+    
+    function renderEventPage() {
+        const app = document.getElementById('eventApp');
+        app.innerHTML = `
+            <div class="event-header">
+                <h1>🎪 EVENT PERMANEN 🎪</h1>
+                <a href="index.html" class="back-btn">← Kembali ke Game</a>
+            </div>
+            <div class="event-nav">
+                <button class="event-nav-btn ${currentTab === 'skins' ? 'active' : ''}" onclick="showEventTab('skins')">🎭 Skin Shop</button>
+                <button class="event-nav-btn ${currentTab === 'daily' ? 'active' : ''}" onclick="showEventTab('daily')">🌙 Daily Riddle</button>
+                <button class="event-nav-btn ${currentTab === 'cursed' ? 'active' : ''}" onclick="showEventTab('cursed')">🔮 Cursed Box</button>
+            </div>
+            <div id="tabContent">
+                ${renderSkinShop()}
+                ${renderDailyRiddles()}
+                ${renderCursedBox()}
+            </div>
+        `;
+        const tabMap = { skins: 0, daily: 1, cursed: 2 };
+        document.querySelectorAll('#tabContent > div').forEach((el, idx) => {
+            el.style.display = idx === tabMap[currentTab] ? 'block' : 'none';
+        });
+    }
+    
+    // ======================== INITIALIZATION ========================
+    function createParticles() {
+        const count = Math.min(40, Math.floor(window.innerWidth / 30));
+        for(let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.width = Math.random() * 4 + 2 + 'px';
+            p.style.height = p.style.width;
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = Math.random() * 15 + 10 + 's';
+            p.style.animationDelay = Math.random() * 10 + 's';
+            document.body.appendChild(p);
+        }
+    }
+    
+    // Expose functions globally
+    window.EventSystem = EventSystem;
+    window.buySkin = buySkin;
+    window.equipSkin = equipSkin;
+    window.submitDailyAnswer = submitDailyAnswer;
+    window.openCursedBox = openCursedBox;
+    window.showEventTab = showEventTab;
+    window.updateEventUI = updateEventUI;
+    window.showEventCompletion = showEventCompletion;
+    window.renderEventPage = renderEventPage;
+    
+    EventSystem.load();
+    createParticles();
+    renderEventPage();
+    
+    window.addEventListener('resize', () => {
+        document.querySelectorAll('.particle').forEach(p => p.remove());
+        createParticles();
+    });
+</script>
+</body>
+</html>
