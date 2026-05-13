@@ -34,7 +34,7 @@
             backdrop-filter: blur(12px);
             border-radius: 28px;
             border: 1px solid rgba(220, 180, 140, 0.4);
-            shadow: 0 8px 32px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             padding: 24px;
             margin-bottom: 20px;
         }
@@ -48,7 +48,7 @@
         h1, h2, h3 { color: #f5e6d0; margin-bottom: 16px; text-shadow: 0 1px 2px black; }
         .char-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 24px;
             margin: 20px 0;
         }
@@ -62,8 +62,16 @@
         }
         .char-card:hover { transform: translateY(-5px); border-color: #e8aa88; box-shadow: 0 0 20px rgba(220,140,100,0.25); }
         .char-header { text-align: center; margin-bottom: 16px; }
-        .char-avatar { font-size: 4rem; }
-        .char-name { font-size: 1.8rem; color: #ffdfc4; }
+        .char-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffaa88;
+            margin-bottom: 12px;
+            background: #1a1025;
+        }
+        .char-name { font-size: 1.8rem; color: #ffdfc4; margin-top: 8px; }
         .char-julukan { font-style: italic; color: #ccaa99; margin-top: 5px; }
         .info-section { margin: 16px 0; }
         .info-section h4 { color: #ffccaa; margin-bottom: 8px; font-size: 1rem; }
@@ -78,9 +86,8 @@
         }
         .relationship-item { margin: 8px 0; font-size: 0.8rem; border-left: 3px solid #ff88aa; padding-left: 10px; color: #ddddcc; }
         .quotes-box { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 10px; margin-top: 10px; font-style: italic; }
-        @media (max-width: 750px) { .char-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 750px) { .char-grid { grid-template-columns: 1fr; } .char-image { width: 100px; height: 100px; } }
         
-        /* Modal Styles */
         .char-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(8,5,20,0.98); backdrop-filter: blur(20px); border-radius: 24px;
@@ -89,13 +96,8 @@
         }
         .char-modal h3 { color: #ffccaa; margin: 15px 0 8px; }
         .char-modal hr { border-color: #665588; margin: 15px 0; }
-        .modal-close {
-            position: sticky; top: 0; text-align: right;
-        }
-        .modal-close button {
-            background: #ff6688; border: none; border-radius: 50%; width: 30px; height: 30px;
-            cursor: pointer; color: white; font-weight: bold;
-        }
+        .modal-close { position: sticky; top: 0; text-align: right; }
+        .modal-close button { background: #ff6688; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; color: white; font-weight: bold; }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1999; }
     </style>
 </head>
@@ -103,10 +105,18 @@
 <div class="game-container" id="app"></div>
 
 <script>
+    // ======================== GAMBAR KARAKTER ========================
+    const CHARACTER_IMAGES = {
+        Haruno: 'https://files.catbox.moe/0vq95g.png',
+        Katsumi: 'https://files.catbox.moe/d0w7s9.png',
+        Juun: 'https://files.catbox.moe/tvvc2w.png',
+        Touya: 'https://files.catbox.moe/048wx7.png'
+    };
+
     // ======================== DATA KARAKTER LENGKAP ========================
     const CHARACTERS_FULL = {
         Haruno: {
-            avatar: '❄️', name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
+            image: CHARACTER_IMAGES.Haruno, name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
             personality: 'Tsundere, protektif, pemarah, tegas, sulit jujur soal perasaan',
             ability: 'Kekuatan fisik monster, daya tahan tinggi, refleks cepat',
             hobbies: 'Latihan otot, sparring, jogging malam, koleksi minuman energi',
@@ -122,7 +132,7 @@
             stats: { intelligence: 80, luck: 60, curseResistance: 70, hintCost: 4 }
         },
         Katsumi: {
-            avatar: '🌊', name: 'Katsumi', julukan: 'Sexy Princess', umur: 18, tinggi: 165,
+            image: CHARACTER_IMAGES.Katsumi, name: 'Katsumi', julukan: 'Sexy Princess', umur: 18, tinggi: 165,
             personality: 'Ceria, super ramah, gaul, manja, perhatian, polos soal cinta',
             ability: 'Mudah akrab dengan siapa saja, pandai membaca suasana, ahli bikin orang nyaman',
             hobbies: 'Menari, menyanyi, scrolling trend terbaru, koleksi barang imut',
@@ -138,7 +148,7 @@
             stats: { intelligence: 95, luck: 55, curseResistance: 65, hintCost: 5 }
         },
         Juun: {
-            avatar: '🌀', name: 'Juun', julukan: 'Silent Prince', umur: 19, tinggi: 188,
+            image: CHARACTER_IMAGES.Juun, name: 'Juun', julukan: 'Silent Prince', umur: 19, tinggi: 188,
             personality: 'Pendiam, tenang, blak-blakan, cerdas, peka terhadap situasi',
             ability: 'Genius akademik, atlet serba bisa, observasi tajam',
             hobbies: 'Membaca artikel astronomi, mendengarkan musik tenang, makan donat',
@@ -154,7 +164,7 @@
             stats: { intelligence: 85, luck: 80, curseResistance: 50, hintCost: 6 }
         },
         Touya: {
-            avatar: '🔥', name: 'Touya', julukan: 'Bocah Imut', umur: 18, tinggi: 158,
+            image: CHARACTER_IMAGES.Touya, name: 'Touya', julukan: 'Bocah Imut', umur: 18, tinggi: 158,
             personality: 'Polos, pemalu, ceroboh, panikan, banyak bicara dengan orang dekat',
             ability: 'Ahli teka-teki, cepat memecahkan misteri, genius bahasa dan sastra kuno',
             hobbies: 'Eksplor tempat angker, baca misteri kuno, nonton anime, mengoleksi teori konspirasi',
@@ -181,7 +191,9 @@
         const modal = document.createElement('div'); modal.className = 'char-modal';
         modal.innerHTML = `
             <div class="modal-close"><button onclick="closeModal()">✕</button></div>
-            <div style="text-align:center; font-size:4rem;">${char.avatar}</div>
+            <div style="text-align:center;">
+                <img src="${char.image}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ff88aa; margin-bottom:10px;">
+            </div>
             <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
             <p style="text-align:center; font-style:italic;">"${char.julukan}"</p>
             <hr>
@@ -223,7 +235,7 @@
                     ${Object.entries(CHARACTERS_FULL).map(([id, char]) => `
                         <div class="char-card" onclick="showDetail('${id}')">
                             <div class="char-header">
-                                <div class="char-avatar">${char.avatar}</div>
+                                <img src="${char.image}" class="char-image" alt="${char.name}" onerror="this.src='https://placehold.co/120x120/2a1a3a/ffaa88?text=${char.name.charAt(0)}'">
                                 <div class="char-name">${char.name}</div>
                                 <div class="char-julukan">"${char.julukan}"</div>
                             </div>
