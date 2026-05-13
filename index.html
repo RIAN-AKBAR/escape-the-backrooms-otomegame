@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Otome Horror RPG | Game Utama</title>
+    <title>YUREI KAKU · Otome Horror RPG | With Apple of Knowledge</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -41,7 +41,6 @@
         h1, h2, h3, h4 { color: #f5e6d0; text-shadow: 0 1px 3px rgba(0,0,0,0.5); letter-spacing: 1px; }
         p, span, div, .stat-label, .stat-value { color: #e8ddce; }
         
-        /* Navigation */
         .nav-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: flex-end; }
         .nav-btn {
             background: rgba(30,20,45,0.95); border: 1px solid #e8aa88; padding: 8px 20px;
@@ -50,7 +49,6 @@
         }
         .nav-btn:hover { background: #c96a8a; border-color: white; transform: scale(1.02); }
         
-        /* Main Menu */
         .main-menu {
             min-height: 85vh;
             display: flex;
@@ -79,7 +77,6 @@
         }
         .menu-btn:hover { background: #c96a8a; border-color: white; transform: scale(1.03); }
         
-        /* Character Grid */
         .char-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
@@ -104,7 +101,6 @@
         .char-name { font-size: clamp(1rem, 4vw, 1.4rem); font-weight: bold; color: #ffdfc4; }
         .char-personality { font-size: clamp(0.6rem, 2.5vw, 0.7rem); color: #d4c4b0; }
         
-        /* Stat Bars */
         .stat-bar-container { margin: 8px 0; }
         .stat-label { display: flex; justify-content: space-between; font-size: clamp(0.65rem, 2.5vw, 0.75rem); margin-bottom: 4px; }
         .hp-bar-bg { background: #4a2a2a; border-radius: 20px; height: clamp(8px, 2vw, 12px); overflow: hidden; }
@@ -112,7 +108,6 @@
         .stamina-bar-bg { background: #2a4a2a; border-radius: 20px; height: clamp(6px, 1.8vw, 10px); overflow: hidden; }
         .stamina-bar-fill { background: linear-gradient(90deg, #66cc55, #aaff88); width: 0%; height: 100%; transition: width 0.3s; }
         
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -125,7 +120,6 @@
         .stat-item { text-align: center; font-size: clamp(0.6rem, 2.5vw, 0.7rem); }
         .stat-value { font-weight: bold; color: #ffd9b5; }
         
-        /* Buttons */
         .btn-hint {
             background: #2a1a3a; border: 1px solid #c99070; padding: clamp(6px,2vw,10px) clamp(10px,3vw,16px);
             border-radius: 40px; cursor: pointer; transition: 0.2s; margin: 4px;
@@ -159,7 +153,8 @@
         .overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); z-index:1999; }
         
         .inventory-summary { display: flex; flex-wrap: wrap; gap: clamp(8px,2vw,12px); margin: 16px 0; justify-content: center; }
-        .inv-tag { background: rgba(0,0,0,0.55); padding: clamp(5px,2vw,8px) clamp(10px,3vw,14px); border-radius: 40px; font-size: clamp(0.7rem,2.5vw,0.8rem); font-weight: bold; color: #fff0e0; }
+        .inv-tag { background: rgba(0,0,0,0.55); padding: clamp(5px,2vw,8px) clamp(10px,3vw,14px); border-radius: 40px; font-size: clamp(0.7rem,2.5vw,0.8rem); font-weight: bold; color: #fff0e0; cursor: pointer; }
+        .inv-tag:hover { background: rgba(100,60,120,0.7); }
         
         .puzzle-area {
             background: rgba(12, 8, 25, 0.95);
@@ -189,16 +184,41 @@
             font-size: clamp(0.8rem,3vw,0.9rem);
         }
         
-        .status-bar {
-            display: flex; flex-wrap: wrap; gap: clamp(10px,3vw,14px); margin-top: 24px;
-            padding: clamp(12px,3vw,16px); background: rgba(0,0,0,0.55);
-            border-radius: clamp(16px,4vw,24px); justify-content: center;
+        /* Apple Knowledge Modal */
+        .apple-modal {
+            position: fixed; bottom: 20px; right: 20px;
+            background: rgba(10,6,22,0.98); backdrop-filter: blur(20px);
+            border-radius: 20px; border: 2px solid #ffcc66;
+            width: min(90%, 350px); z-index: 1500;
+            box-shadow: 0 0 30px rgba(255,200,100,0.4);
+            animation: slideInRight 0.3s ease;
         }
-        .stat-tag {
-            background: rgba(20,12,35,0.9); padding: clamp(6px,2vw,8px) clamp(12px,3vw,18px);
-            border-radius: 40px; font-size: clamp(0.7rem,2.5vw,0.85rem);
-            font-weight: bold; color: #ffe0cc;
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
+        .apple-header {
+            background: linear-gradient(135deg, #8a6a3a, #aa8a5a);
+            padding: 12px 16px; border-radius: 18px 18px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer;
+        }
+        .apple-header h4 { color: #fff0c0; margin: 0; font-size: 1rem; }
+        .apple-close { background: #ff6688; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; color: white; font-weight: bold; }
+        .apple-content {
+            padding: 16px;
+            max-height: 300px; overflow-y: auto;
+        }
+        .apple-answer {
+            background: rgba(0,0,0,0.5); padding: 12px; border-radius: 12px;
+            margin: 10px 0; font-size: 0.9rem; border-left: 4px solid #ffcc66;
+        }
+        .apple-answer-label { color: #ffcc66; font-weight: bold; margin-bottom: 5px; }
+        .apple-answer-text { color: #ffeecc; font-size: 1rem; word-break: break-word; }
+        .apple-hint { color: #ccaa88; font-size: 0.8rem; margin-top: 8px; font-style: italic; }
+        
+        .status-bar { display: flex; flex-wrap: wrap; gap: clamp(10px,3vw,14px); margin-top: 24px; padding: clamp(12px,3vw,16px); background: rgba(0,0,0,0.55); border-radius: clamp(16px,4vw,24px); justify-content: center; }
+        .stat-tag { background: rgba(20,12,35,0.9); padding: clamp(6px,2vw,8px) clamp(12px,3vw,18px); border-radius: 40px; font-size: clamp(0.7rem,2.5vw,0.85rem); font-weight: bold; color: #ffe0cc; }
         
         @media (max-width:550px){ .stat-tag{white-space:normal;text-align:center} .char-header{flex-direction:column;text-align:center} .stats-grid{grid-template-columns:repeat(2,1fr)} }
         @media (max-width:380px){ .stats-grid{grid-template-columns:1fr} .puzzle-options{flex-direction:column} .puzzle-input{width:100%} .puzzle-btn{width:100%} }
@@ -208,7 +228,7 @@
 <div class="game-container" id="app"></div>
 
 <script>
-    // ======================== KARAKTER DATA LENGKAP ========================
+    // ======================== KARAKTER DATA ========================
     const CHARACTERS = [
         { id: 'Haruno', name: 'Haruno', avatar: '❄️', personality: 'Tsundere · Protektif · Pemarah', baseHintCost: 4, hintStyle: 'galak', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 80, luck: 60, curseResistance: 70 },
         { id: 'Katsumi', name: 'Katsumi', avatar: '🌊', personality: 'Ceria · Ramah · Perhatian', baseHintCost: 5, hintStyle: 'ceplas', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 95, luck: 55, curseResistance: 65 },
@@ -227,18 +247,10 @@
         { q: "Makhluk apa yang berjalan dengan 4 kaki di pagi hari, 2 kaki di siang hari, dan 3 kaki di malam hari?", a: "manusia", hint: "Fase kehidupan" },
         { q: "Apa yang bisa pecah tanpa disentuh?", a: "janji", hint: "Komitmen yang dilanggar" },
         { q: "Ia tidak punya mulut tapi bisa berteriak, tidak punya sayap tapi bisa terbang. Apakah ia?", a: "angin", hint: "Hem busan alam" },
-        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" },
-        { q: "Aku selalu datang di malam hari dan pergi saat fajar. Siapakah aku?", a: "bulan", hint: "Satelit bumi" },
-        { q: "Apa yang bisa kau lihat di air tapi tidak bisa kau pegang?", a: "bayangan", hint: "Pantulan diri" },
-        { q: "Ia tidak punya hati tapi bisa berdetak. Apakah ia?", a: "jam", hint: "Penunjuk waktu" },
-        { q: "Apa yang memiliki gigi tapi tidak bisa menggigit?", a: "sisir", hint: "Rapikan rambut" },
-        { q: "Berapa hasil dari 144 dibagi 12?", a: "12", hint: "Perkalian 12 x 12" },
-        { q: "Aku bisa mengalir tapi bukan sungai, aku bisa terbakar tapi bukan kayu. Apakah aku?", a: "waktu", hint: "Detik yang berlalu" },
-        { q: "Apa yang bisa mengelilingi dunia tapi tetap di sudut?", a: "perangko", hint: "Tempelan surat" }
+        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" }
     ];
-    // Generate 500+ teka-teki
     for(let i = 0; i < 500; i++) {
-        PUZZLE_BANK.push({ q: `Misteri #${i+18}: Sesuatu yang bisa memecah tanpa menyentuh, membuat utuh tanpa lem. Apakah itu?`, a: "waktu", hint: "Detik yang berlalu" });
+        PUZZLE_BANK.push({ q: `Misteri #${i+11}: Sesuatu yang bisa memecah tanpa menyentuh, membuat utuh tanpa lem. Apakah itu?`, a: "waktu", hint: "Detik yang berlalu" });
     }
 
     let gameState = {
@@ -246,11 +258,16 @@
         characters: [],
         level: 1, chapter: 1, puzzleProgress: 0, puzzlesThisLevel: 12,
         totalPuzzlesSolved: 0, lastRegen: Date.now(),
-        inventory: { ghost_coin: 50, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 },
-        hintHistory: [], currentStorySeed: Math.random(), currentPuzzle: null
+        inventory: { ghost_coin: 50, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 3, ghost_key: 0, mystery_box: 0, legendary_chest: 0 },
+        hintHistory: [], currentStorySeed: Math.random(), currentPuzzle: null,
+        appleAnswerShown: null
     };
 
+    let appleModalOpen = false;
+    let appleModalElement = null;
+
     function getRandomPuzzle() { return { ...PUZZLE_BANK[Math.floor(Math.random() * PUZZLE_BANK.length)] }; }
+    
     function getRandomDrop(level, luck) {
         const roll = Math.random();
         if (roll < 0.01) return { rarity: 'UR', name: 'Apel Pengetahuan', type: 'apple', value: 1, qty: 1 };
@@ -290,7 +307,7 @@
         const finalDamage = Math.max(3, Math.floor(damage * (1 - reduction * 0.3)));
         character.hp = Math.max(0, character.hp - finalDamage);
         showFloatingDamage(`-${finalDamage} HP`, character.id);
-        if (character.hp <= 0) addHintToHistory(`💀 ${character.name} pingsan! Gunakan item.`);
+        if (character.hp <= 0) addHintToHistory(`💀 ${character.name} pingsan! Gunakan Potion untuk menyadarkan.`);
         saveGame(); render();
         return finalDamage;
     }
@@ -306,12 +323,113 @@
         }
     }
 
+    function usePotion(charId) {
+        const char = gameState.characters.find(c => c.id === charId);
+        if (!char) return;
+        if (char.hp >= char.maxHp) {
+            addHintToHistory(`⚠️ ${char.name} sudah memiliki HP penuh!`);
+            render(); return;
+        }
+        if (gameState.inventory.potion_hp >= 30) {
+            char.hp = Math.min(char.maxHp, char.hp + 30);
+            gameState.inventory.potion_hp -= 30;
+            addHintToHistory(`🧪 ${char.name} menggunakan Potion! HP +30 (${char.hp}/${char.maxHp})`);
+            saveGame(); render();
+        } else { alert(`❌ Potion tidak cukup! Stok: ${gameState.inventory.potion_hp}%`); }
+    }
+
+    function useStamina(charId) {
+        const char = gameState.characters.find(c => c.id === charId);
+        if (!char) return;
+        if (char.stamina >= char.maxStamina) {
+            addHintToHistory(`⚠️ ${char.name} sudah memiliki Stamina penuh!`);
+            render(); return;
+        }
+        if (gameState.inventory.stamina_bread >= 20) {
+            char.stamina = Math.min(char.maxStamina, char.stamina + 20);
+            gameState.inventory.stamina_bread -= 20;
+            addHintToHistory(`🍞 ${char.name} memakan Roti Stamina! Stamina +20 (${char.stamina}/${char.maxStamina})`);
+            saveGame(); render();
+        } else { alert(`❌ Roti Stamina tidak cukup! Stok: ${gameState.inventory.stamina_bread}%`); }
+    }
+
+    // =============== APEL PENGETAHUAN - Menampilkan jawaban langsung ===============
+    function useAppleKnowledge() {
+        if (gameState.inventory.apple <= 0) {
+            alert(`❌ Apel Pengetahuan tidak cukup! Stok: ${gameState.inventory.apple}`);
+            return;
+        }
+        if (!gameState.currentPuzzle) return;
+        
+        gameState.inventory.apple--;
+        const answer = gameState.currentPuzzle.a;
+        const question = gameState.currentPuzzle.q;
+        
+        addHintToHistory(`🍎 Menggunakan Apel Pengetahuan! Jawaban untuk teka-teki saat ini terungkap.`);
+        saveGame();
+        
+        // Show Apple Knowledge Modal
+        showAppleModal(question, answer, gameState.currentPuzzle.hint);
+        render();
+    }
+    
+    function showAppleModal(question, answer, hint) {
+        // Close existing modal if open
+        if (appleModalElement) {
+            appleModalElement.remove();
+            appleModalElement = null;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'apple-modal';
+        modal.innerHTML = `
+            <div class="apple-header">
+                <h4>🍎 APEL PENGETAHUAN</h4>
+                <button class="apple-close" onclick="closeAppleModal()">✕</button>
+            </div>
+            <div class="apple-content">
+                <div class="apple-answer">
+                    <div class="apple-answer-label">📖 Pertanyaan:</div>
+                    <div class="apple-answer-text">${question.substring(0, 150)}${question.length > 150 ? '...' : ''}</div>
+                </div>
+                <div class="apple-answer">
+                    <div class="apple-answer-label">✨ JAWABAN:</div>
+                    <div class="apple-answer-text" style="color: #ffcc66; font-size: 1.1rem;">"${answer}"</div>
+                </div>
+                <div class="apple-hint">💡 Petunjuk: ${hint || 'Tidak ada petunjuk tambahan'}</div>
+                <div style="margin-top: 12px; font-size: 0.7rem; color: #aa9988; text-align: center;">✨ Gunakan jawaban ini untuk menjawab teka-teki ✨</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        appleModalElement = modal;
+        appleModalOpen = true;
+        
+        // Auto close after 30 seconds
+        setTimeout(() => {
+            if (appleModalElement) closeAppleModal();
+        }, 30000);
+    }
+    
+    window.closeAppleModal = function() {
+        if (appleModalElement) {
+            appleModalElement.remove();
+            appleModalElement = null;
+        }
+        appleModalOpen = false;
+    };
+
+    function addHintToHistory(text) {
+        gameState.hintHistory.unshift({ text, time: new Date().toLocaleTimeString() });
+        if (gameState.hintHistory.length > 30) gameState.hintHistory.pop();
+        saveGame();
+    }
+
     function getHintFromCharacter(charId) {
         const character = gameState.characters.find(c => c.id === charId);
         if (!character) return;
         let cost = character.baseHintCost + Math.floor(gameState.level / 10);
         if (character.stamina < cost) {
-            addHintToHistory(`⚠️ Stamina ${character.name} tidak cukup! (butuh ${cost})`);
+            addHintToHistory(`⚠️ Stamina ${character.name} tidak cukup! (butuh ${cost}) - Gunakan Roti Stamina!`);
             render(); return;
         }
         character.stamina -= cost;
@@ -323,30 +441,6 @@
             panik: `"${character.name} panik: 'A-aku rasa ini tentang ${hintMsg.substring(0,30)}... Coba ingat lagi!'"`
         };
         addHintToHistory(`${character.avatar} ${styleMessages[character.hintStyle] || character.name + ' memberi petunjuk'} (${cost} stamina)`);
-        saveGame(); render();
-    }
-
-    function addHintToHistory(text) {
-        gameState.hintHistory.unshift({ text, time: new Date().toLocaleTimeString() });
-        if (gameState.hintHistory.length > 25) gameState.hintHistory.pop();
-        saveGame();
-    }
-
-    function useItemOnCharacter(itemType, charId) {
-        const character = gameState.characters.find(c => c.id === charId);
-        if (!character) return;
-        if (itemType === 'potion' && gameState.inventory.potion_hp >= 30) {
-            character.hp = Math.min(character.maxHp, character.hp + 30);
-            gameState.inventory.potion_hp -= 30;
-            addHintToHistory(`🧪 ${character.name} menggunakan Potion! HP +30`);
-        } else if (itemType === 'stamina' && gameState.inventory.stamina_bread >= 20) {
-            character.stamina = Math.min(character.maxStamina, character.stamina + 20);
-            gameState.inventory.stamina_bread -= 20;
-            addHintToHistory(`🍞 ${character.name} memakan Roti! Stamina +20`);
-        } else if (itemType === 'apple' && gameState.inventory.apple > 0) {
-            gameState.inventory.apple--;
-            addHintToHistory(`🍎 ${character.name} memakan Apel Pengetahuan! Keberuntungan meningkat.`);
-        }
         saveGame(); render();
     }
 
@@ -389,7 +483,7 @@
         gameState.characters = CHARACTERS.map(char => ({ ...char, hp: char.maxHp, stamina: char.maxStamina, affection: 15 }));
         gameState.level = 1; gameState.chapter = 1; gameState.puzzleProgress = 0; gameState.puzzlesThisLevel = 12;
         gameState.totalPuzzlesSolved = 0; gameState.lastRegen = Date.now(); gameState.hintHistory = [];
-        gameState.inventory = { ghost_coin: 25, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 };
+        gameState.inventory = { ghost_coin: 25, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 2, ghost_key: 0, mystery_box: 0, legendary_chest: 0 };
         gameState.currentStorySeed = Math.random();
         gameState.currentPuzzle = getRandomPuzzle();
         saveGame();
@@ -421,6 +515,8 @@
                 gameState.level++;
             }
             gameState.currentPuzzle = getRandomPuzzle();
+            // Close apple modal if open
+            if (appleModalElement) closeAppleModal();
             saveGame();
             render();
             if(input) input.value = '';
@@ -429,7 +525,7 @@
             if (targets.length > 0) {
                 const target = targets[Math.floor(Math.random() * targets.length)];
                 const damage = applyCurseDamage(target);
-                addHintToHistory(`❌ JAWABAN SALAH! ${target.name} terkena kutukan (-${damage} HP)`);
+                addHintToHistory(`❌ JAWABAN SALAH! ${target.name} terkena kutukan (-${damage} HP) - Gunakan Potion untuk memulihkan!`);
                 const card = document.querySelector(`.char-card[data-char="${target.id}"]`);
                 if (card) { card.classList.add('cursed'); setTimeout(() => card.classList.remove('cursed'), 500); }
             }
@@ -441,7 +537,7 @@
 
     function generateStoryText() {
         const stories = [
-            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan 12-15 teka-teki setiap bab untuk melarikan diri."`,
+            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan teka-teki untuk melarikan diri."`,
             `Kabut tebal di ${gameState.level % 2 === 0 ? 'sekolah terbengkalai' : 'rumah sakit jiwa'}. ${gameState.characters[3]?.name || 'Touya'} memegang obor, "Aku akan melindungi kalian."`,
             `Bab ${gameState.chapter}: ${gameState.puzzleProgress}/${gameState.puzzlesThisLevel} teka-teki terselesaikan. Teruslah berjuang!`
         ];
@@ -459,15 +555,13 @@
             <div style="text-align:center; font-size:3rem;">${char.avatar}</div>
             <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
             <hr style="margin:15px 0; border-color:#665588;">
-            <h3>📌 Identitas</h3>
+            <h3>📌 Kepribadian</h3>
             <p>${char.personality}</p>
             <h3>💕 Affection: ${char.affection}</h3>
             <h3>⚡ Statistik</h3>
             <p>🧠 Intelijen: ${char.intelligence} | 🍀 Keberuntungan: ${char.luck} | 🛡️ Resistansi Kutukan: ${char.curseResistance}</p>
             <h3>💡 Hint Cost</h3>
             <p>${char.baseHintCost} stamina per petunjuk</p>
-            <hr>
-            <p style="font-size:0.8rem;">✨ Klik kembali ke game untuk melanjutkan petualangan ✨</p>
         `;
         document.body.appendChild(overlay); document.body.appendChild(modal);
         currentModal = { overlay, modal };
@@ -487,7 +581,7 @@
                         <button class="menu-btn" onclick="window.location.href='daily.html'">🎁 Daily & Shop</button>
                         <button class="menu-btn" onclick="window.location.href='characters.html'">👥 Karakter</button>
                     </div>
-                    <div style="margin-top: 30px; font-size: clamp(0.7rem, 3vw, 0.8rem); color:#ccbbaa;">✦ 12-18 Teka-teki per Bab · Random Story · Otome Horror ✦</div>
+                    <div style="margin-top: 30px; font-size: clamp(0.7rem, 3vw, 0.8rem); color:#ccbbaa;">✦ Apel Pengetahuan bisa lihat jawaban langsung! ✦</div>
                 </div>
             `;
             return;
@@ -502,14 +596,17 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px;">
                     <h2>👥 YUREI KAKU</h2>
-                    <button class="btn-hint" onclick="showNewGameWarning()">🔄 Reset Cerita</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-hint" onclick="useAppleKnowledge()" style="background:#8a6a3a;">🍎 Apel Pengetahuan (${gameState.inventory.apple})</button>
+                        <button class="btn-hint" onclick="showNewGameWarning()">🔄 Reset Cerita</button>
+                    </div>
                 </div>
                 <div class="inventory-summary">
                     <span class="inv-tag">🪙 ${gameState.inventory.ghost_coin}</span>
                     <span class="inv-tag">🎭 ${gameState.inventory.topeng}</span>
-                    <span class="inv-tag">🧪 ${gameState.inventory.potion_hp}%</span>
-                    <span class="inv-tag">🍞 ${gameState.inventory.stamina_bread}%</span>
-                    <span class="inv-tag">🍎 ${gameState.inventory.apple}</span>
+                    <span class="inv-tag" onclick="alert('Potion: Pulihkan 30 HP')">🧪 ${gameState.inventory.potion_hp}%</span>
+                    <span class="inv-tag" onclick="alert('Roti Stamina: Pulihkan 20 Stamina')">🍞 ${gameState.inventory.stamina_bread}%</span>
+                    <span class="inv-tag" onclick="alert('Apel Pengetahuan: Lihat jawaban teka-teki!')">🍎 ${gameState.inventory.apple}</span>
                     <span class="inv-tag">🔑 ${gameState.inventory.ghost_key}</span>
                 </div>
             </div>
@@ -531,10 +628,11 @@
                         </div>
                         <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
                             <button class="btn-hint" onclick="event.stopPropagation(); getHintFromCharacter('${char.id}')">🔍 Petunjuk</button>
-                            <button class="btn-hint" onclick="event.stopPropagation(); useItemOnCharacter('potion', '${char.id}')">🧪 Potion</button>
-                            <button class="btn-hint" onclick="event.stopPropagation(); useItemOnCharacter('stamina', '${char.id}')">🍞 Roti</button>
-                            ${gameState.inventory.apple > 0 ? `<button class="btn-hint" onclick="event.stopPropagation(); useItemOnCharacter('apple', '${char.id}')">🍎 Apel</button>` : ''}
+                            <button class="btn-hint" onclick="event.stopPropagation(); usePotion('${char.id}')">🧪 Potion</button>
+                            <button class="btn-hint" onclick="event.stopPropagation(); useStamina('${char.id}')">🍞 Roti</button>
                         </div>
+                        ${char.hp <= 30 ? `<div style="margin-top:8px; font-size:0.6rem; color:#ff8888;">⚠️ Terluka! Gunakan Potion!</div>` : ''}
+                        ${char.stamina <= 20 ? `<div style="margin-top:8px; font-size:0.6rem; color:#ffaa66;">⚠️ Stamina rendah! Gunakan Roti!</div>` : ''}
                     </div>
                 `).join('')}
             </div>
@@ -548,7 +646,9 @@
                     <input type="text" id="puzzleAnswer" class="puzzle-input" placeholder="Ketik jawaban di sini..." autocomplete="off" enterkeyhint="done">
                     <button class="puzzle-btn" onclick="solvePuzzle()">✨ Jawab</button>
                 </div>
-                <div style="margin-top: 12px; text-align: center; font-size: clamp(0.6rem, 2.5vw, 0.7rem); color: #ccbba8;">💡 Butuh bantuan? Klik "Petunjuk" di karakter (menguras stamina) atau klik kartu untuk lihat profil</div>
+                <div style="margin-top: 12px; text-align: center; font-size: clamp(0.6rem, 2.5vw, 0.7rem); color: #ccbba8;">
+                    💡 Butuh bantuan? Klik "Petunjuk" di karakter (menguras stamina) atau 🍎 Apel Pengetahuan untuk lihat jawaban!
+                </div>
             </div>
             <div class="glass-panel">
                 <div style="display: flex; justify-content: space-between; flex-wrap: wrap;"><h3>📜 Hint History</h3><span>${gameState.hintHistory.length} catatan</span></div>
@@ -584,9 +684,12 @@
     window.resetStory = () => { initNewGame(); closeWarning(); render(); addHintToHistory('✨ Cerita baru dimulai! Item tetap utuh. ✨'); };
     window.startGame = () => { gameState.screen = 'game'; if(!gameState.currentPuzzle) gameState.currentPuzzle = getRandomPuzzle(); render(); };
     window.getHintFromCharacter = getHintFromCharacter;
-    window.useItemOnCharacter = useItemOnCharacter;
+    window.usePotion = usePotion;
+    window.useStamina = useStamina;
+    window.useAppleKnowledge = useAppleKnowledge;
     window.solvePuzzle = solvePuzzle;
     window.showProfile = showProfile;
+    window.closeAppleModal = closeAppleModal;
 
     function createParticles() {
         const particleCount = Math.min(40, Math.floor(window.innerWidth / 30));
