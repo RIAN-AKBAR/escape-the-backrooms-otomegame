@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Otome Horror RPG | Complete Edition</title>
+    <title>YUREI KAKU · Otome Horror RPG | Complete Edition with Relationships</title>
     <style>
         * {
             margin: 0;
@@ -44,7 +44,6 @@
             width: 100%;
         }
 
-        /* Navigation */
         .nav-bar {
             display: flex;
             flex-wrap: wrap;
@@ -78,7 +77,6 @@
             margin-bottom: 20px;
         }
 
-        /* Character Grid */
         .char-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
@@ -118,7 +116,6 @@
         }
         .btn-action:hover { background: #c96a8a; }
 
-        /* Profile Modal */
         .profile-modal {
             position: fixed;
             top: 50%;
@@ -129,7 +126,7 @@
             border-radius: 24px;
             padding: 20px;
             z-index: 2000;
-            width: min(95%, 500px);
+            width: min(95%, 550px);
             max-height: 85vh;
             overflow-y: auto;
             border: 2px solid #ff88aa;
@@ -150,6 +147,14 @@
             color: white;
             font-weight: bold;
         }
+        .relationship-badge {
+            display: inline-block;
+            background: rgba(255,100,120,0.3);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin: 2px;
+        }
         .overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -157,7 +162,6 @@
             z-index: 1999;
         }
 
-        /* Puzzle Area */
         .puzzle-area {
             background: rgba(12, 8, 25, 0.95);
             border-radius: 20px;
@@ -233,7 +237,30 @@
 <div class="game-container" id="app"></div>
 
 <script>
-    // ======================== DATA KARAKTER LENGKAP ========================
+    // ======================== DATA KARAKTER LENGKAP DENGAN HUBUNGAN ========================
+    const RELATIONSHIPS = {
+        Haruno: {
+            Katsumi: "Katsumi adalah orang yang paling sering berada di dekat Haruno tanpa takut. Dia suka menggoda Haruno, memaksa ikut trend aneh. Haruno selalu mengeluh tapi tetap menuruti. Haruno paling protektif terhadap Katsumi dan diam-diam memperhatikan kalau Katsumi sudah makan atau belum.",
+            Juun: "Hubungan penuh rivalitas diam-diam. Sama-sama hebat dan sering bersaing. Haruno sering kesal karena Juun terlalu santai, Juun menganggap Haruno terlalu emosional. Tapi mereka sangat saling percaya.",
+            Touya: "Awalnya Touya takut setengah mati pada Haruno. Kini Touya jadi paling sering menempel pada Haruno saat takut. Haruno sering mengomel tapi paling sering melindungi Touya."
+        },
+        Katsumi: {
+            Haruno: "Salah satu sedikit orang yang tidak takut pada Haruno. Suka menggoda dan memaksa Haruno ikut trend. Sering mengingatkan Haruno untuk istirahat dan makan.",
+            Juun: "Sering mengajak Juun nongkrong. Juun jarang benar-benar menolak. Katsumi mengerti sifat asli Juun yang sebenarnya perhatian walau jarang menunjukkannya.",
+            Touya: "Menganggap Touya seperti adik kecil. Paling sering menenangkan Touya saat panik. Suka menggoda Touya karena reaksinya lucu, tapi langsung protektif jika ada yang mengejek Touya."
+        },
+        Juun: {
+            Haruno: "Rival terbesar dalam olahraga. Sering bersaing diam-diam. Meski sering beradu pendapat, punya rasa percaya yang kuat satu sama lain.",
+            Katsumi: "Salah satu orang yang paling sering mengganggu ketenangan Juun, tapi juga yang paling bisa membuat suasana terasa ringan. Juun lebih sabar menghadapi Katsumi.",
+            Touya: "Rival akademik yang paling sering berusaha mengalahkannya. Juun cukup menghargai kemampuan Touya memecahkan teka-teki. Sering berjalan paling belakang bersama Touya saat eksplorasi tempat angker."
+        },
+        Touya: {
+            Haruno: "Awalnya benar-benar takut, sekarang jadi 'tameng hidup' favorit Touya saat suasana menegangkan. Haruno sering mengomel tapi selalu melindungi.",
+            Katsumi: "Orang yang paling sering menenangkan Touya saat panik. Touya sangat nyaman berada di dekat Katsumi. Sering bercerita panjang lebar tentang teori misterinya.",
+            Juun: "Rival akademik terbesar yang paling ingin dikalahkan. Sering gugup saat Juun muncul. Diam-diam sangat kagum pada kemampuan Juun."
+        }
+    };
+
     const CHARACTERS_DATA = {
         Haruno: {
             id: 'Haruno', avatar: '❄️', name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
@@ -243,6 +270,7 @@
             likes: 'Minuman berenergi dingin, tantangan fisik, suasana tenang',
             dislikes: 'Orang keras kepala yang cari masalah sendiri, keributan nggak penting, dipanggil "imut"',
             description: 'Sosok paling besar dan paling kuat di kelompoknya. Tubuhnya seperti tembok baja. Galak, gampang emosi, tapi di balik itu paling peduli. Kalau ada teman terluka, dia bakal maju melindungi meski dirinya sendiri sedang berdarah.',
+            quotes: ['"Kalau nggak kuat, mundur. Biar gue aja."', '"Hah? Gue khawatir? Ngaco."', '"Cepat berdiri. Gue nggak suka lihat muka kalah."', '"Selama gue masih bisa berdiri, nggak bakal ada yang nyentuh kalian."'],
             hintStyle: 'galak', baseHintCost: 4,
             hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
             intelligence: 80, luck: 60, curseResistance: 70
@@ -255,6 +283,7 @@
             likes: 'Dessert manis, boneka lucu, aksesoris pastel, karaoke malam',
             dislikes: 'Suasana sepi menyeramkan, film horor, orang bertengkar',
             description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun. Tipe orang yang selalu khawatir pada teman-temannya.',
+            quotes: ['"Eh? Serius? Lucu bangettt!"', '"Jangan dipendem sendiri dong... cerita sama aku."', '"Aku cuma bantu sedikit kok~"', '"H-HANTU?! Jangan tinggalin aku sendirian!!"'],
             hintStyle: 'ceplas', baseHintCost: 5,
             hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
             intelligence: 95, luck: 55, curseResistance: 65
@@ -267,6 +296,7 @@
             likes: 'Tempat sunyi, malam berbintang, kopi pahit, kucing',
             dislikes: 'Keramaian berisik, serangga, rumah hantu',
             description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Murid paling pintar, tapi rivalitas dengan Haruno. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
+            quotes: ['"Berisik."', '"Itu keputusan yang buruk."', '"Aku tidak marah. Hanya malas bicara."', '"Donat terakhirku siapa yang ambil?"'],
             hintStyle: 'singkat', baseHintCost: 6,
             hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
             intelligence: 85, luck: 80, curseResistance: 50
@@ -279,6 +309,7 @@
             likes: 'Teka-teki sulit, sejarah, barang antik, ramen murah, pelukan hangat',
             dislikes: 'Orang menyeramkan, suasana tegang, jumpscare mendadak',
             description: 'Cowok mungil dengan wajah imut. Sering dikira anak SMP. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
+            quotes: ['"A-Aku nggak takut kok... cuma kaget dikit!"', '"Teori ku benar! Aku tahu ada sesuatu di sini!"', '"JANGAN TINGGALIN AKU SENDIRIAN!!"', '"Su-suara tadi itu apaan...?"'],
             hintStyle: 'panik', baseHintCost: 8,
             hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
             intelligence: 98, luck: 70, curseResistance: 45
@@ -296,28 +327,20 @@
         { q: "Makhluk apa yang berjalan dengan 4 kaki di pagi hari, 2 kaki di siang hari, dan 3 kaki di malam hari?", a: "manusia", hint: "Fase kehidupan" },
         { q: "Apa yang bisa pecah tanpa disentuh?", a: "janji", hint: "Komitmen yang dilanggar" },
         { q: "Ia tidak punya mulut tapi bisa berteriak, tidak punya sayap tapi bisa terbang. Apakah ia?", a: "angin", hint: "Hem busan alam" },
-        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" }
-    ];
-    
-    // Generate 500+ teka-teki dengan variasi
-    for(let i = 1; i <= 500; i++) {
-        if(!PUZZLE_BANK[i]) {
-            PUZZLE_BANK.push({
-                q: `Teka-teki ke-${i+10}: Apa yang bisa kau lihat sekali dalam semenit, dua kali dalam sedetik, tapi tidak pernah dalam seribu tahun?`,
-                a: "huruf m",
-                hint: "Perhatikan ejaan kata 'menit', 'detik', 'tahun'"
-            });
-        }
-    }
-    // Tambahan 100 teka-teki unik
-    const extraPuzzles = [
+        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" },
         { q: "Aku memiliki kota tanpa rumah, gunung tanpa batu, dan air tanpa ikan. Apakah aku?", a: "peta", hint: "Gambar dunia" },
         { q: "Apa yang bisa kau pegang tapi tidak bisa kau sentuh?", a: "napas", hint: "Udara kehidupan" },
         { q: "Berapa banyak bulan yang dimiliki bumi?", a: "1", hint: "Satelit alami" },
         { q: "Apa yang memiliki leher tapi tidak punya kepala?", a: "botol", hint: "Tempat minum" }
     ];
-    PUZZLE_BANK.push(...extraPuzzles);
-    for(let i=0; i<400; i++) PUZZLE_BANK.push({ q: `Misteri #${i+100}: Sesuatu yang bisa memecah tanpa menyentuh, membuat utuh tanpa lem. Apakah itu?`, a: "waktu", hint: "Detik yang berlalu" });
+    
+    for(let i = 0; i < 500; i++) {
+        PUZZLE_BANK.push({ 
+            q: `Misteri #${i+15}: Sesuatu yang bisa memecah tanpa menyentuh, membuat utuh tanpa lem. Apakah itu?`, 
+            a: "waktu", 
+            hint: "Detik yang berlalu" 
+        });
+    }
 
     function getRandomPuzzle() {
         return { ...PUZZLE_BANK[Math.floor(Math.random() * PUZZLE_BANK.length)] };
@@ -332,7 +355,8 @@
         inventory: { ghost_coin: 30, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0 },
         hintHistory: [],
         lastRegenTime: Date.now(),
-        currentStorySeed: Math.random()
+        currentStorySeed: Math.random(),
+        relationshipAffection: { Haruno: 15, Katsumi: 15, Juun: 15, Touya: 15 }
     };
 
     function initGame() {
@@ -373,7 +397,6 @@
         } else { initGame(); }
     }
 
-    // =============== ITEM & HEALING (TIDAK AUTO, HARUS PAKAI ITEM) ===============
     function usePotion(charId) {
         const char = gameState.characters.find(c => c.id === charId);
         if(!char) return;
@@ -396,22 +419,15 @@
         } else { alert(`❌ Roti Stamina tidak cukup! Stok: ${gameState.inventory.stamina_bread}%`); }
     }
 
-    // Recovery pasif saat di lobby (hanya berjalan saat tidak bermain puzzle)
     let lastLobbyRecovery = Date.now();
     function lobbyRecovery() {
         const now = Date.now();
         const minutesPassed = Math.floor((now - lastLobbyRecovery) / 60000);
         if(minutesPassed > 0 && gameState.screen === 'lobby') {
             gameState.characters.forEach(char => {
-                let recoveryRate = 0;
-                if(char.id === 'Haruno') recoveryRate = 3; // paling cepat pulih
-                else if(char.id === 'Juun') recoveryRate = 2;
-                else if(char.id === 'Katsumi') recoveryRate = 2.5;
-                else recoveryRate = 1.5;
-                const hpGain = Math.floor(minutesPassed * recoveryRate);
-                const stamGain = Math.floor(minutesPassed * (recoveryRate + 0.5));
-                char.hp = Math.min(char.maxHp, char.hp + hpGain);
-                char.stamina = Math.min(char.maxStamina, char.stamina + stamGain);
+                let recoveryRate = char.id === 'Haruno' ? 3 : char.id === 'Juun' ? 2 : char.id === 'Katsumi' ? 2.5 : 1.5;
+                char.hp = Math.min(char.maxHp, char.hp + Math.floor(minutesPassed * recoveryRate));
+                char.stamina = Math.min(char.maxStamina, char.stamina + Math.floor(minutesPassed * (recoveryRate + 0.5)));
             });
             lastLobbyRecovery = now;
             saveGame();
@@ -426,7 +442,6 @@
         saveGame();
     }
 
-    // =============== HINT BERBEDA SETIAP KARAKTER ===============
     function getHint(charId) {
         const char = gameState.characters.find(c => c.id === charId);
         if(!char) return;
@@ -437,16 +452,15 @@
         char.stamina -= char.baseHintCost;
         const puzzle = gameState.currentPuzzle;
         const hintTexts = {
-            Haruno: `"${char.name} menatap tajam: '${puzzle?.hint || 'Fokus! Jangan buang waktuku.'}'"`,
-            Katsumi: `"${char.name} tersenyum: 'Coba pikirkan tentang ${puzzle?.hint?.substring(0,30) || 'petunjuk yang ada'}... Aku yakin kamu bisa!'"`,
-            Juun: `"${char.name} berkata datar: '${puzzle?.hint || 'Jawabannya sederhana. Pikir lagi.'}'"`,
-            Touya: `"${char.name} panik: 'A-aku rasa ini tentang ${puzzle?.hint?.substring(0,25) || 'sesuatu'}... Coba ingat lagi!'"`
+            Haruno: `"${char.name} menyilangkan tangan: '${puzzle?.hint || 'Fokus! Jangan buang waktuku.'}'"`,
+            Katsumi: `"${char.name} tersenyum manis: 'Coba pikirkan tentang ${puzzle?.hint?.substring(0,30) || 'petunjuk yang ada'}... Aku yakin kamu bisa!'"`,
+            Juun: `"${char.name} berkata datar sambil minum kopi: '${puzzle?.hint || 'Jawabannya sederhana. Pikir lagi.'}'"`,
+            Touya: `"${char.name} panik sambil memegang lenganmu: 'A-aku rasa ini tentang ${puzzle?.hint?.substring(0,25) || 'sesuatu'}... Coba ingat lagi!'"`
         };
-        addToHistory(`${char.avatar} ${hintTexts[char.id] || char.name + ' memberi petunjuk'} (${char.baseHintCost} stamina)`);
+        addToHistory(`${char.avatar} ${hintTexts[char.id]} (${char.baseHintCost} stamina)`);
         saveGame(); render();
     }
 
-    // =============== JAWAB TEKA-TEKI ===============
     function submitAnswer() {
         const input = document.getElementById('puzzleAnswer');
         if(!input) return;
@@ -470,18 +484,18 @@
             render();
             input.value = '';
         } else {
-            addToHistory(`❌ JAWABAN SALAH! "${userAnswer}" bukan jawaban yang tepat.`);
+            addToHistory(`❌ JAWABAN SALAH! "${userAnswer}" bukan jawaban yang tepat. Coba lagi!`);
             input.value = '';
             render();
         }
     }
 
-    // =============== RENDER UI ===============
     let currentModal = null;
     function showProfile(char) {
         if(currentModal) { currentModal.remove(); currentModal = null; }
         const overlay = document.createElement('div'); overlay.className = 'overlay';
         const modal = document.createElement('div'); modal.className = 'profile-modal';
+        const relationships = RELATIONSHIPS[char.id] || {};
         modal.innerHTML = `
             <button class="profile-close" onclick="closeModal()">✕</button>
             <div style="text-align:center; font-size:3rem;">${char.avatar}</div>
@@ -498,8 +512,15 @@
             <p><strong>Suka:</strong> ${char.likes}<br><strong>Tidak suka:</strong> ${char.dislikes}</p>
             <h3>📖 Deskripsi</h3>
             <p>${char.description}</p>
+            <h3>💬 Quotes Khas</h3>
+            <p>${char.quotes.map(q => `"${q}"`).join('<br>')}</p>
+            <h3>💞 Hubungan dengan Karakter Lain</h3>
+            ${relationships.Katsumi ? `<p><strong>🌸 Katsumi:</strong> ${relationships.Katsumi}</p>` : ''}
+            ${relationships.Juun ? `<p><strong>🌀 Juun:</strong> ${relationships.Juun}</p>` : ''}
+            ${relationships.Touya ? `<p><strong>🔥 Touya:</strong> ${relationships.Touya}</p>` : ''}
+            ${relationships.Haruno ? `<p><strong>❄️ Haruno:</strong> ${relationships.Haruno}</p>` : ''}
             <hr>
-            <p style="font-size:0.8rem; color:#ccaa99;">❤️ Affection: ${char.affection} | 🧠 Intel: ${char.intelligence} | 🍀 Luck: ${char.luck}</p>
+            <p style="font-size:0.8rem; color:#ccaa99;">❤️ Affection: ${char.affection} | 🧠 Intel: ${char.intelligence} | 🍀 Luck: ${char.luck} | 🛡️ Resist: ${char.curseResistance}</p>
         `;
         document.body.appendChild(overlay); document.body.appendChild(modal);
         currentModal = { overlay, modal };
@@ -507,10 +528,13 @@
     window.closeModal = () => { if(currentModal) { currentModal.overlay.remove(); currentModal.modal.remove(); currentModal = null; } };
 
     function generateStory() {
+        const char = gameState.characters[Math.floor(Math.random() * gameState.characters.length)];
         const stories = [
-            `【 Bab ${gameState.chapter} 】 ${gameState.characters[0]?.name || 'Haruno'} berdiri di depan gerbang tua. "${gameState.characters[3]?.name || 'Touya'}, jangan panik dulu."`,
-            `Kabut tebal menyelimuti ${gameState.level % 2 === 0 ? 'sekolah tua' : 'rumah sakit jiwa'}. ${gameState.characters[1]?.name || 'Katsumi'} menggenggam tangan ${gameState.characters[2]?.name || 'Juun'}.`,
-            `"${gameState.characters[0]?.name || 'Haruno'}! ${gameState.characters[3]?.name || 'Touya'} jatuh!" seru ${gameState.characters[1]?.name || 'Katsumi'} panik.`
+            `【 Bab ${gameState.chapter} 】 ${char.name} berdiri di depan gerbang tua. "${char.quotes[0] || 'Ayo kita lanjutkan.'}"`,
+            `Kabut tebal menyelimuti area sekitar. ${gameState.characters[0]?.name} menatap tajam ke arah bayangan yang bergerak.`,
+            `"${gameState.characters[2]?.name}! Jangan pergi sendirian!" seru ${gameState.characters[1]?.name} panik.`,
+            `${gameState.characters[3]?.name} menggigil ketakutan sambil memegang lengan ${gameState.characters[0]?.name}. "J-jangan tinggalin aku..."`,
+            `${gameState.characters[0]?.name} menghela napas. "Kalian ini merepotkan." Tapi tetap berjalan paling belakang untuk melindungi.`
         ];
         return stories[Math.floor(Math.random() * stories.length)];
     }
@@ -522,8 +546,8 @@
             app.innerHTML = `
                 <div class="glass-panel" style="text-align:center;">
                     <h1 style="font-size:clamp(2rem,8vw,3rem);">YUREI KAKU</h1>
-                    <p style="color:#ccbbaa;">Otome Horror Puzzle RPG</p>
-                    <div class="menu-buttons" style="display:flex; gap:12px; justify-content:center; margin:20px 0;">
+                    <p style="color:#ccbbaa;">Otome Horror Puzzle RPG · 4 Arwah Penjaga</p>
+                    <div style="display:flex; gap:12px; justify-content:center; margin:20px 0; flex-wrap:wrap;">
                         <button class="nav-btn" onclick="gameState.screen='game'; render()">✨ Mulai Petualangan</button>
                         <button class="nav-btn" onclick="window.location.href='daily.html'">🎁 Daily & Shop</button>
                     </div>
@@ -546,11 +570,10 @@
                             </div>
                         `).join('')}
                     </div>
-                    <p style="text-align:center; font-size:0.7rem; margin-top:10px;">✨ Klik kartu karakter untuk melihat profil lengkap ✨</p>
+                    <p style="text-align:center; font-size:0.7rem; margin-top:10px;">✨ Klik kartu karakter untuk melihat profil lengkap dan hubungan mereka ✨</p>
                 </div>
             `;
         } else {
-            const remaining = gameState.puzzlesThisLevel - gameState.puzzleProgress;
             app.innerHTML = `
                 <div class="glass-panel">
                     <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
@@ -590,7 +613,7 @@
                     </div>
                     <div class="puzzle-question">「 ${gameState.currentPuzzle?.q || 'Memuat...'} 」</div>
                     <div class="puzzle-options">
-                        <input type="text" id="puzzleAnswer" class="puzzle-input" placeholder="Ketik jawaban..." autocomplete="off">
+                        <input type="text" id="puzzleAnswer" class="puzzle-input" placeholder="Ketik jawaban..." autocomplete="off" enterkeyhint="done">
                         <button class="puzzle-btn" onclick="submitAnswer()">✨ Jawab</button>
                     </div>
                 </div>
