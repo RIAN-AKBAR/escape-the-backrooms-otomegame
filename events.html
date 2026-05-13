@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Event Permanen | Skin Shop · Daily Riddle · Cursed Box</title>
+    <title>YUREI KAKU · Event Permanen | Skin Shop</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -105,26 +105,37 @@
         }
         .skin-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
             margin: 20px 0;
         }
         .skin-card {
             background: rgba(0,0,0,0.45);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 20px;
             text-align: center;
             border-left: 4px solid;
             transition: all 0.3s;
             position: relative;
         }
-        .skin-card:hover { transform: translateY(-3px); }
+        .skin-card:hover { transform: translateY(-5px); }
         .skin-card.owned { opacity: 0.85; border-color: #88ff88; }
         .skin-card.active { border-color: #ffcc66; box-shadow: 0 0 20px rgba(255,200,100,0.3); }
-        .skin-avatar { font-size: 3rem; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; background: rgba(255,255,255,0.05); }
-        .skin-name { font-weight: bold; color: #ffdfc4; margin-bottom: 8px; }
+        .skin-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            border: 3px solid #ffaa88;
+            background: #1a1025;
+            transition: transform 0.3s;
+        }
+        .skin-image:hover { transform: scale(1.05); }
+        .skin-name { font-weight: bold; color: #ffdfc4; font-size: 1.2rem; margin-bottom: 5px; }
+        .skin-original { font-size: 0.7rem; color: #aa9988; margin-bottom: 10px; }
         .skin-price { margin: 12px 0; }
-        .price-value { color: #ffcc66; font-weight: bold; }
+        .price-value { color: #ffcc66; font-weight: bold; font-size: 1.1rem; }
         .owned-badge { color: #88ff88; font-weight: bold; }
         .active-glow { position: absolute; top: -8px; right: -8px; background: #ffcc66; color: #1a0a2a; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
         .soul-gem-display {
@@ -199,7 +210,6 @@
         }
         .cursed-box:hover { transform: scale(1.02); border-color: #ff88aa; box-shadow: 0 0 30px rgba(255,100,100,0.3); }
         .cursed-box.opened { opacity: 0.6; cursor: default; filter: grayscale(0.3); }
-        .cursed-box.opened:hover { transform: none; }
         .box-icon { font-size: 4rem; margin-bottom: 10px; }
         .box-glow {
             position: absolute;
@@ -266,6 +276,7 @@
             .cursed-box { width: 140px; height: 140px; }
             .box-icon { font-size: 3rem; }
             .event-nav { justify-content: center; }
+            .skin-image { width: 100px; height: 100px; }
         }
     </style>
 </head>
@@ -273,6 +284,38 @@
 <div class="event-container" id="eventApp"></div>
 
 <script>
+    // ======================== SKIN DATA ========================
+    const SKIN_DATA = {
+        Haruno: {
+            image: 'https://files.catbox.moe/tzgd44.png',
+            skinName: 'Muscular man',
+            originalName: 'Haruno',
+            price: 1200,
+            color: '#88aaff'
+        },
+        Katsumi: {
+            image: 'https://files.catbox.moe/4lqz3o.png',
+            skinName: 'Idol Girl',
+            originalName: 'Katsumi',
+            price: 1250,
+            color: '#66ddcc'
+        },
+        Juun: {
+            image: 'https://files.catbox.moe/lcbizg.png',
+            skinName: 'Boys spring',
+            originalName: 'Juun',
+            price: 1200,
+            color: '#cc88ff'
+        },
+        Touya: {
+            image: 'https://files.catbox.moe/gxhdkm.png',
+            skinName: 'Cute Baby Boy',
+            originalName: 'Touya',
+            price: 1300,
+            color: '#ff8866'
+        }
+    };
+
     // ======================== EVENT SYSTEM CORE ========================
     const EventSystem = {
         soulGems: 0,
@@ -335,7 +378,11 @@
             if (mainSave) {
                 try {
                     const data = JSON.parse(mainSave);
-                    // Keep soul gems separate
+                    // Sync active skin to main game
+                    if (this.activeSkin) {
+                        data.activeSkin = this.activeSkin;
+                        localStorage.setItem('yureiKakuSave', JSON.stringify(data));
+                    }
                 } catch(e) {}
             }
         },
@@ -387,12 +434,15 @@
                 this.activeSkin = character;
                 this.save();
                 if (window.updateEventUI) window.updateEventUI();
+                this.syncToMainGame();
                 return true;
             }
             return false;
         },
         
         getActiveSkin: function() { return this.activeSkin; },
+        getSkinImage: function(character) { return SKIN_DATA[character]?.image || ''; },
+        getSkinName: function(character) { return SKIN_DATA[character]?.skinName || character; },
         
         checkEventCompletion: function() {
             const allOwned = Object.values(this.ownedSkins).every(v => v === true);
@@ -551,9 +601,10 @@
         showEventPopup('🎉 EVENT COMPLETED! 🎉', 'Semua Jiwa Terkutuk telah terkumpul! Semua skin telah dibuka!', 'success');
     }
     
-    function buySkin(character, price) {
+    function buySkin(character) {
+        const price = SKIN_DATA[character].price;
         if (EventSystem.buySkin(character, price)) {
-            showEventPopup('🎉 SKIN DIDAPATKAN! 🎉', `${character} Skin sekarang milikmu!`, 'success');
+            showEventPopup('🎉 SKIN DIDAPATKAN! 🎉', `${SKIN_DATA[character].skinName} skin sekarang milikmu!`, 'success');
             renderEventPage();
         } else {
             showEventPopup('❌ Gagal!', `Permata Jiwa tidak cukup! Butuh ${price} 💎`, 'error');
@@ -563,7 +614,7 @@
     function equipSkin(character) {
         EventSystem.equipSkin(character);
         renderEventPage();
-        showEventPopup('✨ Skin Aktif! ✨', `${character} Skin sekarang digunakan! Efek visual berubah.`, 'success');
+        showEventPopup('✨ Skin Aktif! ✨', `${SKIN_DATA[character].skinName} skin sekarang digunakan!`, 'success');
     }
     
     function submitDailyAnswer(index) {
@@ -617,28 +668,24 @@
     }
     
     function renderSkinShop() {
-        const skinPrices = { Haruno: 1200, Katsumi: 1250, Juun: 1200, Touya: 1300 };
-        const skinNames = { Haruno: 'Haruno · Jiwa Es', Katsumi: 'Katsumi · Jiwa Laut', Juun: 'Juun · Jiwa Senja', Touya: 'Touya · Jiwa Api' };
-        const skinColors = { Haruno: '#88aaff', Katsumi: '#66ddcc', Juun: '#cc88ff', Touya: '#ff8866' };
-        const skinAvatars = { Haruno: '❄️', Katsumi: '🌊', Juun: '🌀', Touya: '🔥' };
-        
         return `
             <div class="event-glass-panel">
                 <h2 class="event-title">🎭 SKIN JIWA TERKUTUK 🎭</h2>
                 <p class="event-subtitle">Kumpulkan Permata Jiwa untuk membuka skin eksklusif!</p>
                 <div class="skin-grid">
-                    ${Object.entries(skinPrices).map(([char, price]) => `
-                        <div class="skin-card ${EventSystem.ownedSkins[char] ? 'owned' : ''} ${EventSystem.activeSkin === char ? 'active' : ''}" style="border-left-color: ${skinColors[char]}">
-                            <div class="skin-avatar" style="background: ${skinColors[char]}20">${skinAvatars[char]}</div>
-                            <div class="skin-name">${skinNames[char]}</div>
+                    ${Object.entries(SKIN_DATA).map(([char, data]) => `
+                        <div class="skin-card ${EventSystem.ownedSkins[char] ? 'owned' : ''} ${EventSystem.activeSkin === char ? 'active' : ''}" style="border-left-color: ${data.color}">
+                            <img src="${data.image}" class="skin-image" alt="${data.skinName}" onerror="this.src='https://placehold.co/120x120/2a1a3a/ffaa88?text=${char.charAt(0)}'">
+                            <div class="skin-name">${data.skinName}</div>
+                            <div class="skin-original">✦ Original: ${data.originalName} ✦</div>
                             <div class="skin-price">
-                                ${EventSystem.ownedSkins[char] ? '<span class="owned-badge">✓ OWNED</span>' : `<span class="price-value">💎 ${price}</span>`}
+                                ${EventSystem.ownedSkins[char] ? '<span class="owned-badge">✓ OWNED</span>' : `<span class="price-value">💎 ${data.price}</span>`}
                             </div>
                             ${EventSystem.ownedSkins[char] ? 
                                 `<button class="event-btn equip-btn" onclick="equipSkin('${char}')" ${EventSystem.activeSkin === char ? 'disabled' : ''}>
-                                    ${EventSystem.activeSkin === char ? '✦ ACTIVE ✦' : '✨ Equip'}
+                                    ${EventSystem.activeSkin === char ? '✦ ACTIVE ✦' : '✨ Pakai Skin'}
                                 </button>` :
-                                `<button class="event-btn buy-btn" onclick="buySkin('${char}', ${price})">🔮 Beli</button>`
+                                `<button class="event-btn buy-btn" onclick="buySkin('${char}')">🔮 Beli (${data.price}💎)</button>`
                             }
                             ${EventSystem.activeSkin === char ? '<div class="active-glow">ACTIVE</div>' : ''}
                         </div>
