@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, view-fit=cover, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>YUREI KAKU · Profil Karakter</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,13 +28,13 @@
             90% { opacity: 0.15; }
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
-        .game-container { max-width: 1300px; margin: 0 auto; position: relative; z-index: 2; width: 100%; }
+        .game-container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; width: 100%; }
         .glass-panel {
             background: rgba(10, 8, 22, 0.92);
             backdrop-filter: blur(12px);
             border-radius: 28px;
             border: 1px solid rgba(220, 180, 140, 0.4);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            shadow: 0 8px 32px rgba(0,0,0,0.5);
             padding: 24px;
             margin-bottom: 20px;
         }
@@ -42,12 +42,13 @@
         .nav-btn {
             background: rgba(30,20,45,0.9); border: 1px solid #e8aa88; padding: 8px 20px;
             border-radius: 40px; color: #ffefdf; cursor: pointer; text-decoration: none; display: inline-block;
+            font-weight: bold; transition: all 0.2s;
         }
-        .nav-btn:hover { background: #c96a8a; }
-        h1, h2, h3 { color: #ffdfc4; margin-bottom: 16px; }
+        .nav-btn:hover { background: #c96a8a; border-color: white; }
+        h1, h2, h3 { color: #f5e6d0; margin-bottom: 16px; text-shadow: 0 1px 2px black; }
         .char-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 24px;
             margin: 20px 0;
         }
@@ -57,40 +58,52 @@
             padding: 20px;
             border: 1px solid #6a4a6a;
             transition: all 0.3s;
+            cursor: pointer;
         }
-        .char-card:hover { transform: translateY(-5px); border-color: #e8aa88; }
+        .char-card:hover { transform: translateY(-5px); border-color: #e8aa88; box-shadow: 0 0 20px rgba(220,140,100,0.25); }
         .char-header { text-align: center; margin-bottom: 16px; }
         .char-avatar { font-size: 4rem; }
-        .char-name { font-size: 1.8rem; }
+        .char-name { font-size: 1.8rem; color: #ffdfc4; }
         .char-julukan { font-style: italic; color: #ccaa99; margin-top: 5px; }
         .info-section { margin: 16px 0; }
         .info-section h4 { color: #ffccaa; margin-bottom: 8px; font-size: 1rem; }
         .info-section p { font-size: 0.85rem; line-height: 1.5; color: #ddddcc; }
         .stats-mini {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            margin: 15px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 20px;
         }
-        .stat-badge { background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 30px; font-size: 0.75rem; }
+        .stat-badge { background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 30px; font-size: 0.75rem; color: #ffdfc4; }
         .relationship-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            padding: 12px;
-            margin-top: 12px;
+            background: rgba(0,0,0,0.3); border-radius: 16px; padding: 12px; margin-top: 12px;
         }
-        .relationship-item { margin: 8px 0; font-size: 0.8rem; border-left: 3px solid #ff88aa; padding-left: 10px; }
-        @media (max-width: 700px) { .char-grid { grid-template-columns: 1fr; } }
+        .relationship-item { margin: 8px 0; font-size: 0.8rem; border-left: 3px solid #ff88aa; padding-left: 10px; color: #ddddcc; }
+        .quotes-box { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 10px; margin-top: 10px; font-style: italic; }
+        @media (max-width: 750px) { .char-grid { grid-template-columns: 1fr; } }
+        
+        /* Modal Styles */
+        .char-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(8,5,20,0.98); backdrop-filter: blur(20px); border-radius: 24px;
+            padding: 24px; z-index: 2000; width: min(95%, 550px); max-height: 85vh;
+            overflow-y: auto; border: 2px solid #ff88aa; color: #f0e0d0;
+        }
+        .char-modal h3 { color: #ffccaa; margin: 15px 0 8px; }
+        .char-modal hr { border-color: #665588; margin: 15px 0; }
+        .modal-close {
+            position: sticky; top: 0; text-align: right;
+        }
+        .modal-close button {
+            background: #ff6688; border: none; border-radius: 50%; width: 30px; height: 30px;
+            cursor: pointer; color: white; font-weight: bold;
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1999; }
     </style>
 </head>
 <body>
 <div class="game-container" id="app"></div>
 
 <script>
+    // ======================== DATA KARAKTER LENGKAP ========================
     const CHARACTERS_FULL = {
         Haruno: {
             avatar: '❄️', name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
@@ -99,12 +112,12 @@
             hobbies: 'Latihan otot, sparring, jogging malam, koleksi minuman energi',
             likes: 'Minuman berenergi dingin, tantangan fisik, suasana tenang',
             dislikes: 'Orang keras kepala yang cari masalah sendiri, keributan nggak penting, dipanggil "imut"',
-            description: 'Sosok paling besar dan paling kuat di kelompoknya. Galak, gampang emosi, tapi di balik itu paling peduli.',
-            quotes: ['"Kalau nggak kuat, mundur. Biar gue aja."', '"Hah? Gue khawatir? Ngaco."', '"Selama gue masih bisa berdiri, nggak bakal ada yang nyentuh kalian."'],
+            description: 'Sosok paling besar dan paling kuat di kelompoknya. Tubuhnya seperti tembok baja. Galak, gampang emosi, tapi di balik itu paling peduli. Kalau ada teman terluka, dia bakal maju melindungi meski dirinya sendiri sedang berdarah.',
+            quotes: ['"Kalau nggak kuat, mundur. Biar gue aja."', '"Hah? Gue khawatir? Ngaco."', '"Cepat berdiri. Gue nggak suka lihat muka kalah."', '"Selama gue masih bisa berdiri, nggak bakal ada yang nyentuh kalian."', '"Jangan jalan sendirian malam-malam. Merepotkan."'],
             relationships: {
-                Katsumi: "Katsumi adalah orang yang paling sering berada di dekat Haruno tanpa takut. Haruno paling protektif terhadap Katsumi.",
-                Juun: "Hubungan penuh rivalitas diam-diam. Sama-sama hebat dan sering bersaing.",
-                Touya: "Awalnya Touya takut, kini jadi paling sering menempel pada Haruno saat takut."
+                Katsumi: "Katsumi adalah orang yang paling sering berada di dekat Haruno tanpa takut. Haruno paling protektif terhadap Katsumi dan diam-diam memperhatikan kalau Katsumi sudah makan atau belum.",
+                Juun: "Hubungan penuh rivalitas diam-diam. Sama-sama hebat dan sering bersaing. Haruno sering kesal karena Juun terlalu santai, tapi mereka sangat saling percaya.",
+                Touya: "Awalnya Touya takut setengah mati pada Haruno. Kini Touya jadi paling sering menempel pada Haruno saat takut. Haruno sering mengomel tapi paling sering melindungi Touya."
             },
             stats: { intelligence: 80, luck: 60, curseResistance: 70, hintCost: 4 }
         },
@@ -114,13 +127,13 @@
             ability: 'Mudah akrab dengan siapa saja, pandai membaca suasana, ahli bikin orang nyaman',
             hobbies: 'Menari, menyanyi, scrolling trend terbaru, koleksi barang imut',
             likes: 'Dessert manis, boneka lucu, aksesoris pastel, karaoke malam',
-            dislikes: 'Suasana sepi menyeramkan, film horor, orang bertengkar, hantu',
-            description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun.',
-            quotes: ['"Eh? Serius? Lucu bangettt!"', '"Jangan dipendem sendiri dong... cerita sama aku."', '"H-HANTU?! Jangan tinggalin aku sendirian!!"'],
+            dislikes: 'Suasana sepi menyeramkan, film horor, orang bertengkar, hantu dan tempat gelap',
+            description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun. Tipe orang yang selalu khawatir pada teman-temannya.',
+            quotes: ['"Eh? Serius? Lucu bangettt!"', '"Jangan dipendem sendiri dong... cerita sama aku."', '"Aku cuma bantu sedikit kok~"', '"H-HANTU?! Jangan tinggalin aku sendirian!!"', '"Kalian tuh kayak keluarga buat aku."'],
             relationships: {
-                Haruno: "Salah satu sedikit orang yang tidak takut pada Haruno. Suka menggoda dan memaksa Haruno ikut trend.",
-                Juun: "Sering mengajak Juun nongkrong. Juun jarang benar-benar menolak.",
-                Touya: "Menganggap Touya seperti adik kecil. Paling sering menenangkan Touya saat panik."
+                Haruno: "Salah satu sedikit orang yang tidak takut pada Haruno. Suka menggoda dan memaksa Haruno ikut trend. Sering mengingatkan Haruno untuk istirahat.",
+                Juun: "Sering mengajak Juun nongkrong. Juun jarang benar-benar menolak. Katsumi mengerti sifat asli Juun yang sebenarnya perhatian.",
+                Touya: "Menganggap Touya seperti adik kecil. Paling sering menenangkan Touya saat panik. Suka menggoda Touya karena reaksinya lucu, tapi langsung protektif jika ada yang mengejek Touya."
             },
             stats: { intelligence: 95, luck: 55, curseResistance: 65, hintCost: 5 }
         },
@@ -131,12 +144,12 @@
             hobbies: 'Membaca artikel astronomi, mendengarkan musik tenang, makan donat',
             likes: 'Tempat sunyi, malam berbintang, kopi pahit, kucing',
             dislikes: 'Keramaian berisik, serangga, rumah hantu',
-            description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
-            quotes: ['"Berisik."', '"Itu keputusan yang buruk."', '"Donat terakhirku siapa yang ambil?"', '"...Kucing."'],
+            description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Murid paling pintar, tapi rivalitas dengan Haruno. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
+            quotes: ['"Berisik."', '"Itu keputusan yang buruk."', '"Aku tidak marah. Hanya malas bicara."', '"Donat terakhirku siapa yang ambil?"', '"...Kucing."', '"Panik tidak akan menyelesaikan masalah."'],
             relationships: {
-                Haruno: "Rival terbesar dalam olahraga. Meski sering beradu pendapat, punya rasa percaya yang kuat.",
+                Haruno: "Rival terbesar dalam olahraga. Meski sering beradu pendapat, punya rasa percaya yang kuat satu sama lain.",
                 Katsumi: "Salah satu orang yang paling sering mengganggu ketenangan Juun, tapi juga yang paling bisa membuat suasana terasa ringan.",
-                Touya: "Rival akademik yang paling sering berusaha mengalahkannya. Juun cukup menghargai kemampuan Touya."
+                Touya: "Rival akademik yang paling sering berusaha mengalahkannya. Juun cukup menghargai kemampuan Touya memecahkan teka-teki."
             },
             stats: { intelligence: 85, luck: 80, curseResistance: 50, hintCost: 6 }
         },
@@ -147,16 +160,54 @@
             hobbies: 'Eksplor tempat angker, baca misteri kuno, nonton anime, mengoleksi teori konspirasi',
             likes: 'Teka-teki sulit, sejarah, barang antik, ramen murah, pelukan hangat',
             dislikes: 'Orang menyeramkan, suasana tegang, jumpscare mendadak',
-            description: 'Cowok mungil dengan wajah imut. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
-            quotes: ['"A-Aku nggak takut kok... cuma kaget dikit!"', '"Teori ku benar! Aku tahu ada sesuatu di sini!"', '"JANGAN TINGGALIN AKU SENDIRIAN!!"'],
+            description: 'Cowok mungil dengan wajah imut. Sering dikira anak SMP. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
+            quotes: ['"A-Aku nggak takut kok... cuma kaget dikit!"', '"Teori ku benar! Aku tahu ada sesuatu di sini!"', '"JANGAN TINGGALIN AKU SENDIRIAN!!"', '"Su-suara tadi itu apaan...?"', '"H-Haruno, tungguin aku jalannya jangan cepat-cepat!"'],
             relationships: {
-                Haruno: "Awalnya benar-benar takut, sekarang jadi 'tameng hidup' favorit Touya saat suasana menegangkan.",
-                Katsumi: "Orang yang paling sering menenangkan Touya saat panik. Touya sangat nyaman berada di dekat Katsumi.",
-                Juun: "Rival akademik terbesar yang paling ingin dikalahkan. Sering gugup saat Juun muncul."
+                Haruno: "Awalnya benar-benar takut, sekarang jadi 'tameng hidup' favorit Touya saat suasana menegangkan. Haruno sering mengomel tapi selalu melindungi.",
+                Katsumi: "Orang yang paling sering menenangkan Touya saat panik. Touya sangat nyaman berada di dekat Katsumi. Sering bercerita panjang lebar tentang teori misterinya.",
+                Juun: "Rival akademik terbesar yang paling ingin dikalahkan. Sering gugup saat Juun muncul. Diam-diam sangat kagum pada kemampuan Juun."
             },
             stats: { intelligence: 98, luck: 70, curseResistance: 45, hintCost: 8 }
         }
     };
+
+    let currentModal = null;
+
+    function showDetail(id) {
+        const char = CHARACTERS_FULL[id];
+        if(!char) return;
+        if(currentModal) { currentModal.remove(); currentModal = null; }
+        const overlay = document.createElement('div'); overlay.className = 'overlay';
+        const modal = document.createElement('div'); modal.className = 'char-modal';
+        modal.innerHTML = `
+            <div class="modal-close"><button onclick="closeModal()">✕</button></div>
+            <div style="text-align:center; font-size:4rem;">${char.avatar}</div>
+            <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
+            <p style="text-align:center; font-style:italic;">"${char.julukan}"</p>
+            <hr>
+            <h3>📌 Identitas</h3>
+            <p>Umur: ${char.umur} tahun | Tinggi: ${char.tinggi} cm</p>
+            <h3>💭 Kepribadian</h3>
+            <p>${char.personality}</p>
+            <h3>⚡ Kemampuan</h3>
+            <p>${char.ability}</p>
+            <h3>🎯 Hobi & Kesukaan</h3>
+            <p><strong>Suka:</strong> ${char.likes}<br><strong>Tidak suka:</strong> ${char.dislikes}</p>
+            <h3>📖 Deskripsi</h3>
+            <p>${char.description}</p>
+            <h3>💬 Quotes Khas</h3>
+            <div class="quotes-box">${char.quotes.map(q => `"${q}"`).join('<br>')}</div>
+            <h3>💞 Hubungan dengan Karakter Lain</h3>
+            ${Object.entries(char.relationships).map(([name, rel]) => `<p><strong>${name}:</strong> ${rel}</p>`).join('')}
+            <hr>
+            <p style="font-size:0.8rem;">🧠 Intelijen: ${char.stats.intelligence} | 🍀 Keberuntungan: ${char.stats.luck} | 🛡️ Resistansi Kutukan: ${char.stats.curseResistance} | 💡 Biaya Hint: ${char.stats.hintCost} stamina</p>
+        `;
+        document.body.appendChild(overlay); document.body.appendChild(modal);
+        currentModal = { overlay, modal };
+    }
+
+    window.closeModal = () => { if(currentModal) { currentModal.overlay.remove(); currentModal.modal.remove(); currentModal = null; } };
+    window.showDetail = showDetail;
 
     function render() {
         const app = document.getElementById('app');
@@ -167,7 +218,7 @@
                     <a href="daily.html" class="nav-btn">🎁 Daily & Shop</a>
                 </div>
                 <h1>👥 Profil Karakter YUREI KAKU</h1>
-                <p style="color:#ccbbaa; margin-bottom:20px;">Klik pada kartu untuk melihat lebih detail</p>
+                <p style="color:#ccbbaa; margin-bottom:20px;">Klik pada kartu untuk melihat profil lengkap setiap karakter</p>
                 <div class="char-grid">
                     ${Object.entries(CHARACTERS_FULL).map(([id, char]) => `
                         <div class="char-card" onclick="showDetail('${id}')">
@@ -188,7 +239,7 @@
                             </div>
                             <div class="info-section">
                                 <h4>💭 Kepribadian</h4>
-                                <p>${char.personality}</p>
+                                <p>${char.personality.substring(0,80)}...</p>
                             </div>
                             <div class="relationship-box">
                                 <h4>💞 Hubungan Singkat</h4>
@@ -201,45 +252,9 @@
         `;
     }
 
-    let currentModal = null;
-    function showDetail(id) {
-        const char = CHARACTERS_FULL[id];
-        if(!char) return;
-        if(currentModal) { currentModal.remove(); currentModal = null; }
-        const overlay = document.createElement('div'); overlay.className = 'overlay';
-        const modal = document.createElement('div'); modal.className = 'char-modal';
-        modal.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(8,5,20,0.98); backdrop-filter:blur(20px); border-radius:24px; padding:24px; z-index:2000; width:min(95%,550px); max-height:85vh; overflow-y:auto; border:2px solid #ff88aa; color:#f0e0d0;';
-        modal.innerHTML = `
-            <div style="position:sticky; top:0; text-align:right;"><button onclick="closeModal()" style="background:#ff6688; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; color:white;">✕</button></div>
-            <div style="text-align:center; font-size:4rem;">${char.avatar}</div>
-            <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
-            <p style="text-align:center; font-style:italic;">"${char.julukan}"</p>
-            <hr style="margin:15px 0; border-color:#665588;">
-            <h3>📌 Identitas</h3>
-            <p>Umur: ${char.umur} tahun | Tinggi: ${char.tinggi} cm</p>
-            <h3>💭 Kepribadian</h3>
-            <p>${char.personality}</p>
-            <h3>⚡ Kemampuan</h3>
-            <p>${char.ability}</p>
-            <h3>🎯 Hobi & Kesukaan</h3>
-            <p><strong>Suka:</strong> ${char.likes}<br><strong>Tidak suka:</strong> ${char.dislikes}</p>
-            <h3>📖 Deskripsi</h3>
-            <p>${char.description}</p>
-            <h3>💬 Quotes Khas</h3>
-            <p>${char.quotes.map(q => `"${q}"`).join('<br>')}</p>
-            <h3>💞 Hubungan dengan Karakter Lain</h3>
-            ${Object.entries(char.relationships).map(([name, rel]) => `<p><strong>${name}:</strong> ${rel}</p>`).join('')}
-            <hr style="margin:15px 0;">
-            <p style="font-size:0.8rem;">🧠 Intel: ${char.stats.intelligence} | 🍀 Luck: ${char.stats.luck} | 🛡️ Resist: ${char.stats.curseResistance} | 💡 Hint: ${char.stats.hintCost} stamina</p>
-        `;
-        document.body.appendChild(overlay); document.body.appendChild(modal);
-        currentModal = { overlay, modal };
-    }
-    window.closeModal = () => { if(currentModal) { currentModal.overlay.remove(); currentModal.modal.remove(); currentModal = null; } };
-    window.showDetail = showDetail;
-
     function createParticles() {
-        for(let i=0;i<40;i++) {
+        const count = Math.min(40, Math.floor(window.innerWidth / 30));
+        for(let i=0; i<count; i++) {
             let p=document.createElement('div'); p.className='particle';
             p.style.width=Math.random()*4+2+'px'; p.style.height=p.style.width;
             p.style.left=Math.random()*100+'%';
@@ -248,8 +263,10 @@
             document.body.appendChild(p);
         }
     }
+
     createParticles();
     render();
+    window.addEventListener('resize', () => { document.querySelectorAll('.particle').forEach(p=>p.remove()); createParticles(); });
 </script>
 </body>
 </html>
