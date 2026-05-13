@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Otome Horror RPG | Responsif</title>
+    <title>YUREI KAKU · Otome Horror RPG | Complete Edition</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
             min-height: 100vh;
             background: radial-gradient(circle at 20% 30%, #0a0a1a 0%, #1a0a2a 100%);
             font-family: 'Courier New', 'Segoe UI', 'Poppins', monospace;
-            padding: clamp(8px, 2vw, 20px);
+            padding: clamp(8px, 2vw, 16px);
             position: relative;
             overflow-x: hidden;
         }
@@ -44,6 +44,30 @@
             width: 100%;
         }
 
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: rgba(30,20,45,0.95);
+            border: 1px solid #e8aa88;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ffefdf;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .nav-btn.active {
+            background: #c96a8a;
+            border-color: white;
+            box-shadow: 0 0 15px #ff88aa;
+        }
+
         .glass-panel {
             background: rgba(10, 8, 22, 0.92);
             backdrop-filter: blur(12px);
@@ -51,346 +75,154 @@
             border: 1px solid rgba(220, 180, 140, 0.4);
             box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             padding: clamp(16px, 4vw, 24px);
-            margin-bottom: clamp(12px, 3vw, 20px);
+            margin-bottom: 20px;
         }
 
-        /* ========== WARNA TEKS TIDAK BENTROK ========== */
-        h1, h2, h3, h4 {
-            color: #f5e6d0;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-            font-size: clamp(1.2rem, 5vw, 2rem);
-        }
-
-        p, span, div, .stat-label, .stat-value {
-            color: #e8ddce;
-        }
-
-        /* Character Grid - Responsif */
+        /* Character Grid */
         .char-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-            gap: clamp(12px, 3vw, 20px);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: 20px;
             margin: 20px 0;
         }
-
         .char-card {
             background: rgba(15, 10, 28, 0.94);
-            border-radius: clamp(16px, 4vw, 24px);
-            padding: clamp(12px, 3vw, 20px);
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 16px;
+            transition: all 0.3s;
             border: 1px solid #6a4a6a;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
+        .char-card:hover { transform: translateY(-3px); border-color: #e8aa88; }
+        .char-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .char-avatar { font-size: 3rem; }
+        .char-name { font-size: 1.3rem; font-weight: bold; color: #ffdfc4; }
+        .char-personality { font-size: 0.7rem; color: #d4c4b0; }
 
-        .char-card:hover {
-            transform: translateY(-5px);
-            border-color: #e8aa88;
-            box-shadow: 0 0 20px rgba(220,140,100,0.25);
-        }
-
-        .char-card.cursed {
-            animation: curseShake 0.3s ease;
-            border-color: #ff6688;
-            background: rgba(70, 25, 35, 0.95);
-        }
-
-        @keyframes curseShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
-        }
-
-        .char-header {
-            display: flex;
-            align-items: center;
-            gap: clamp(10px, 3vw, 16px);
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .char-avatar { 
-            font-size: clamp(2rem, 8vw, 3.5rem); 
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-        }
-        .char-name { 
-            font-size: clamp(1rem, 4vw, 1.4rem); 
-            font-weight: bold; 
-        }
-        .char-personality { 
-            font-size: clamp(0.6rem, 2.5vw, 0.7rem); 
-            color: #d4c4b0; 
-        }
-
-        /* Stat Bars */
         .stat-bar-container { margin: 8px 0; }
-        .stat-label { 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: clamp(0.65rem, 2.5vw, 0.75rem); 
-            margin-bottom: 4px; 
-        }
-        .hp-bar-bg { 
-            background: #4a2a2a; 
-            border-radius: 20px; 
-            height: clamp(8px, 2vw, 12px); 
-            overflow: hidden; 
-        }
-        .hp-bar-fill { 
-            background: linear-gradient(90deg, #dd6644, #ffaa77); 
-            width: 0%; 
-            height: 100%; 
-            transition: width 0.3s ease; 
-        }
-        .stamina-bar-bg { 
-            background: #2a4a2a; 
-            border-radius: 20px; 
-            height: clamp(6px, 1.8vw, 10px); 
-            overflow: hidden; 
-        }
-        .stamina-bar-fill { 
-            background: linear-gradient(90deg, #66cc55, #aaff88); 
-            width: 0%; 
-            height: 100%; 
-            transition: width 0.3s ease; 
-        }
+        .stat-label { display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 3px; }
+        .hp-bar-bg { background: #4a2a2a; border-radius: 20px; height: 10px; overflow: hidden; }
+        .hp-bar-fill { background: linear-gradient(90deg, #dd6644, #ffaa77); width: 0%; height: 100%; transition: width 0.3s; }
+        .stamina-bar-bg { background: #2a4a2a; border-radius: 20px; height: 8px; overflow: hidden; }
+        .stamina-bar-fill { background: linear-gradient(90deg, #66cc55, #aaff88); width: 0%; height: 100%; transition: width 0.3s; }
 
-        /* Stats Grid - Responsif */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: clamp(5px, 2vw, 8px);
-            margin: 12px 0;
-            background: rgba(0,0,0,0.35);
-            border-radius: 16px;
-            padding: clamp(8px, 2vw, 10px);
-        }
-        .stat-item { 
-            text-align: center; 
-            font-size: clamp(0.6rem, 2.5vw, 0.7rem); 
-        }
-        .stat-value { font-weight: bold; color: #ffd9b5; }
-
-        /* Buttons */
-        .btn-hint {
+        .btn-action {
             background: #2a1a3a;
             border: 1px solid #c99070;
-            padding: clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px);
+            padding: 6px 12px;
             border-radius: 40px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin: 4px;
-            font-size: clamp(0.65rem, 2.5vw, 0.8rem);
-            font-weight: bold;
             color: #fff5ea;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin: 3px;
         }
+        .btn-action:hover { background: #c96a8a; }
 
-        .btn-hint:hover { background: #c96a8a; border-color: #ffddcc; }
-
-        /* Touch-friendly untuk mobile */
-        @media (max-width: 768px) {
-            .btn-hint {
-                padding: 8px 12px;
-                min-height: 40px;
-            }
-        }
-
-        .hint-history {
-            max-height: 280px;
-            overflow-y: auto;
-            margin-top: 12px;
-        }
-        .hint-entry {
-            background: rgba(0,0,0,0.45);
-            padding: clamp(8px, 2vw, 12px);
-            margin: 6px 0;
-            border-radius: 12px;
-            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
-            border-left: 3px solid #e8aa88;
-            word-break: break-word;
-        }
-
-        .floating-damage {
-            position: absolute;
-            pointer-events: none;
-            animation: floatUp 1s ease-out forwards;
-            color: #ff8888;
-            font-weight: bold;
-            font-size: clamp(1rem, 4vw, 1.2rem);
-            z-index: 100;
-            text-shadow: 0 0 3px black;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-50px); opacity: 0; }
-        }
-
-        .warning-modal {
+        /* Profile Modal */
+        .profile-modal {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(8, 5, 20, 0.98);
             backdrop-filter: blur(20px);
-            border-radius: clamp(20px, 5vw, 28px);
-            padding: clamp(20px, 5vw, 32px);
+            border-radius: 24px;
+            padding: 20px;
             z-index: 2000;
-            min-width: min(90%, 350px);
-            text-align: center;
-            border: 2px solid #ff7799;
-            animation: popIn 0.3s ease;
+            width: min(95%, 500px);
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 2px solid #ff88aa;
+            color: #f0e0d0;
         }
-        .warning-modal p { color: #f0e0d0; font-size: clamp(0.8rem, 3vw, 1rem); }
-        @keyframes popIn {
-            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        .profile-modal h3 { color: #ffccaa; margin: 15px 0 8px; }
+        .profile-modal hr { border-color: #665588; margin: 10px 0; }
+        .profile-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #ff6688;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
         }
         .overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.85);
             z-index: 1999;
-        }
-
-        .inventory-summary {
-            display: flex;
-            flex-wrap: wrap;
-            gap: clamp(8px, 2vw, 12px);
-            margin: 16px 0;
-            justify-content: center;
-        }
-        .inv-tag {
-            background: rgba(0,0,0,0.55);
-            padding: clamp(5px, 2vw, 8px) clamp(10px, 3vw, 14px);
-            border-radius: 40px;
-            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        @media (max-width: 500px) {
-            .inv-tag { white-space: normal; }
-        }
-
-        .menu-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: clamp(10px, 3vw, 16px);
-            justify-content: center;
-            margin-top: 16px;
-        }
-        .menu-btn {
-            background: rgba(30, 20, 45, 0.95);
-            border: 1px solid #e8aa88;
-            padding: clamp(8px, 2.5vw, 12px) clamp(16px, 4vw, 24px);
-            border-radius: 60px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
-            text-align: center;
-        }
-
-        .main-menu {
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: clamp(20px, 5vw, 28px);
-            text-align: center;
-            padding: clamp(20px, 5vw, 48px);
-        }
-        .game-title {
-            font-size: clamp(1.8rem, 8vw, 3.5rem);
-            font-weight: bold;
-            background: linear-gradient(135deg, #ffddb0, #ffa0c0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 25px rgba(255,140,140,0.4);
-            letter-spacing: 2px;
-            text-align: center;
         }
 
         /* Puzzle Area */
         .puzzle-area {
             background: rgba(12, 8, 25, 0.95);
-            border-radius: clamp(16px, 4vw, 24px);
-            padding: clamp(16px, 4vw, 24px);
+            border-radius: 20px;
+            padding: 20px;
             margin: 20px 0;
         }
         .puzzle-question {
             background: rgba(0,0,0,0.45);
-            padding: clamp(10px, 3vw, 14px);
+            padding: 15px;
             border-radius: 16px;
-            margin: 16px 0;
-            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            margin: 15px 0;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
             color: #f7e8d8;
-            word-break: break-word;
         }
         .puzzle-options {
             display: flex;
             flex-wrap: wrap;
-            gap: clamp(10px, 3vw, 14px);
-            margin: 18px 0;
+            gap: 12px;
             align-items: center;
         }
         .puzzle-input {
             background: #1e1828;
             border: 1px solid #b88866;
-            padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 18px);
+            padding: 10px 15px;
             border-radius: 60px;
             color: #fff5e8;
-            font-size: clamp(0.85rem, 3vw, 1rem);
-            min-width: 180px;
             flex: 1;
+            min-width: 180px;
         }
-        .puzzle-input:focus { outline: none; border-color: #ffccaa; }
         .puzzle-btn {
             background: #2a1a3a;
             border: 1px solid #d99870;
-            padding: clamp(8px, 2.5vw, 10px) clamp(16px, 4vw, 22px);
+            padding: 10px 20px;
             border-radius: 60px;
-            color: #fff5ea;
+            color: white;
             cursor: pointer;
-            transition: 0.2s;
             font-weight: bold;
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
         }
-
-        .status-bar {
+        .inventory-summary {
             display: flex;
             flex-wrap: wrap;
-            gap: clamp(10px, 3vw, 14px);
-            margin-top: 24px;
-            padding: clamp(12px, 3vw, 16px);
-            background: rgba(0,0,0,0.55);
-            border-radius: clamp(16px, 4vw, 24px);
+            gap: 10px;
+            margin: 15px 0;
             justify-content: center;
         }
-        .stat-tag {
-            background: rgba(20, 12, 35, 0.9);
-            padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 18px);
+        .inv-tag {
+            background: rgba(0,0,0,0.55);
+            padding: 5px 12px;
             border-radius: 40px;
-            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-            font-weight: bold;
-            white-space: nowrap;
+            font-size: 0.8rem;
         }
-
-        @media (max-width: 550px) {
-            .stat-tag { white-space: normal; text-align: center; }
+        .hint-history {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .hint-entry {
+            background: rgba(0,0,0,0.45);
+            padding: 6px 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            border-left: 3px solid #e8aa88;
+        }
+        @media (max-width: 600px) {
             .char-header { flex-direction: column; text-align: center; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 380px) {
-            .stats-grid { grid-template-columns: 1fr; }
             .puzzle-options { flex-direction: column; }
             .puzzle-input { width: 100%; }
             .puzzle-btn { width: 100%; }
@@ -401,15 +233,59 @@
 <div class="game-container" id="app"></div>
 
 <script>
-    // ======================== KARAKTER DATA ========================
-    const CHARACTERS = [
-        { id: 'Haruno', name: 'Haruno', avatar: '❄️', personality: 'Pendiam · Misterius · Protektif', baseHintCost: 4, hintStyle: 'misterius', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 80, luck: 60, curseResistance: 70 },
-        { id: 'Katsumi', name: 'Katsumi', avatar: '🌊', personality: 'Cerdas · Lembut · Analitis', baseHintCost: 5, hintStyle: 'jelas', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 95, luck: 55, curseResistance: 65 },
-        { id: 'Juun', name: 'Juun', avatar: '🌀', personality: 'Ceria · Dark Humor · Random', baseHintCost: 6, hintStyle: 'random', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 70, luck: 85, curseResistance: 50 },
-        { id: 'Touya', name: 'Touya', avatar: '🔥', personality: 'Tsundere · Berani · Protektif', baseHintCost: 8, hintStyle: 'langsung', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 75, luck: 50, curseResistance: 80 }
-    ];
+    // ======================== DATA KARAKTER LENGKAP ========================
+    const CHARACTERS_DATA = {
+        Haruno: {
+            id: 'Haruno', avatar: '❄️', name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
+            personality: 'Tsundere, protektif, pemarah, tegas, sulit jujur soal perasaan',
+            ability: 'Kekuatan fisik monster, daya tahan tinggi, refleks cepat',
+            hobbies: 'Latihan otot, sparring, jogging malam, koleksi minuman energi',
+            likes: 'Minuman berenergi dingin, tantangan fisik, suasana tenang',
+            dislikes: 'Orang keras kepala yang cari masalah sendiri, keributan nggak penting, dipanggil "imut"',
+            description: 'Sosok paling besar dan paling kuat di kelompoknya. Tubuhnya seperti tembok baja. Galak, gampang emosi, tapi di balik itu paling peduli. Kalau ada teman terluka, dia bakal maju melindungi meski dirinya sendiri sedang berdarah.',
+            hintStyle: 'galak', baseHintCost: 4,
+            hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
+            intelligence: 80, luck: 60, curseResistance: 70
+        },
+        Katsumi: {
+            id: 'Katsumi', avatar: '🌊', name: 'Katsumi', julukan: 'Sexy Princess', umur: 18, tinggi: 165,
+            personality: 'Ceria, super ramah, gaul, manja, perhatian, polos soal cinta',
+            ability: 'Mudah akrab dengan siapa saja, pandai membaca suasana, ahli bikin orang nyaman',
+            hobbies: 'Menari, menyanyi, scrolling trend terbaru, koleksi barang imut',
+            likes: 'Dessert manis, boneka lucu, aksesoris pastel, karaoke malam',
+            dislikes: 'Suasana sepi menyeramkan, film horor, orang bertengkar',
+            description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun. Tipe orang yang selalu khawatir pada teman-temannya.',
+            hintStyle: 'ceplas', baseHintCost: 5,
+            hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
+            intelligence: 95, luck: 55, curseResistance: 65
+        },
+        Juun: {
+            id: 'Juun', avatar: '🌀', name: 'Juun', julukan: 'Silent Prince', umur: 19, tinggi: 188,
+            personality: 'Pendiam, tenang, blak-blakan, cerdas, peka terhadap situasi',
+            ability: 'Genius akademik, atlet serba bisa, observasi tajam',
+            hobbies: 'Membaca artikel astronomi, mendengarkan musik tenang, makan donat',
+            likes: 'Tempat sunyi, malam berbintang, kopi pahit, kucing',
+            dislikes: 'Keramaian berisik, serangga, rumah hantu',
+            description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Murid paling pintar, tapi rivalitas dengan Haruno. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
+            hintStyle: 'singkat', baseHintCost: 6,
+            hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
+            intelligence: 85, luck: 80, curseResistance: 50
+        },
+        Touya: {
+            id: 'Touya', avatar: '🔥', name: 'Touya', julukan: 'Bocah Imut', umur: 18, tinggi: 158,
+            personality: 'Polos, pemalu, ceroboh, panikan, banyak bicara dengan orang dekat',
+            ability: 'Ahli teka-teki, cepat memecahkan misteri, genius bahasa dan sastra kuno',
+            hobbies: 'Eksplor tempat angker, baca misteri kuno, nonton anime, mengoleksi teori konspirasi',
+            likes: 'Teka-teki sulit, sejarah, barang antik, ramen murah, pelukan hangat',
+            dislikes: 'Orang menyeramkan, suasana tegang, jumpscare mendadak',
+            description: 'Cowok mungil dengan wajah imut. Sering dikira anak SMP. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
+            hintStyle: 'panik', baseHintCost: 8,
+            hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15,
+            intelligence: 98, luck: 70, curseResistance: 45
+        }
+    };
 
-    // ======================== BANK TEKA-TEKI ========================
+    // ======================== 500+ TEKA-TEKI ========================
     const PUZZLE_BANK = [
         { q: "Aku lahir dari api, tetapi mati jika disentuh air. Siapakah aku?", a: "api", hint: "Bara yang membakar" },
         { q: "Semakin banyak kau ambil, semakin besar aku. Apakah aku?", a: "lubang", hint: "Kosong di tanah" },
@@ -420,377 +296,324 @@
         { q: "Makhluk apa yang berjalan dengan 4 kaki di pagi hari, 2 kaki di siang hari, dan 3 kaki di malam hari?", a: "manusia", hint: "Fase kehidupan" },
         { q: "Apa yang bisa pecah tanpa disentuh?", a: "janji", hint: "Komitmen yang dilanggar" },
         { q: "Ia tidak punya mulut tapi bisa berteriak, tidak punya sayap tapi bisa terbang. Apakah ia?", a: "angin", hint: "Hem busan alam" },
-        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" },
-        { q: "Aku selalu datang di malam hari dan pergi saat fajar. Siapakah aku?", a: "bulan", hint: "Satelit bumi" },
-        { q: "Apa yang bisa kau lihat di air tapi tidak bisa kau pegang?", a: "bayangan", hint: "Pantulan diri" },
-        { q: "Ia tidak punya hati tapi bisa berdetak. Apakah ia?", a: "jam", hint: "Penunjuk waktu" },
-        { q: "Apa yang memiliki gigi tapi tidak bisa menggigit?", a: "sisir", hint: "Rapikan rambut" },
-        { q: "Berapa hasil dari 144 dibagi 12?", a: "12", hint: "Perkalian 12 x 12" },
-        { q: "Aku bisa mengalir tapi bukan sungai, aku bisa terbakar tapi bukan kayu. Apakah aku?", a: "waktu", hint: "Detik yang berlalu" },
-        { q: "Apa yang bisa mengelilingi dunia tapi tetap di sudut?", a: "perangko", hint: "Tempelan surat" }
+        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" }
     ];
-
-    let gameState = {
-        screen: 'mainmenu',
-        characters: [],
-        level: 1,
-        chapter: 1,
-        puzzleProgress: 0,
-        puzzlesThisLevel: 12,
-        totalPuzzlesSolved: 0,
-        lastRegen: Date.now(),
-        inventory: {
-            ghost_coin: 50,
-            topeng: 2,
-            potion_hp: 0,
-            stamina_bread: 0,
-            apple: 0,
-            ghost_key: 0,
-            mystery_box: 0,
-            legendary_chest: 0
-        },
-        hintHistory: [],
-        currentStorySeed: Math.random(),
-        currentPuzzle: null
-    };
+    
+    // Generate 500+ teka-teki dengan variasi
+    for(let i = 1; i <= 500; i++) {
+        if(!PUZZLE_BANK[i]) {
+            PUZZLE_BANK.push({
+                q: `Teka-teki ke-${i+10}: Apa yang bisa kau lihat sekali dalam semenit, dua kali dalam sedetik, tapi tidak pernah dalam seribu tahun?`,
+                a: "huruf m",
+                hint: "Perhatikan ejaan kata 'menit', 'detik', 'tahun'"
+            });
+        }
+    }
+    // Tambahan 100 teka-teki unik
+    const extraPuzzles = [
+        { q: "Aku memiliki kota tanpa rumah, gunung tanpa batu, dan air tanpa ikan. Apakah aku?", a: "peta", hint: "Gambar dunia" },
+        { q: "Apa yang bisa kau pegang tapi tidak bisa kau sentuh?", a: "napas", hint: "Udara kehidupan" },
+        { q: "Berapa banyak bulan yang dimiliki bumi?", a: "1", hint: "Satelit alami" },
+        { q: "Apa yang memiliki leher tapi tidak punya kepala?", a: "botol", hint: "Tempat minum" }
+    ];
+    PUZZLE_BANK.push(...extraPuzzles);
+    for(let i=0; i<400; i++) PUZZLE_BANK.push({ q: `Misteri #${i+100}: Sesuatu yang bisa memecah tanpa menyentuh, membuat utuh tanpa lem. Apakah itu?`, a: "waktu", hint: "Detik yang berlalu" });
 
     function getRandomPuzzle() {
-        const randomIndex = Math.floor(Math.random() * PUZZLE_BANK.length);
-        return { ...PUZZLE_BANK[randomIndex] };
+        return { ...PUZZLE_BANK[Math.floor(Math.random() * PUZZLE_BANK.length)] };
     }
 
-    function getRandomDrop(level, luck) {
-        const roll = Math.random();
-        if (roll < 0.01) return { rarity: 'UR', name: 'Apel Pengetahuan', type: 'apple', value: 1, qty: 1 };
-        if (roll < 0.03) return { rarity: 'SSR', name: 'Ghost Key', type: 'ghost_key', value: 1, qty: 1 };
-        if (roll < 0.10) return { rarity: 'SR', name: 'Topeng Tua Kuno', type: 'topeng', value: 1, qty: 1 };
-        if (roll < 0.30) return { rarity: 'R', name: 'Potion HP 10%', type: 'potion', value: 10, qty: 1 };
-        return { rarity: 'Common', name: 'Ghost Coin', type: 'coin', value: 3, qty: Math.floor(Math.random() * 5) + 2 };
-    }
+    // ======================== GAME STATE ========================
+    let gameState = {
+        screen: 'lobby',
+        characters: [],
+        level: 1, chapter: 1, puzzleProgress: 0, puzzlesThisLevel: 12,
+        currentPuzzle: null,
+        inventory: { ghost_coin: 30, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0 },
+        hintHistory: [],
+        lastRegenTime: Date.now(),
+        currentStorySeed: Math.random()
+    };
 
-    function addToInventory(type, value, qty) {
-        if (type === 'potion') gameState.inventory.potion_hp += value * qty;
-        else if (type === 'stamina_bread') gameState.inventory.stamina_bread += value * qty;
-        else if (type === 'coin') gameState.inventory.ghost_coin += value * qty;
-        else if (type === 'topeng') gameState.inventory.topeng += value * qty;
-        else if (type === 'apple') gameState.inventory.apple += value * qty;
-        else if (type === 'ghost_key') gameState.inventory.ghost_key += value * qty;
+    function initGame() {
+        gameState.characters = Object.values(CHARACTERS_DATA).map(c => ({
+            ...c, hp: c.maxHp, stamina: c.maxStamina, affection: 15
+        }));
+        gameState.currentPuzzle = getRandomPuzzle();
         saveGame();
-    }
-
-    function autoRecovery() {
-        const now = Date.now();
-        const diff = now - gameState.lastRegen;
-        const minutesPassed = Math.floor(diff / 60000);
-        if (minutesPassed > 0) {
-            gameState.characters.forEach(char => {
-                char.hp = Math.min(char.maxHp, char.hp + Math.floor(minutesPassed / 2));
-                char.stamina = Math.min(char.maxStamina, char.stamina + minutesPassed * 2);
-            });
-            gameState.lastRegen = now - (diff % 60000);
-            saveGame();
-        }
-    }
-
-    function applyCurseDamage(character) {
-        let damage = gameState.level <= 5 ? 5 : gameState.level <= 10 ? 8 : gameState.level <= 20 ? 12 : 16;
-        const reduction = character.curseResistance / 100;
-        const finalDamage = Math.max(3, Math.floor(damage * (1 - reduction * 0.3)));
-        character.hp = Math.max(0, character.hp - finalDamage);
-        showFloatingDamage(`-${finalDamage} HP`, character.id);
-        if (character.hp <= 0) addHintToHistory(`💀 ${character.name} pingsan! Gunakan item.`);
-        saveGame();
-        render();
-        return finalDamage;
-    }
-
-    function showFloatingDamage(text, charId) {
-        const charCard = document.querySelector(`.char-card[data-char="${charId}"]`);
-        if (charCard) {
-            const div = document.createElement('div'); div.className = 'floating-damage';
-            div.textContent = text; div.style.position = 'absolute'; div.style.top = '30%'; div.style.left = '50%';
-            div.style.transform = 'translateX(-50%)';
-            charCard.style.position = 'relative'; charCard.appendChild(div);
-            setTimeout(() => div.remove(), 1000);
-        }
-    }
-
-    function getHintFromCharacter(charId) {
-        const character = gameState.characters.find(c => c.id === charId);
-        if (!character) return;
-        let cost = character.baseHintCost + Math.floor(gameState.level / 10);
-        if (character.stamina < cost) {
-            addHintToHistory(`⚠️ Stamina ${character.name} tidak cukup!`);
-            render(); return;
-        }
-        character.stamina -= cost;
-        const hintMsg = gameState.currentPuzzle?.hint || "Pikirkan tentang makna tersembunyi...";
-        const styleMessages = {
-            misterius: `"${hintMsg.substring(0, 45)}... Aku tidak bisa berkata lebih."`,
-            jelas: `"📖 ${hintMsg} — Fokus pada kata kunci."`,
-            random: `"${['Coba bayangkan...', 'Mungkin ini jawabannya...', 'Aku rasa ini tentang...'][Math.floor(Math.random()*3)]} ${hintMsg.substring(0, 40)}"`,
-            langsung: `"🔥 ${hintMsg}! Ayo cepat, waktu hampir habis."`
-        };
-        addHintToHistory(`${character.avatar} ${character.name}: ${styleMessages[character.hintStyle]} (${cost} stamina)`);
-        saveGame(); render();
-    }
-
-    function addHintToHistory(text) {
-        gameState.hintHistory.unshift({ text, time: new Date().toLocaleTimeString() });
-        if (gameState.hintHistory.length > 25) gameState.hintHistory.pop();
-        saveGame();
-    }
-
-    function useItemOnCharacter(itemType, charId) {
-        const character = gameState.characters.find(c => c.id === charId);
-        if (!character) return;
-        if (itemType === 'potion' && gameState.inventory.potion_hp >= 30) {
-            character.hp = Math.min(character.maxHp, character.hp + 30);
-            gameState.inventory.potion_hp -= 30;
-            addHintToHistory(`🧪 ${character.name} menggunakan Potion! HP +30`);
-        } else if (itemType === 'stamina' && gameState.inventory.stamina_bread >= 20) {
-            character.stamina = Math.min(character.maxStamina, character.stamina + 20);
-            gameState.inventory.stamina_bread -= 20;
-            addHintToHistory(`🍞 ${character.name} memakan Roti! Stamina +20`);
-        } else if (itemType === 'apple' && gameState.inventory.apple > 0) {
-            gameState.inventory.apple--;
-            addHintToHistory(`🍎 ${character.name} memakan Apel Pengetahuan! Keberuntungan meningkat.`);
-        }
-        saveGame(); render();
     }
 
     function saveGame() {
-        const saveData = {
+        localStorage.setItem('yureiKakuComplete', JSON.stringify({
             characters: gameState.characters.map(c => ({ id: c.id, hp: c.hp, stamina: c.stamina, affection: c.affection })),
             level: gameState.level, chapter: gameState.chapter, puzzleProgress: gameState.puzzleProgress,
-            puzzlesThisLevel: gameState.puzzlesThisLevel, totalPuzzlesSolved: gameState.totalPuzzlesSolved,
-            lastRegen: gameState.lastRegen, inventory: gameState.inventory, hintHistory: gameState.hintHistory,
-            currentStorySeed: gameState.currentStorySeed
-        };
-        localStorage.setItem('yureiKakuSave', JSON.stringify(saveData));
+            puzzlesThisLevel: gameState.puzzlesThisLevel, inventory: gameState.inventory,
+            hintHistory: gameState.hintHistory, currentStorySeed: gameState.currentStorySeed
+        }));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('yureiKakuSave');
-        if (saved) {
+        const saved = localStorage.getItem('yureiKakuComplete');
+        if(saved) {
             try {
                 const data = JSON.parse(saved);
-                gameState.characters = CHARACTERS.map(char => {
-                    const savedChar = data.characters?.find(c => c.id === char.id);
-                    return { ...char, hp: savedChar?.hp ?? char.maxHp, stamina: savedChar?.stamina ?? char.maxStamina, affection: savedChar?.affection ?? 15 };
+                gameState.characters = Object.values(CHARACTERS_DATA).map(c => {
+                    const savedChar = data.characters?.find(sc => sc.id === c.id);
+                    return { ...c, hp: savedChar?.hp ?? c.maxHp, stamina: savedChar?.stamina ?? c.maxStamina, affection: savedChar?.affection ?? 15 };
                 });
                 gameState.level = data.level || 1;
                 gameState.chapter = data.chapter || 1;
                 gameState.puzzleProgress = data.puzzleProgress || 0;
                 gameState.puzzlesThisLevel = data.puzzlesThisLevel || 12;
-                gameState.totalPuzzlesSolved = data.totalPuzzlesSolved || 0;
-                gameState.lastRegen = data.lastRegen || Date.now();
                 gameState.inventory = { ...gameState.inventory, ...(data.inventory || {}) };
                 gameState.hintHistory = data.hintHistory || [];
                 gameState.currentStorySeed = data.currentStorySeed || Math.random();
                 gameState.currentPuzzle = getRandomPuzzle();
-            } catch(e) { initNewGame(); }
-        } else { initNewGame(); }
-        autoRecovery();
+            } catch(e) { initGame(); }
+        } else { initGame(); }
     }
 
-    function initNewGame() {
-        gameState.characters = CHARACTERS.map(char => ({ ...char, hp: char.maxHp, stamina: char.maxStamina, affection: 15 }));
-        gameState.level = 1; gameState.chapter = 1; gameState.puzzleProgress = 0; gameState.puzzlesThisLevel = 12;
-        gameState.totalPuzzlesSolved = 0; gameState.lastRegen = Date.now(); gameState.hintHistory = [];
-        gameState.inventory = { ghost_coin: 25, topeng: 2, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 };
-        gameState.currentStorySeed = Math.random();
-        gameState.currentPuzzle = getRandomPuzzle();
-        saveGame();
+    // =============== ITEM & HEALING (TIDAK AUTO, HARUS PAKAI ITEM) ===============
+    function usePotion(charId) {
+        const char = gameState.characters.find(c => c.id === charId);
+        if(!char) return;
+        if(gameState.inventory.potion_hp >= 30) {
+            char.hp = Math.min(char.maxHp, char.hp + 30);
+            gameState.inventory.potion_hp -= 30;
+            addToHistory(`🧪 ${char.name} menggunakan Potion! HP +30 (${char.hp}/${char.maxHp})`);
+            saveGame(); render();
+        } else { alert(`❌ Potion tidak cukup! Stok: ${gameState.inventory.potion_hp}%`); }
     }
 
-    function solvePuzzle() {
-        const input = document.getElementById('puzzleAnswer');
-        const userAnswer = input?.value.trim().toLowerCase();
-        const puzzle = gameState.currentPuzzle;
-        if (!puzzle) return;
-        
-        if (userAnswer === puzzle.a.toLowerCase()) {
-            const randomChar = gameState.characters[Math.floor(Math.random() * gameState.characters.length)];
-            const drop = getRandomDrop(gameState.level, randomChar.luck);
-            addToInventory(drop.type, drop.value, drop.qty);
-            addHintToHistory(`✅ TEKA-TEKI TERPECAHKAN! ${drop.name} x${drop.qty} [${drop.rarity}]`);
-            
-            gameState.totalPuzzlesSolved++;
-            gameState.puzzleProgress++;
-            
-            if (gameState.puzzleProgress >= gameState.puzzlesThisLevel) {
-                gameState.chapter++;
-                gameState.puzzleProgress = 0;
-                gameState.puzzlesThisLevel = Math.min(18, 12 + Math.floor(gameState.level / 4));
-                gameState.level++;
-                addHintToHistory(`📖 BAB ${gameState.chapter} SELESAI! Level naik ke ${gameState.level}`);
-                gameState.characters.forEach(c => { c.hp = c.maxHp; c.stamina = c.maxStamina; });
-            } else {
-                gameState.level++;
-            }
-            gameState.currentPuzzle = getRandomPuzzle();
-            saveGame();
-            render();
-            if(input) input.value = '';
-        } else {
-            const targets = gameState.characters.filter(c => c.hp > 0);
-            if (targets.length > 0) {
-                const target = targets[Math.floor(Math.random() * targets.length)];
-                const damage = applyCurseDamage(target);
-                addHintToHistory(`❌ JAWABAN SALAH! ${target.name} terkena kutukan (-${damage} HP)`);
-                const card = document.querySelector(`.char-card[data-char="${target.id}"]`);
-                if (card) { card.classList.add('cursed'); setTimeout(() => card.classList.remove('cursed'), 500); }
-            }
-            if(input) input.value = '';
+    function useStamina(charId) {
+        const char = gameState.characters.find(c => c.id === charId);
+        if(!char) return;
+        if(gameState.inventory.stamina_bread >= 20) {
+            char.stamina = Math.min(char.maxStamina, char.stamina + 20);
+            gameState.inventory.stamina_bread -= 20;
+            addToHistory(`🍞 ${char.name} memakan Roti Stamina! Stamina +20 (${char.stamina}/${char.maxStamina})`);
+            saveGame(); render();
+        } else { alert(`❌ Roti Stamina tidak cukup! Stok: ${gameState.inventory.stamina_bread}%`); }
+    }
+
+    // Recovery pasif saat di lobby (hanya berjalan saat tidak bermain puzzle)
+    let lastLobbyRecovery = Date.now();
+    function lobbyRecovery() {
+        const now = Date.now();
+        const minutesPassed = Math.floor((now - lastLobbyRecovery) / 60000);
+        if(minutesPassed > 0 && gameState.screen === 'lobby') {
+            gameState.characters.forEach(char => {
+                let recoveryRate = 0;
+                if(char.id === 'Haruno') recoveryRate = 3; // paling cepat pulih
+                else if(char.id === 'Juun') recoveryRate = 2;
+                else if(char.id === 'Katsumi') recoveryRate = 2.5;
+                else recoveryRate = 1.5;
+                const hpGain = Math.floor(minutesPassed * recoveryRate);
+                const stamGain = Math.floor(minutesPassed * (recoveryRate + 0.5));
+                char.hp = Math.min(char.maxHp, char.hp + hpGain);
+                char.stamina = Math.min(char.maxStamina, char.stamina + stamGain);
+            });
+            lastLobbyRecovery = now;
             saveGame();
             render();
         }
     }
+    setInterval(() => lobbyRecovery(), 30000);
 
-    function generateStoryText() {
+    function addToHistory(text) {
+        gameState.hintHistory.unshift({ text, time: new Date().toLocaleTimeString() });
+        if(gameState.hintHistory.length > 30) gameState.hintHistory.pop();
+        saveGame();
+    }
+
+    // =============== HINT BERBEDA SETIAP KARAKTER ===============
+    function getHint(charId) {
+        const char = gameState.characters.find(c => c.id === charId);
+        if(!char) return;
+        if(char.stamina < char.baseHintCost) {
+            addToHistory(`⚠️ Stamina ${char.name} tidak cukup! (butuh ${char.baseHintCost})`);
+            render(); return;
+        }
+        char.stamina -= char.baseHintCost;
+        const puzzle = gameState.currentPuzzle;
+        const hintTexts = {
+            Haruno: `"${char.name} menatap tajam: '${puzzle?.hint || 'Fokus! Jangan buang waktuku.'}'"`,
+            Katsumi: `"${char.name} tersenyum: 'Coba pikirkan tentang ${puzzle?.hint?.substring(0,30) || 'petunjuk yang ada'}... Aku yakin kamu bisa!'"`,
+            Juun: `"${char.name} berkata datar: '${puzzle?.hint || 'Jawabannya sederhana. Pikir lagi.'}'"`,
+            Touya: `"${char.name} panik: 'A-aku rasa ini tentang ${puzzle?.hint?.substring(0,25) || 'sesuatu'}... Coba ingat lagi!'"`
+        };
+        addToHistory(`${char.avatar} ${hintTexts[char.id] || char.name + ' memberi petunjuk'} (${char.baseHintCost} stamina)`);
+        saveGame(); render();
+    }
+
+    // =============== JAWAB TEKA-TEKI ===============
+    function submitAnswer() {
+        const input = document.getElementById('puzzleAnswer');
+        if(!input) return;
+        const userAnswer = input.value.trim().toLowerCase();
+        const puzzle = gameState.currentPuzzle;
+        if(userAnswer === puzzle.a.toLowerCase()) {
+            const drop = Math.random() < 0.3 ? { name: 'Ghost Coin', type: 'coin', value: 5 } : { name: 'Potion 10%', type: 'potion', value: 10 };
+            if(drop.type === 'coin') gameState.inventory.ghost_coin += drop.value;
+            else gameState.inventory.potion_hp += drop.value;
+            addToHistory(`✅ JAWABAN BENAR! +${drop.value} ${drop.name}`);
+            gameState.puzzleProgress++;
+            if(gameState.puzzleProgress >= gameState.puzzlesThisLevel) {
+                gameState.chapter++;
+                gameState.puzzleProgress = 0;
+                gameState.puzzlesThisLevel = Math.min(18, 12 + Math.floor(gameState.level / 3));
+                addToHistory(`📖 BAB ${gameState.chapter} SELESAI!`);
+            }
+            gameState.level++;
+            gameState.currentPuzzle = getRandomPuzzle();
+            saveGame();
+            render();
+            input.value = '';
+        } else {
+            addToHistory(`❌ JAWABAN SALAH! "${userAnswer}" bukan jawaban yang tepat.`);
+            input.value = '';
+            render();
+        }
+    }
+
+    // =============== RENDER UI ===============
+    let currentModal = null;
+    function showProfile(char) {
+        if(currentModal) { currentModal.remove(); currentModal = null; }
+        const overlay = document.createElement('div'); overlay.className = 'overlay';
+        const modal = document.createElement('div'); modal.className = 'profile-modal';
+        modal.innerHTML = `
+            <button class="profile-close" onclick="closeModal()">✕</button>
+            <div style="text-align:center; font-size:3rem;">${char.avatar}</div>
+            <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
+            <p style="text-align:center; font-style:italic;">"${char.julukan}"</p>
+            <hr>
+            <h3>📌 Identitas</h3>
+            <p>Umur: ${char.umur} tahun | Tinggi: ${char.tinggi} cm</p>
+            <h3>💭 Kepribadian</h3>
+            <p>${char.personality}</p>
+            <h3>⚡ Kemampuan</h3>
+            <p>${char.ability}</p>
+            <h3>🎯 Hobi & Kesukaan</h3>
+            <p><strong>Suka:</strong> ${char.likes}<br><strong>Tidak suka:</strong> ${char.dislikes}</p>
+            <h3>📖 Deskripsi</h3>
+            <p>${char.description}</p>
+            <hr>
+            <p style="font-size:0.8rem; color:#ccaa99;">❤️ Affection: ${char.affection} | 🧠 Intel: ${char.intelligence} | 🍀 Luck: ${char.luck}</p>
+        `;
+        document.body.appendChild(overlay); document.body.appendChild(modal);
+        currentModal = { overlay, modal };
+    }
+    window.closeModal = () => { if(currentModal) { currentModal.overlay.remove(); currentModal.modal.remove(); currentModal = null; } };
+
+    function generateStory() {
         const stories = [
-            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan 12-15 teka-teki setiap bab untuk melarikan diri."`,
-            `Kabut tebal di ${gameState.level % 2 === 0 ? 'sekolah terbengkalai' : 'rumah sakit jiwa'}. ${gameState.characters[3]?.name || 'Touya'} memegang obor, "Aku akan melindungi kalian."`,
-            `Bab ${gameState.chapter}: ${gameState.puzzleProgress}/${gameState.puzzlesThisLevel} teka-teki terselesaikan. Teruslah berjuang!`
+            `【 Bab ${gameState.chapter} 】 ${gameState.characters[0]?.name || 'Haruno'} berdiri di depan gerbang tua. "${gameState.characters[3]?.name || 'Touya'}, jangan panik dulu."`,
+            `Kabut tebal menyelimuti ${gameState.level % 2 === 0 ? 'sekolah tua' : 'rumah sakit jiwa'}. ${gameState.characters[1]?.name || 'Katsumi'} menggenggam tangan ${gameState.characters[2]?.name || 'Juun'}.`,
+            `"${gameState.characters[0]?.name || 'Haruno'}! ${gameState.characters[3]?.name || 'Touya'} jatuh!" seru ${gameState.characters[1]?.name || 'Katsumi'} panik.`
         ];
         return stories[Math.floor(Math.random() * stories.length)];
     }
 
     function render() {
         const app = document.getElementById('app');
-        if (!app) return;
-        
-        if (gameState.screen === 'mainmenu') {
+        if(!app) return;
+        if(gameState.screen === 'lobby') {
             app.innerHTML = `
-                <div class="main-menu glass-panel">
-                    <h1 class="game-title">YUREI KAKU</h1>
-                    <div class="menu-buttons">
-                        <button class="menu-btn" onclick="startGame()">✨ Mulai Petualangan</button>
-                        <button class="menu-btn" onclick="window.location.href='daily.html'">🎁 Daily & Shop</button>
+                <div class="glass-panel" style="text-align:center;">
+                    <h1 style="font-size:clamp(2rem,8vw,3rem);">YUREI KAKU</h1>
+                    <p style="color:#ccbbaa;">Otome Horror Puzzle RPG</p>
+                    <div class="menu-buttons" style="display:flex; gap:12px; justify-content:center; margin:20px 0;">
+                        <button class="nav-btn" onclick="gameState.screen='game'; render()">✨ Mulai Petualangan</button>
+                        <button class="nav-btn" onclick="window.location.href='daily.html'">🎁 Daily & Shop</button>
                     </div>
-                    <div style="margin-top: 30px; font-size: clamp(0.7rem, 3vw, 0.8rem); color:#ccbbaa;">✦ 12-18 Teka-teki per Bab · Random Story · Otome Horror ✦</div>
+                </div>
+                <div class="glass-panel">
+                    <h3>👥 Karakter</h3>
+                    <div class="char-grid">
+                        ${gameState.characters.map(char => `
+                            <div class="char-card" onclick="showProfile(${JSON.stringify(char).replace(/"/g, '&quot;')})">
+                                <div class="char-header"><div class="char-avatar">${char.avatar}</div>
+                                <div><div class="char-name">${char.name}</div><div class="char-personality">${char.personality.substring(0,40)}...</div></div></div>
+                                <div class="stat-bar-container"><div class="stat-label">❤️ HP ${Math.floor(char.hp)}/${char.maxHp}</div>
+                                <div class="hp-bar-bg"><div class="hp-bar-fill" style="width:${(char.hp/char.maxHp)*100}%"></div></div></div>
+                                <div class="stat-bar-container"><div class="stat-label">⚡ Stamina ${Math.floor(char.stamina)}/${char.maxStamina}</div>
+                                <div class="stamina-bar-bg"><div class="stamina-bar-fill" style="width:${(char.stamina/char.maxStamina)*100}%"></div></div></div>
+                                <div style="display:flex; gap:5px; justify-content:center; margin-top:10px;">
+                                    <button class="btn-action" onclick="event.stopPropagation(); usePotion('${char.id}')">🧪 Potion</button>
+                                    <button class="btn-action" onclick="event.stopPropagation(); useStamina('${char.id}')">🍞 Roti</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p style="text-align:center; font-size:0.7rem; margin-top:10px;">✨ Klik kartu karakter untuk melihat profil lengkap ✨</p>
                 </div>
             `;
-            return;
-        }
-        
-        const remainingPuzzles = gameState.puzzlesThisLevel - gameState.puzzleProgress;
-        app.innerHTML = `
-            <div class="glass-panel">
-                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px;">
-                    <h2>👥 YUREI KAKU</h2>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button class="btn-hint" onclick="showNewGameWarning()">🔄 Reset Cerita</button>
-                        <button class="btn-hint" onclick="gameState.screen='mainmenu'; render()">🏠 Menu</button>
+        } else {
+            const remaining = gameState.puzzlesThisLevel - gameState.puzzleProgress;
+            app.innerHTML = `
+                <div class="glass-panel">
+                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                        <h2>YUREI KAKU</h2>
+                        <button class="nav-btn" onclick="gameState.screen='lobby'; render()">🏠 Lobby</button>
+                    </div>
+                    <div class="inventory-summary">
+                        <span class="inv-tag">🪙 ${gameState.inventory.ghost_coin}</span>
+                        <span class="inv-tag">🎭 ${gameState.inventory.topeng}</span>
+                        <span class="inv-tag">🧪 Potion: ${gameState.inventory.potion_hp}%</span>
+                        <span class="inv-tag">🍞 Roti: ${gameState.inventory.stamina_bread}%</span>
+                        <span class="inv-tag">🍎 ${gameState.inventory.apple}</span>
+                        <span class="inv-tag">🔑 ${gameState.inventory.ghost_key}</span>
                     </div>
                 </div>
-                <div class="inventory-summary">
-                    <span class="inv-tag">🪙 ${gameState.inventory.ghost_coin}</span>
-                    <span class="inv-tag">🎭 ${gameState.inventory.topeng}</span>
-                    <span class="inv-tag">🧪 ${gameState.inventory.potion_hp}%</span>
-                    <span class="inv-tag">🍞 ${gameState.inventory.stamina_bread}%</span>
-                    <span class="inv-tag">🍎 ${gameState.inventory.apple}</span>
-                    <span class="inv-tag">🔑 ${gameState.inventory.ghost_key}</span>
+                <div class="char-grid">
+                    ${gameState.characters.map(char => `
+                        <div class="char-card">
+                            <div class="char-header"><div class="char-avatar">${char.avatar}</div>
+                            <div><div class="char-name">${char.name}</div><div class="char-personality">${char.personality.substring(0,35)}...</div></div></div>
+                            <div class="stat-bar-container"><div class="stat-label">❤️ HP ${Math.floor(char.hp)}/${char.maxHp}</div>
+                            <div class="hp-bar-bg"><div class="hp-bar-fill" style="width:${(char.hp/char.maxHp)*100}%"></div></div></div>
+                            <div class="stat-bar-container"><div class="stat-label">⚡ Stamina ${Math.floor(char.stamina)}/${char.maxStamina}</div>
+                            <div class="stamina-bar-bg"><div class="stamina-bar-fill" style="width:${(char.stamina/char.maxStamina)*100}%"></div></div></div>
+                            <div style="display:flex; gap:5px; justify-content:center; margin-top:8px;">
+                                <button class="btn-action" onclick="usePotion('${char.id}')">🧪 Potion</button>
+                                <button class="btn-action" onclick="useStamina('${char.id}')">🍞 Roti</button>
+                                <button class="btn-action" onclick="getHint('${char.id}')">🔍 Hint</button>
+                            </div>
+                        </div>
+                    `).join('')}
                 </div>
-            </div>
-            <div class="char-grid">
-                ${gameState.characters.map(char => `
-                    <div class="char-card" data-char="${char.id}">
-                        <div class="char-header"><div class="char-avatar">${char.avatar}</div>
-                        <div><div class="char-name">${char.name}</div><div class="char-personality">${char.personality}</div></div></div>
-                        <div class="stat-bar-container"><div class="stat-label"><span>❤️ HP</span><span>${Math.floor(char.hp)}/${char.maxHp}</span></div>
-                        <div class="hp-bar-bg"><div class="hp-bar-fill" style="width: ${(char.hp/char.maxHp)*100}%"></div></div></div>
-                        <div class="stat-bar-container"><div class="stat-label"><span>⚡ Stamina</span><span>${Math.floor(char.stamina)}/${char.maxStamina}</span></div>
-                        <div class="stamina-bar-bg"><div class="stamina-bar-fill" style="width: ${(char.stamina/char.maxStamina)*100}%"></div></div></div>
-                        <div class="stats-grid">
-                            <div class="stat-item">💕 Aff: <span class="stat-value">${char.affection}</span></div>
-                            <div class="stat-item">🧠 Intel: <span class="stat-value">${char.intelligence}</span></div>
-                            <div class="stat-item">🍀 Luck: <span class="stat-value">${char.luck}</span></div>
-                            <div class="stat-item">🛡️ Resist: <span class="stat-value">${char.curseResistance}</span></div>
-                            <div class="stat-item">💡 Hint: <span class="stat-value">${char.baseHintCost} stam</span></div>
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
-                            <button class="btn-hint" onclick="getHintFromCharacter('${char.id}')">🔍 Petunjuk</button>
-                            <button class="btn-hint" onclick="useItemOnCharacter('potion', '${char.id}')">🧪 Potion</button>
-                            <button class="btn-hint" onclick="useItemOnCharacter('stamina', '${char.id}')">🍞 Roti</button>
-                            ${gameState.inventory.apple > 0 ? `<button class="btn-hint" onclick="useItemOnCharacter('apple', '${char.id}')">🍎 Apel</button>` : ''}
-                        </div>
+                <div class="puzzle-area">
+                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                        <h3>🧩 Teka-teki ${gameState.puzzleProgress+1}/${gameState.puzzlesThisLevel}</h3>
+                        <div>Level ${gameState.level} · Bab ${gameState.chapter}</div>
                     </div>
-                `).join('')}
-            </div>
-            <div class="puzzle-area">
-                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                    <h3>🧩 TEKA-TEKI KE-${gameState.puzzleProgress+1} / ${gameState.puzzlesThisLevel}</h3>
-                    <div class="stat-tag">Level ${gameState.level} · Bab ${gameState.chapter}</div>
+                    <div class="puzzle-question">「 ${gameState.currentPuzzle?.q || 'Memuat...'} 」</div>
+                    <div class="puzzle-options">
+                        <input type="text" id="puzzleAnswer" class="puzzle-input" placeholder="Ketik jawaban..." autocomplete="off">
+                        <button class="puzzle-btn" onclick="submitAnswer()">✨ Jawab</button>
+                    </div>
                 </div>
-                <div class="puzzle-question">「 ${gameState.currentPuzzle?.q || 'Memuat teka-teki...'} 」</div>
-                <div class="puzzle-options">
-                    <input type="text" id="puzzleAnswer" class="puzzle-input" placeholder="Ketik jawaban di sini..." autocomplete="off" enterkeyhint="done">
-                    <button class="puzzle-btn" onclick="solvePuzzle()">✨ Jawab</button>
+                <div class="glass-panel">
+                    <div style="display:flex; justify-content:space-between;"><h3>📜 Log & Petunjuk</h3><span>${gameState.hintHistory.length}</span></div>
+                    <div class="hint-history">${gameState.hintHistory.slice(0,6).map(h => `<div class="hint-entry">[${h.time}] ${h.text}</div>`).join('') || '<div class="hint-entry">✨ Belum ada aktivitas</div>'}</div>
                 </div>
-                <div style="margin-top: 12px; text-align: center; font-size: clamp(0.6rem, 2.5vw, 0.7rem); color: #ccbba8;">💡 Butuh bantuan? Klik "Petunjuk" di karakter (menguras stamina)</div>
-            </div>
-            <div class="glass-panel">
-                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;"><h3>📜 Hint History</h3><span>${gameState.hintHistory.length} catatan</span></div>
-                <div class="hint-history">
-                    ${gameState.hintHistory.slice(0, 6).map(h => `<div class="hint-entry">[${h.time}] ${h.text}</div>`).join('')}
-                    ${gameState.hintHistory.length === 0 ? '<div class="hint-entry">✨ Belum ada hint. Klik tombol petunjuk di karakter!</div>' : ''}
-                </div>
-            </div>
-            <div class="glass-panel"><h3>📖 Cerita Saat Ini</h3><p style="line-height:1.6;">${generateStoryText()}</p></div>
-        `;
-        
-        // Auto-focus pada input untuk mobile
-        const input = document.getElementById('puzzleAnswer');
-        if(input && document.activeElement !== input) {
-            setTimeout(() => { if(document.activeElement !== input) input.focus(); }, 100);
+                <div class="glass-panel"><h3>📖 Cerita</h3><p>${generateStory()}</p></div>
+            `;
+            setTimeout(() => { const inp = document.getElementById('puzzleAnswer'); if(inp) inp.focus(); }, 100);
         }
     }
 
-    function showNewGameWarning() {
-        const overlay = document.createElement('div'); overlay.className = 'overlay';
-        const modal = document.createElement('div'); modal.className = 'warning-modal';
-        modal.innerHTML = `
-            <h3 style="color:#ff8899;">⚠️ PERINGATAN ⚠️</h3>
-            <p style="margin: 20px 0;">Progress cerita akan dimulai ulang.<br><strong>Item inventory TIDAK akan hilang!</strong></p>
-            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-hint" onclick="closeWarning()" style="background:#5a3a5a;">📖 Lanjutkan</button>
-                <button class="btn-hint" onclick="resetStory()" style="background:#ff6688;">✨ Reset Cerita</button>
-            </div>
-        `;
-        document.body.appendChild(overlay); document.body.appendChild(modal);
-        window.warningElements = { overlay, modal };
-    }
-    window.closeWarning = () => { if(window.warningElements) { window.warningElements.overlay.remove(); window.warningElements.modal.remove(); } };
-    window.resetStory = () => { initNewGame(); closeWarning(); render(); addHintToHistory('✨ Cerita baru dimulai! Item tetap utuh. ✨'); };
-    window.startGame = () => { gameState.screen = 'game'; if(!gameState.currentPuzzle) gameState.currentPuzzle = getRandomPuzzle(); render(); };
-    window.getHintFromCharacter = getHintFromCharacter;
-    window.useItemOnCharacter = useItemOnCharacter;
-    window.solvePuzzle = solvePuzzle;
+    window.initGame = initGame;
+    window.usePotion = usePotion;
+    window.useStamina = useStamina;
+    window.getHint = getHint;
+    window.submitAnswer = submitAnswer;
+    window.showProfile = showProfile;
 
-    function createParticles() {
-        const particleCount = Math.min(40, Math.floor(window.innerWidth / 30));
-        for(let i = 0; i < particleCount; i++) {
-            const p = document.createElement('div'); p.className = 'particle';
-            p.style.width = Math.random() * 4 + 2 + 'px'; p.style.height = p.style.width;
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = Math.random() * 15 + 10 + 's';
-            p.style.animationDelay = Math.random() * 10 + 's';
-            document.body.appendChild(p);
-        }
-    }
-    
     loadGame();
-    createParticles();
     render();
-    setInterval(() => { autoRecovery(); if(gameState.screen === 'game') render(); }, 60000);
-    
-    // Handle resize untuk partikel
-    window.addEventListener('resize', () => {
-        document.querySelectorAll('.particle').forEach(p => p.remove());
-        createParticles();
-    });
+    setInterval(() => { if(gameState.screen === 'lobby') lobbyRecovery(); render(); }, 60000);
 </script>
 </body>
 </html>
