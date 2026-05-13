@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, view-fit=cover, user-scalable=yes">
+    <title>YUREI KAKU · Profil Karakter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0a1a 0%, #1a0a2a 100%);
+            font-family: 'Courier New', 'Segoe UI', 'Poppins', monospace;
+            padding: clamp(8px, 2vw, 20px);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .particle {
+            position: fixed;
+            background: rgba(200,180,150,0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatParticle linear infinite;
+            z-index: 0;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .game-container { max-width: 1300px; margin: 0 auto; position: relative; z-index: 2; width: 100%; }
+        .glass-panel {
+            background: rgba(10, 8, 22, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(220, 180, 140, 0.4);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .nav-buttons { display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 20px; flex-wrap: wrap; }
+        .nav-btn {
+            background: rgba(30,20,45,0.9); border: 1px solid #e8aa88; padding: 8px 20px;
+            border-radius: 40px; color: #ffefdf; cursor: pointer; text-decoration: none; display: inline-block;
+        }
+        .nav-btn:hover { background: #c96a8a; }
+        h1, h2, h3 { color: #ffdfc4; margin-bottom: 16px; }
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin: 20px 0;
+        }
+        .char-card {
+            background: rgba(15, 10, 28, 0.94);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid #6a4a6a;
+            transition: all 0.3s;
+        }
+        .char-card:hover { transform: translateY(-5px); border-color: #e8aa88; }
+        .char-header { text-align: center; margin-bottom: 16px; }
+        .char-avatar { font-size: 4rem; }
+        .char-name { font-size: 1.8rem; }
+        .char-julukan { font-style: italic; color: #ccaa99; margin-top: 5px; }
+        .info-section { margin: 16px 0; }
+        .info-section h4 { color: #ffccaa; margin-bottom: 8px; font-size: 1rem; }
+        .info-section p { font-size: 0.85rem; line-height: 1.5; color: #ddddcc; }
+        .stats-mini {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+        }
+        .stat-badge { background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 30px; font-size: 0.75rem; }
+        .relationship-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        .relationship-item { margin: 8px 0; font-size: 0.8rem; border-left: 3px solid #ff88aa; padding-left: 10px; }
+        @media (max-width: 700px) { .char-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="game-container" id="app"></div>
+
+<script>
+    const CHARACTERS_FULL = {
+        Haruno: {
+            avatar: '❄️', name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
+            personality: 'Tsundere, protektif, pemarah, tegas, sulit jujur soal perasaan',
+            ability: 'Kekuatan fisik monster, daya tahan tinggi, refleks cepat',
+            hobbies: 'Latihan otot, sparring, jogging malam, koleksi minuman energi',
+            likes: 'Minuman berenergi dingin, tantangan fisik, suasana tenang',
+            dislikes: 'Orang keras kepala yang cari masalah sendiri, keributan nggak penting, dipanggil "imut"',
+            description: 'Sosok paling besar dan paling kuat di kelompoknya. Galak, gampang emosi, tapi di balik itu paling peduli.',
+            quotes: ['"Kalau nggak kuat, mundur. Biar gue aja."', '"Hah? Gue khawatir? Ngaco."', '"Selama gue masih bisa berdiri, nggak bakal ada yang nyentuh kalian."'],
+            relationships: {
+                Katsumi: "Katsumi adalah orang yang paling sering berada di dekat Haruno tanpa takut. Haruno paling protektif terhadap Katsumi.",
+                Juun: "Hubungan penuh rivalitas diam-diam. Sama-sama hebat dan sering bersaing.",
+                Touya: "Awalnya Touya takut, kini jadi paling sering menempel pada Haruno saat takut."
+            },
+            stats: { intelligence: 80, luck: 60, curseResistance: 70, hintCost: 4 }
+        },
+        Katsumi: {
+            avatar: '🌊', name: 'Katsumi', julukan: 'Sexy Princess', umur: 18, tinggi: 165,
+            personality: 'Ceria, super ramah, gaul, manja, perhatian, polos soal cinta',
+            ability: 'Mudah akrab dengan siapa saja, pandai membaca suasana, ahli bikin orang nyaman',
+            hobbies: 'Menari, menyanyi, scrolling trend terbaru, koleksi barang imut',
+            likes: 'Dessert manis, boneka lucu, aksesoris pastel, karaoke malam',
+            dislikes: 'Suasana sepi menyeramkan, film horor, orang bertengkar, hantu',
+            description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun.',
+            quotes: ['"Eh? Serius? Lucu bangettt!"', '"Jangan dipendem sendiri dong... cerita sama aku."', '"H-HANTU?! Jangan tinggalin aku sendirian!!"'],
+            relationships: {
+                Haruno: "Salah satu sedikit orang yang tidak takut pada Haruno. Suka menggoda dan memaksa Haruno ikut trend.",
+                Juun: "Sering mengajak Juun nongkrong. Juun jarang benar-benar menolak.",
+                Touya: "Menganggap Touya seperti adik kecil. Paling sering menenangkan Touya saat panik."
+            },
+            stats: { intelligence: 95, luck: 55, curseResistance: 65, hintCost: 5 }
+        },
+        Juun: {
+            avatar: '🌀', name: 'Juun', julukan: 'Silent Prince', umur: 19, tinggi: 188,
+            personality: 'Pendiam, tenang, blak-blakan, cerdas, peka terhadap situasi',
+            ability: 'Genius akademik, atlet serba bisa, observasi tajam',
+            hobbies: 'Membaca artikel astronomi, mendengarkan musik tenang, makan donat',
+            likes: 'Tempat sunyi, malam berbintang, kopi pahit, kucing',
+            dislikes: 'Keramaian berisik, serangga, rumah hantu',
+            description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
+            quotes: ['"Berisik."', '"Itu keputusan yang buruk."', '"Donat terakhirku siapa yang ambil?"', '"...Kucing."'],
+            relationships: {
+                Haruno: "Rival terbesar dalam olahraga. Meski sering beradu pendapat, punya rasa percaya yang kuat.",
+                Katsumi: "Salah satu orang yang paling sering mengganggu ketenangan Juun, tapi juga yang paling bisa membuat suasana terasa ringan.",
+                Touya: "Rival akademik yang paling sering berusaha mengalahkannya. Juun cukup menghargai kemampuan Touya."
+            },
+            stats: { intelligence: 85, luck: 80, curseResistance: 50, hintCost: 6 }
+        },
+        Touya: {
+            avatar: '🔥', name: 'Touya', julukan: 'Bocah Imut', umur: 18, tinggi: 158,
+            personality: 'Polos, pemalu, ceroboh, panikan, banyak bicara dengan orang dekat',
+            ability: 'Ahli teka-teki, cepat memecahkan misteri, genius bahasa dan sastra kuno',
+            hobbies: 'Eksplor tempat angker, baca misteri kuno, nonton anime, mengoleksi teori konspirasi',
+            likes: 'Teka-teki sulit, sejarah, barang antik, ramen murah, pelukan hangat',
+            dislikes: 'Orang menyeramkan, suasana tegang, jumpscare mendadak',
+            description: 'Cowok mungil dengan wajah imut. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
+            quotes: ['"A-Aku nggak takut kok... cuma kaget dikit!"', '"Teori ku benar! Aku tahu ada sesuatu di sini!"', '"JANGAN TINGGALIN AKU SENDIRIAN!!"'],
+            relationships: {
+                Haruno: "Awalnya benar-benar takut, sekarang jadi 'tameng hidup' favorit Touya saat suasana menegangkan.",
+                Katsumi: "Orang yang paling sering menenangkan Touya saat panik. Touya sangat nyaman berada di dekat Katsumi.",
+                Juun: "Rival akademik terbesar yang paling ingin dikalahkan. Sering gugup saat Juun muncul."
+            },
+            stats: { intelligence: 98, luck: 70, curseResistance: 45, hintCost: 8 }
+        }
+    };
+
+    function render() {
+        const app = document.getElementById('app');
+        app.innerHTML = `
+            <div class="glass-panel">
+                <div class="nav-buttons">
+                    <a href="index.html" class="nav-btn">🎮 Game Utama</a>
+                    <a href="daily.html" class="nav-btn">🎁 Daily & Shop</a>
+                </div>
+                <h1>👥 Profil Karakter YUREI KAKU</h1>
+                <p style="color:#ccbbaa; margin-bottom:20px;">Klik pada kartu untuk melihat lebih detail</p>
+                <div class="char-grid">
+                    ${Object.entries(CHARACTERS_FULL).map(([id, char]) => `
+                        <div class="char-card" onclick="showDetail('${id}')">
+                            <div class="char-header">
+                                <div class="char-avatar">${char.avatar}</div>
+                                <div class="char-name">${char.name}</div>
+                                <div class="char-julukan">"${char.julukan}"</div>
+                            </div>
+                            <div class="stats-mini">
+                                <span class="stat-badge">🧠 Intel: ${char.stats.intelligence}</span>
+                                <span class="stat-badge">🍀 Luck: ${char.stats.luck}</span>
+                                <span class="stat-badge">🛡️ Resist: ${char.stats.curseResistance}</span>
+                                <span class="stat-badge">💡 Hint: ${char.stats.hintCost} stam</span>
+                            </div>
+                            <div class="info-section">
+                                <h4>📌 Identitas</h4>
+                                <p>${char.umur} tahun · ${char.tinggi} cm</p>
+                            </div>
+                            <div class="info-section">
+                                <h4>💭 Kepribadian</h4>
+                                <p>${char.personality}</p>
+                            </div>
+                            <div class="relationship-box">
+                                <h4>💞 Hubungan Singkat</h4>
+                                ${Object.entries(char.relationships).slice(0,2).map(([name, rel]) => `<div class="relationship-item"><strong>${name}:</strong> ${rel.substring(0,80)}...</div>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    let currentModal = null;
+    function showDetail(id) {
+        const char = CHARACTERS_FULL[id];
+        if(!char) return;
+        if(currentModal) { currentModal.remove(); currentModal = null; }
+        const overlay = document.createElement('div'); overlay.className = 'overlay';
+        const modal = document.createElement('div'); modal.className = 'char-modal';
+        modal.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(8,5,20,0.98); backdrop-filter:blur(20px); border-radius:24px; padding:24px; z-index:2000; width:min(95%,550px); max-height:85vh; overflow-y:auto; border:2px solid #ff88aa; color:#f0e0d0;';
+        modal.innerHTML = `
+            <div style="position:sticky; top:0; text-align:right;"><button onclick="closeModal()" style="background:#ff6688; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; color:white;">✕</button></div>
+            <div style="text-align:center; font-size:4rem;">${char.avatar}</div>
+            <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
+            <p style="text-align:center; font-style:italic;">"${char.julukan}"</p>
+            <hr style="margin:15px 0; border-color:#665588;">
+            <h3>📌 Identitas</h3>
+            <p>Umur: ${char.umur} tahun | Tinggi: ${char.tinggi} cm</p>
+            <h3>💭 Kepribadian</h3>
+            <p>${char.personality}</p>
+            <h3>⚡ Kemampuan</h3>
+            <p>${char.ability}</p>
+            <h3>🎯 Hobi & Kesukaan</h3>
+            <p><strong>Suka:</strong> ${char.likes}<br><strong>Tidak suka:</strong> ${char.dislikes}</p>
+            <h3>📖 Deskripsi</h3>
+            <p>${char.description}</p>
+            <h3>💬 Quotes Khas</h3>
+            <p>${char.quotes.map(q => `"${q}"`).join('<br>')}</p>
+            <h3>💞 Hubungan dengan Karakter Lain</h3>
+            ${Object.entries(char.relationships).map(([name, rel]) => `<p><strong>${name}:</strong> ${rel}</p>`).join('')}
+            <hr style="margin:15px 0;">
+            <p style="font-size:0.8rem;">🧠 Intel: ${char.stats.intelligence} | 🍀 Luck: ${char.stats.luck} | 🛡️ Resist: ${char.stats.curseResistance} | 💡 Hint: ${char.stats.hintCost} stamina</p>
+        `;
+        document.body.appendChild(overlay); document.body.appendChild(modal);
+        currentModal = { overlay, modal };
+    }
+    window.closeModal = () => { if(currentModal) { currentModal.overlay.remove(); currentModal.modal.remove(); currentModal = null; } };
+    window.showDetail = showDetail;
+
+    function createParticles() {
+        for(let i=0;i<40;i++) {
+            let p=document.createElement('div'); p.className='particle';
+            p.style.width=Math.random()*4+2+'px'; p.style.height=p.style.width;
+            p.style.left=Math.random()*100+'%';
+            p.style.animationDuration=Math.random()*15+10+'s';
+            p.style.animationDelay=Math.random()*10+'s';
+            document.body.appendChild(p);
+        }
+    }
+    createParticles();
+    render();
+</script>
+</body>
+</html>
