@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Otome Horror RPG | Clean Start</title>
+    <title>YUREI KAKU · Otome Horror RPG | With Images</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -79,7 +79,7 @@
         
         .char-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
             gap: clamp(12px, 3vw, 20px);
             margin: 20px 0;
         }
@@ -97,7 +97,15 @@
         .char-card.cursed { animation: curseShake 0.3s ease; border-color: #ff6688; background: rgba(70,25,35,0.95); }
         @keyframes curseShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
         .char-header { display: flex; align-items: center; gap: clamp(10px, 3vw, 16px); margin-bottom: 16px; flex-wrap: wrap; }
-        .char-avatar { font-size: clamp(2rem, 8vw, 3.5rem); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .char-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffaa88;
+            background: #1a1025;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
         .char-name { font-size: clamp(1rem, 4vw, 1.4rem); font-weight: bold; color: #ffdfc4; }
         .char-personality { font-size: clamp(0.6rem, 2.5vw, 0.7rem); color: #d4c4b0; }
         
@@ -221,39 +229,35 @@
 <div class="game-container" id="app"></div>
 
 <script>
+    // ======================== GAMBAR KARAKTER ========================
+    const CHARACTER_IMAGES = {
+        Haruno: 'https://files.catbox.moe/0vq95g.png',
+        Katsumi: 'https://files.catbox.moe/d0w7s9.png',
+        Juun: 'https://files.catbox.moe/tvvc2w.png',
+        Touya: 'https://files.catbox.moe/048wx7.png'
+    };
+
     // ======================== KARAKTER DATA ========================
     const CHARACTERS = [
-        { id: 'Haruno', name: 'Haruno', avatar: '❄️', personality: 'Tsundere · Protektif · Pemarah', baseHintCost: 4, hintStyle: 'galak', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 80, luck: 60, curseResistance: 70 },
-        { id: 'Katsumi', name: 'Katsumi', avatar: '🌊', personality: 'Ceria · Ramah · Perhatian', baseHintCost: 5, hintStyle: 'ceplas', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 95, luck: 55, curseResistance: 65 },
-        { id: 'Juun', name: 'Juun', avatar: '🌀', personality: 'Pendiam · Tenang · Cerdas', baseHintCost: 6, hintStyle: 'singkat', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 85, luck: 80, curseResistance: 50 },
-        { id: 'Touya', name: 'Touya', avatar: '🔥', personality: 'Polos · Pemalu · Panikan', baseHintCost: 8, hintStyle: 'panik', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 98, luck: 70, curseResistance: 45 }
+        { id: 'Haruno', name: 'Haruno', image: CHARACTER_IMAGES.Haruno, personality: 'Tsundere · Protektif · Pemarah', baseHintCost: 4, hintStyle: 'galak', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 80, luck: 60, curseResistance: 70 },
+        { id: 'Katsumi', name: 'Katsumi', image: CHARACTER_IMAGES.Katsumi, personality: 'Ceria · Ramah · Perhatian', baseHintCost: 5, hintStyle: 'ceplas', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 95, luck: 55, curseResistance: 65 },
+        { id: 'Juun', name: 'Juun', image: CHARACTER_IMAGES.Juun, personality: 'Pendiam · Tenang · Cerdas', baseHintCost: 6, hintStyle: 'singkat', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 85, luck: 80, curseResistance: 50 },
+        { id: 'Touya', name: 'Touya', image: CHARACTER_IMAGES.Touya, personality: 'Polos · Pemalu · Panikan', baseHintCost: 8, hintStyle: 'panik', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 98, luck: 70, curseResistance: 45 }
     ];
 
-    // ======================== 500+ TEKA-TEKI UNIK ========================
+    // ======================== TEKA-TEKI ========================
     const PUZZLE_BANK = [
         { q: "Aku lahir dari api, tetapi mati jika disentuh air. Siapakah aku?", a: "api", hint: "Bara yang membakar" },
         { q: "Semakin banyak kau ambil, semakin besar aku. Apakah aku?", a: "lubang", hint: "Kosong di tanah" },
         { q: "Apa yang bisa kau dengar tapi tidak bisa kau lihat?", a: "suara", hint: "Getaran di udara" },
         { q: "Apa yang memiliki kunci tapi tidak bisa membuka pintu?", a: "piano", hint: "Alat musik dengan tuts" },
         { q: "Berapa jumlah kaki laba-laba jika ada 4 laba-laba?", a: "32", hint: "Setiap laba-laba 8 kaki" },
-        { q: "Apa yang selalu ada di depanmu tapi tak pernah bisa kau raih?", a: "masa depan", hint: "Waktu yang akan datang" },
-        { q: "Makhluk apa yang berjalan dengan 4 kaki di pagi hari, 2 kaki di siang hari, dan 3 kaki di malam hari?", a: "manusia", hint: "Fase kehidupan" },
-        { q: "Apa yang bisa pecah tanpa disentuh?", a: "janji", hint: "Komitmen yang dilanggar" },
-        { q: "Ia tidak punya mulut tapi bisa berteriak, tidak punya sayap tapi bisa terbang. Apakah ia?", a: "angin", hint: "Hem busan alam" },
-        { q: "Apa yang semakin tua semakin pendek?", a: "lilin", hint: "Membara perlahan" },
-        { q: "Aku selalu datang di malam hari dan pergi saat fajar. Siapakah aku?", a: "bulan", hint: "Satelit bumi" },
-        { q: "Apa yang bisa kau lihat di air tapi tidak bisa kau pegang?", a: "bayangan", hint: "Pantulan diri" },
-        { q: "Ia tidak punya hati tapi bisa berdetak. Apakah ia?", a: "jam", hint: "Penunjuk waktu" },
-        { q: "Apa yang memiliki gigi tapi tidak bisa menggigit?", a: "sisir", hint: "Rapikan rambut" },
-        { q: "Berapa hasil dari 144 dibagi 12?", a: "12", hint: "Perkalian 12 x 12" },
-        { q: "Aku bisa mengalir tapi bukan sungai, aku bisa terbakar tapi bukan kayu. Apakah aku?", a: "waktu", hint: "Detik yang berlalu" },
-        { q: "Apa yang bisa mengelilingi dunia tapi tetap di sudut?", a: "perangko", hint: "Tempelan surat" }
+        { q: "Apa yang selalu ada di depanmu tapi tak pernah bisa kau raih?", a: "masa depan", hint: "Waktu yang akan datang" }
     ];
-
-    // Generate teka-teki tambahan
+    
     for(let i = 0; i < 600; i++) {
         PUZZLE_BANK.push({
-            q: `Misteri #${i+18}: Apa yang bisa membuatmu tertawa dan menangis dalam waktu bersamaan?`,
+            q: `Misteri #${i+7}: Apa yang bisa membuatmu tertawa dan menangis dalam waktu bersamaan?`,
             a: i % 3 === 0 ? "kenangan" : (i % 3 === 1 ? "cinta" : "kehidupan"),
             hint: "Berhubungan dengan perasaan manusia"
         });
@@ -278,7 +282,6 @@
         characters: [],
         level: 1, chapter: 1, puzzleProgress: 0, puzzlesThisLevel: 12,
         totalPuzzlesSolved: 0, lastRegen: Date.now(),
-        // INVENTORY KOSONG DI AWAL!
         inventory: { ghost_coin: 0, topeng: 0, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 },
         hintHistory: [], currentStorySeed: Math.random(), currentPuzzle: null
     };
@@ -479,7 +482,6 @@
         gameState.characters = CHARACTERS.map(char => ({ ...char, hp: char.maxHp, stamina: char.maxStamina, affection: 15 }));
         gameState.level = 1; gameState.chapter = 1; gameState.puzzleProgress = 0; gameState.puzzlesThisLevel = 12;
         gameState.totalPuzzlesSolved = 0; gameState.lastRegen = Date.now(); gameState.hintHistory = [];
-        // INVENTORY KOSONG! Tidak ada item apapun di awal
         gameState.inventory = { ghost_coin: 0, topeng: 0, potion_hp: 0, stamina_bread: 0, apple: 0, ghost_key: 0, mystery_box: 0, legendary_chest: 0 };
         gameState.currentStorySeed = Math.random();
         gameState.currentPuzzle = getRandomPuzzle();
@@ -533,8 +535,8 @@
 
     function generateStoryText() {
         const stories = [
-            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan teka-teki untuk melarikan diri. Tapi hati-hati, kita tidak punya persediaan apapun di awal!"`,
-            `Kabut tebal di ${gameState.level % 2 === 0 ? 'sekolah terbengkalai' : 'rumah sakit jiwa'}. ${gameState.characters[3]?.name || 'Touya'} memegang obor, "Aku akan melindungi kalian. Tapi kita butuh item dari teka-teki!"`,
+            `Kutukan ${gameState.currentStorySeed.toString().slice(0,6)} menyelimuti desa. ${gameState.characters[0]?.name || 'Haruno'} berbisik, "Pecahkan teka-teki untuk melarikan diri. Kita tidak punya persediaan apapun di awal!"`,
+            `Kabut tebal di ${gameState.level % 2 === 0 ? 'sekolah terbengkalai' : 'rumah sakit jiwa'}. ${gameState.characters[3]?.name || 'Touya'} memegang obor, "Aku akan melindungi kalian."`,
             `Bab ${gameState.chapter}: ${gameState.puzzleProgress}/${gameState.puzzlesThisLevel} teka-teki terselesaikan. Setiap jawaban benar bisa memberikan item berharga!`
         ];
         return stories[Math.floor(Math.random() * stories.length)];
@@ -548,7 +550,9 @@
         modal.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(8,5,20,0.98); backdrop-filter:blur(20px); border-radius:24px; padding:24px; z-index:2000; width:min(95%,500px); max-height:85vh; overflow-y:auto; border:2px solid #ff88aa; color:#f0e0d0;';
         modal.innerHTML = `
             <button class="profile-close" style="position:absolute; top:10px; right:15px; background:#ff6688; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; color:white; font-weight:bold;" onclick="closeModal()">✕</button>
-            <div style="text-align:center; font-size:3rem;">${char.avatar}</div>
+            <div style="text-align:center;">
+                <img src="${char.image}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ffaa88; margin-bottom:10px;">
+            </div>
             <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
             <hr style="margin:15px 0; border-color:#665588;">
             <h3>📌 Kepribadian</h3>
@@ -614,8 +618,13 @@
             <div class="char-grid">
                 ${gameState.characters.map(char => `
                     <div class="char-card" data-char="${char.id}" onclick="showProfile(${JSON.stringify(char).replace(/"/g, '&quot;')})">
-                        <div class="char-header"><div class="char-avatar">${char.avatar}</div>
-                        <div><div class="char-name">${char.name}</div><div class="char-personality">${char.personality}</div></div></div>
+                        <div class="char-header">
+                            <img src="${char.image}" class="char-image" alt="${char.name}" onerror="this.src='https://placehold.co/80x80/2a1a3a/ffaa88?text=${char.name.charAt(0)}'">
+                            <div>
+                                <div class="char-name">${char.name}</div>
+                                <div class="char-personality">${char.personality}</div>
+                            </div>
+                        </div>
                         <div class="stat-bar-container"><div class="stat-label"><span>❤️ HP</span><span>${Math.floor(char.hp)}/${char.maxHp}</span></div>
                         <div class="hp-bar-bg"><div class="hp-bar-fill" style="width: ${(char.hp/char.maxHp)*100}%"></div></div></div>
                         <div class="stat-bar-container"><div class="stat-label"><span>⚡ Stamina</span><span>${Math.floor(char.stamina)}/${char.maxStamina}</span></div>
