@@ -261,15 +261,15 @@
         Touya: 'https://files.catbox.moe/048wx7.png'
     };
 
-    // ======================== KARAKTER DATA ========================
+    // ======================== KARAKTER DATA (SEMUA SAMA STRUKTURNYA) ========================
     const CHARACTERS = [
-        { id: 'Haruno', name: 'Haruno', image: CHARACTER_IMAGES.Haruno, personality: 'Tsundere · Protektif · Pemarah', baseHintCost: 4, hintStyle: 'galak', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 80, luck: 60, curseResistance: 70 },
-        { id: 'Katsumi', name: 'Katsumi', image: CHARACTER_IMAGES.Katsumi, personality: 'Ceria · Ramah · Perhatian', baseHintCost: 5, hintStyle: 'ceplas', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 95, luck: 55, curseResistance: 65 },
-        { id: 'Juun', name: 'Juun', image: CHARACTER_IMAGES.Juun, personality: 'Pendiam · Tenang · Cerdas', baseHintCost: 6, hintStyle: 'singkat', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 85, luck: 80, curseResistance: 50 },
-        { id: 'Touya', name: 'Touya', image: CHARACTER_IMAGES.Touya, personality: 'Polos · Pemalu · Panikan', baseHintCost: 8, hintStyle: 'panik', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 98, luck: 70, curseResistance: 45 }
+        { id: 'Haruno', name: 'Haruno', avatar: '❄️', image: CHARACTER_IMAGES.Haruno, personality: 'Tsundere · Protektif · Pemarah', baseHintCost: 4, hintStyle: 'galak', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 80, luck: 60, curseResistance: 70 },
+        { id: 'Katsumi', name: 'Katsumi', avatar: '🌊', image: CHARACTER_IMAGES.Katsumi, personality: 'Ceria · Ramah · Perhatian', baseHintCost: 5, hintStyle: 'ceplas', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 95, luck: 55, curseResistance: 65 },
+        { id: 'Juun', name: 'Juun', avatar: '🌀', image: CHARACTER_IMAGES.Juun, personality: 'Pendiam · Tenang · Cerdas', baseHintCost: 6, hintStyle: 'singkat', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 85, luck: 80, curseResistance: 50 },
+        { id: 'Touya', name: 'Touya', avatar: '🔥', image: CHARACTER_IMAGES.Touya, personality: 'Polos · Pemalu · Panikan', baseHintCost: 8, hintStyle: 'panik', hp: 100, maxHp: 100, stamina: 100, maxStamina: 100, affection: 15, intelligence: 98, luck: 70, curseResistance: 45 }
     ];
 
-    // ======================== 5000+ TEKA-TEKI (Logika & Horor Fokus) ========================
+    // ======================== 5000+ TEKA-TEKI ========================
     const PUZZLE_BANK = [];
     const riddles = [
         { q: "Aku punya kunci tapi tidak bisa membuka pintu. Apakah aku?", a: "piano", hint: "Alat musik" },
@@ -281,7 +281,6 @@
         { q: "Apa yang memiliki leher tapi tidak punya kepala?", a: "botol", hint: "Tempat minum" }
     ];
     const horrorPlaces = ['rumah tua', 'kamar mayat', 'loteng', 'ruang bawah tanah', 'hutan angker', 'kuburan', 'sekolah tua', 'rumah sakit jiwa', 'cermin retak', 'boneka tua'];
-    const horrorSounds = ['langkah kaki', 'bisikan', 'tangisan', 'ketukan pintu', 'derit pintu', 'suara gesekan', 'tawa anak kecil', 'napas berat'];
     
     for(let i = 0; i < 2000; i++) {
         const r = riddles[i % riddles.length];
@@ -289,8 +288,7 @@
     }
     for(let i = 0; i < 1500; i++) {
         const place = horrorPlaces[i % horrorPlaces.length];
-        const sound = horrorSounds[i % horrorSounds.length];
-        PUZZLE_BANK.push({ q: `Di ${place}, kamu mendengar ${sound}. Tidak ada orang di sekitar. Apa yang mungkin terjadi?`, a: ["hantu","angin","bayangan","tikus","halusinasi"][i%5], hint: "Pikirkan tentang hal supernatural atau penjelasan logis." });
+        PUZZLE_BANK.push({ q: `Di ${place}, kamu mendengar suara aneh. Tidak ada orang di sekitar. Apa yang mungkin terjadi?`, a: ["hantu","angin","bayangan","tikus","halusinasi"][i%5], hint: "Pikirkan tentang hal supernatural atau penjelasan logis." });
     }
     for(let i = 0; i < 1000; i++) {
         const r = riddles[i % riddles.length];
@@ -333,10 +331,10 @@
             addHintToHistory(`✨ Mendapatkan ${name} x${value} dari Event! ✨`);
         } else if (type === 'ghost_coin') {
             gameState.inventory.ghost_coin += value;
-            addHintToHistory(`✨ Mendapatkan ${name} x${value} dari Event! ✨`);
+            addHintToHistory(`✨ Mendapatkan ${name} dari Event! ✨`);
         } else if (type === 'topeng') {
             gameState.inventory.topeng += value;
-            addHintToHistory(`✨ Mendapatkan ${name} x${value} dari Event! ✨`);
+            addHintToHistory(`✨ Mendapatkan ${name} dari Event! ✨`);
         } else if (type === 'apple') {
             gameState.inventory.apple += value;
             addHintToHistory(`✨ Mendapatkan ${name} dari Event! ✨`);
@@ -345,7 +343,7 @@
             addHintToHistory(`✨ Mendapatkan ${name} dari Event! ✨`);
         }
         saveGame();
-        render();
+        if (gameState.screen === 'game') render();
     };
 
     function addToInventory(type, value, qty) {
@@ -671,9 +669,21 @@
             <div class="char-grid">
                 ${gameState.characters.map(char => `
                     <div class="char-card" data-char="${char.id}" onclick="showProfile(${JSON.stringify(char).replace(/"/g, '&quot;')})">
-                        <div class="char-header"><img src="${char.image}" class="char-image" onerror="this.src='https://placehold.co/80x80/2a1a3a/ffaa88?text=${char.name.charAt(0)}'"><div><div class="char-name">${char.name}</div><div class="char-personality">${char.personality}</div></div></div>
-                        <div class="stat-bar-container"><div class="stat-label"><span>❤️ HP</span><span>${Math.floor(char.hp)}/${char.maxHp}</span></div><div class="hp-bar-bg"><div class="hp-bar-fill" style="width: ${(char.hp/char.maxHp)*100}%"></div></div></div>
-                        <div class="stat-bar-container"><div class="stat-label"><span>⚡ Stamina</span><span>${Math.floor(char.stamina)}/${char.maxStamina}</span></div><div class="stamina-bar-bg"><div class="stamina-bar-fill" style="width: ${(char.stamina/char.maxStamina)*100}%"></div></div></div>
+                        <div class="char-header">
+                            <img src="${char.image}" class="char-image" alt="${char.name}" onerror="this.src='https://placehold.co/80x80/2a1a3a/ffaa88?text=${char.name.charAt(0)}'">
+                            <div>
+                                <div class="char-name">${char.name}</div>
+                                <div class="char-personality">${char.personality}</div>
+                            </div>
+                        </div>
+                        <div class="stat-bar-container">
+                            <div class="stat-label"><span>❤️ HP</span><span>${Math.floor(char.hp)}/${char.maxHp}</span></div>
+                            <div class="hp-bar-bg"><div class="hp-bar-fill" style="width: ${(char.hp/char.maxHp)*100}%"></div></div>
+                        </div>
+                        <div class="stat-bar-container">
+                            <div class="stat-label"><span>⚡ Stamina</span><span>${Math.floor(char.stamina)}/${char.maxStamina}</span></div>
+                            <div class="stamina-bar-bg"><div class="stamina-bar-fill" style="width: ${(char.stamina/char.maxStamina)*100}%"></div></div>
+                        </div>
                         <div class="stats-grid">
                             <div class="stat-item">💕 Aff: <span class="stat-value">${char.affection}</span></div>
                             <div class="stat-item">🧠 Intel: <span class="stat-value">${char.intelligence}</span></div>
