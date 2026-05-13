@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>YUREI KAKU · Profil Karakter</title>
+    <title>YUREI KAKU · Profil Karakter & Kustomisasi Skin</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -46,6 +46,46 @@
         }
         .nav-btn:hover { background: #c96a8a; border-color: white; }
         h1, h2, h3 { color: #f5e6d0; margin-bottom: 16px; text-shadow: 0 1px 2px black; }
+        
+        /* Skin Customization Section */
+        .skin-customization {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .active-skin-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+        }
+        .active-skin-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffcc66;
+            box-shadow: 0 0 15px rgba(255,200,100,0.5);
+        }
+        .active-skin-info h4 { color: #ffcc66; margin-bottom: 5px; }
+        .active-skin-info p { color: #ddccbb; }
+        .reset-skin-btn {
+            background: #5a3a5a;
+            border: 1px solid #ffaa88;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ffefdf;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-skin-btn:hover { background: #ff6688; transform: scale(1.02); }
+        
         .char-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -59,9 +99,22 @@
             border: 1px solid #6a4a6a;
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
         }
         .char-card:hover { transform: translateY(-5px); border-color: #e8aa88; box-shadow: 0 0 20px rgba(220,140,100,0.25); }
-        .char-header { text-align: center; margin-bottom: 16px; }
+        .char-card.has-skin { border-color: #ffcc66; box-shadow: 0 0 15px rgba(255,200,100,0.3); }
+        .skin-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ffcc66;
+            color: #1a0a2a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .char-header { text-align: center; margin-bottom: 16px; position: relative; }
         .char-image {
             width: 120px;
             height: 120px;
@@ -70,7 +123,10 @@
             border: 3px solid #ffaa88;
             margin-bottom: 12px;
             background: #1a1025;
+            transition: transform 0.3s;
+            cursor: pointer;
         }
+        .char-image:hover { transform: scale(1.05); }
         .char-name { font-size: 1.8rem; color: #ffdfc4; margin-top: 8px; }
         .char-julukan { font-style: italic; color: #ccaa99; margin-top: 5px; }
         .info-section { margin: 16px 0; }
@@ -86,7 +142,6 @@
         }
         .relationship-item { margin: 8px 0; font-size: 0.8rem; border-left: 3px solid #ff88aa; padding-left: 10px; color: #ddddcc; }
         .quotes-box { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 10px; margin-top: 10px; font-style: italic; }
-        @media (max-width: 750px) { .char-grid { grid-template-columns: 1fr; } .char-image { width: 100px; height: 100px; } }
         
         .char-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -99,13 +154,15 @@
         .modal-close { position: sticky; top: 0; text-align: right; }
         .modal-close button { background: #ff6688; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; color: white; font-weight: bold; }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1999; }
+        
+        @media (max-width: 750px) { .char-grid { grid-template-columns: 1fr; } .char-image { width: 100px; height: 100px; } }
     </style>
 </head>
 <body>
 <div class="game-container" id="app"></div>
 
 <script>
-    // ======================== GAMBAR KARAKTER ========================
+    // ======================== GAMBAR KARAKTER ORIGINAL ========================
     const CHARACTER_IMAGES = {
         Haruno: 'https://files.catbox.moe/0vq95g.png',
         Katsumi: 'https://files.catbox.moe/d0w7s9.png',
@@ -113,69 +170,175 @@
         Touya: 'https://files.catbox.moe/048wx7.png'
     };
 
+    // ======================== SKIN DATA ========================
+    const SKIN_DATA = {
+        Haruno: {
+            image: 'https://files.catbox.moe/tzgd44.png',
+            skinName: 'Muscular man',
+            price: 1200
+        },
+        Katsumi: {
+            image: 'https://files.catbox.moe/4lqz3o.png',
+            skinName: 'Idol Girl',
+            price: 1250
+        },
+        Juun: {
+            image: 'https://files.catbox.moe/lcbizg.png',
+            skinName: 'Boys spring',
+            price: 1200
+        },
+        Touya: {
+            image: 'https://files.catbox.moe/gxhdkm.png',
+            skinName: 'Cute Baby Boy',
+            price: 1300
+        }
+    };
+
+    // ======================== LOAD SKIN STATUS ========================
+    let ownedSkins = { Haruno: false, Katsumi: false, Juun: false, Touya: false };
+    let activeSkin = null;
+    
+    function loadSkinStatus() {
+        const eventData = localStorage.getItem('yureiEventSystem');
+        if (eventData) {
+            try {
+                const data = JSON.parse(eventData);
+                ownedSkins = data.ownedSkins || { Haruno: false, Katsumi: false, Juun: false, Touya: false };
+                activeSkin = data.activeSkin || null;
+            } catch(e) {}
+        }
+        
+        // Also check main game save
+        const mainSave = localStorage.getItem('yureiKakuSave');
+        if (mainSave) {
+            try {
+                const data = JSON.parse(mainSave);
+                if (data.activeSkin) activeSkin = data.activeSkin;
+            } catch(e) {}
+        }
+    }
+    
+    function saveSkinStatus() {
+        const eventData = localStorage.getItem('yureiEventSystem');
+        if (eventData) {
+            try {
+                const data = JSON.parse(eventData);
+                data.ownedSkins = ownedSkins;
+                data.activeSkin = activeSkin;
+                localStorage.setItem('yureiEventSystem', JSON.stringify(data));
+            } catch(e) {}
+        }
+        
+        const mainSave = localStorage.getItem('yureiKakuSave');
+        if (mainSave) {
+            try {
+                const data = JSON.parse(mainSave);
+                data.activeSkin = activeSkin;
+                data.eventSkins = ownedSkins;
+                localStorage.setItem('yureiKakuSave', JSON.stringify(data));
+            } catch(e) {}
+        }
+    }
+    
+    function getCharacterImage(charId) {
+        if (activeSkin === charId && ownedSkins[charId] && SKIN_DATA[charId]) {
+            return SKIN_DATA[charId].image;
+        }
+        return CHARACTER_IMAGES[charId];
+    }
+    
+    function getCharacterDisplayName(charId) {
+        if (activeSkin === charId && ownedSkins[charId] && SKIN_DATA[charId]) {
+            return SKIN_DATA[charId].skinName;
+        }
+        return charId;
+    }
+    
+    function resetToOriginal(charId) {
+        if (activeSkin === charId) {
+            activeSkin = null;
+            saveSkinStatus();
+            render();
+            showPopup('✨ Skin Dinonaktifkan ✨', `${charId} kembali ke tampilan original.`, 'success');
+        }
+    }
+    
+    function showPopup(title, message, type) {
+        const popup = document.createElement('div');
+        popup.className = 'event-popup';
+        popup.style.cssText = 'position:fixed; bottom:20px; right:20px; background:rgba(10,6,22,0.98); backdrop-filter:blur(20px); border-radius:20px; padding:16px 20px; z-index:2000; min-width:280px; display:flex; align-items:center; gap:12px; border-left:4px solid #88ff88; animation:slideInRight 0.3s ease;';
+        popup.innerHTML = `
+            <div style="font-size:1.8rem;">✨</div>
+            <div style="flex:1;"><div style="font-weight:bold; color:#ffdfc4;">${title}</div><div style="font-size:0.8rem; color:#ccbbaa;">${message}</div></div>
+            <button style="background:none; border:none; color:#aa9988; cursor:pointer; font-size:1rem;" onclick="this.parentElement.remove()">✕</button>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 3000);
+    }
+
     // ======================== DATA KARAKTER LENGKAP ========================
     const CHARACTERS_FULL = {
         Haruno: {
-            image: CHARACTER_IMAGES.Haruno, name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
+            id: 'Haruno', name: 'Haruno', julukan: 'The Monster', umur: 19, tinggi: 198,
             personality: 'Tsundere, protektif, pemarah, tegas, sulit jujur soal perasaan',
             ability: 'Kekuatan fisik monster, daya tahan tinggi, refleks cepat',
             hobbies: 'Latihan otot, sparring, jogging malam, koleksi minuman energi',
             likes: 'Minuman berenergi dingin, tantangan fisik, suasana tenang',
             dislikes: 'Orang keras kepala yang cari masalah sendiri, keributan nggak penting, dipanggil "imut"',
-            description: 'Sosok paling besar dan paling kuat di kelompoknya. Tubuhnya seperti tembok baja. Galak, gampang emosi, tapi di balik itu paling peduli. Kalau ada teman terluka, dia bakal maju melindungi meski dirinya sendiri sedang berdarah.',
-            quotes: ['"Kalau nggak kuat, mundur. Biar gue aja."', '"Hah? Gue khawatir? Ngaco."', '"Cepat berdiri. Gue nggak suka lihat muka kalah."', '"Selama gue masih bisa berdiri, nggak bakal ada yang nyentuh kalian."', '"Jangan jalan sendirian malam-malam. Merepotkan."'],
+            description: 'Sosok paling besar dan paling kuat di kelompoknya. Tubuhnya seperti tembok baja. Galak, gampang emosi, tapi di balik itu paling peduli.',
+            quotes: ['"Kalau nggak kuat, mundur. Biar gue aja."', '"Hah? Gue khawatir? Ngaco."', '"Cepat berdiri. Gue nggak suka lihat muka kalah."'],
             relationships: {
-                Katsumi: "Katsumi adalah orang yang paling sering berada di dekat Haruno tanpa takut. Haruno paling protektif terhadap Katsumi dan diam-diam memperhatikan kalau Katsumi sudah makan atau belum.",
-                Juun: "Hubungan penuh rivalitas diam-diam. Sama-sama hebat dan sering bersaing. Haruno sering kesal karena Juun terlalu santai, tapi mereka sangat saling percaya.",
-                Touya: "Awalnya Touya takut setengah mati pada Haruno. Kini Touya jadi paling sering menempel pada Haruno saat takut. Haruno sering mengomel tapi paling sering melindungi Touya."
+                Katsumi: "Katsumi adalah orang yang paling sering berada di dekat Haruno tanpa takut. Haruno paling protektif terhadap Katsumi.",
+                Juun: "Hubungan penuh rivalitas diam-diam. Sama-sama hebat dan sering bersaing.",
+                Touya: "Awalnya Touya takut setengah mati pada Haruno. Kini Touya jadi paling sering menempel pada Haruno saat takut."
             },
             stats: { intelligence: 80, luck: 60, curseResistance: 70, hintCost: 4 }
         },
         Katsumi: {
-            image: CHARACTER_IMAGES.Katsumi, name: 'Katsumi', julukan: 'Sexy Princess', umur: 18, tinggi: 165,
+            id: 'Katsumi', name: 'Katsumi', julukan: 'Sexy Princess', umur: 18, tinggi: 165,
             personality: 'Ceria, super ramah, gaul, manja, perhatian, polos soal cinta',
             ability: 'Mudah akrab dengan siapa saja, pandai membaca suasana, ahli bikin orang nyaman',
             hobbies: 'Menari, menyanyi, scrolling trend terbaru, koleksi barang imut',
             likes: 'Dessert manis, boneka lucu, aksesoris pastel, karaoke malam',
             dislikes: 'Suasana sepi menyeramkan, film horor, orang bertengkar, hantu dan tempat gelap',
-            description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun. Tipe orang yang selalu khawatir pada teman-temannya.',
-            quotes: ['"Eh? Serius? Lucu bangettt!"', '"Jangan dipendem sendiri dong... cerita sama aku."', '"Aku cuma bantu sedikit kok~"', '"H-HANTU?! Jangan tinggalin aku sendirian!!"', '"Kalian tuh kayak keluarga buat aku."'],
+            description: 'Pusat keceriaan di kelompoknya. Selalu tahu trend terbaru. Sangat ramah dan mudah dekat dengan siapa pun.',
+            quotes: ['"Eh? Serius? Lucu bangettt!"', '"Jangan dipendem sendiri dong... cerita sama aku."', '"H-HANTU?! Jangan tinggalin aku sendirian!!"'],
             relationships: {
-                Haruno: "Salah satu sedikit orang yang tidak takut pada Haruno. Suka menggoda dan memaksa Haruno ikut trend. Sering mengingatkan Haruno untuk istirahat.",
-                Juun: "Sering mengajak Juun nongkrong. Juun jarang benar-benar menolak. Katsumi mengerti sifat asli Juun yang sebenarnya perhatian.",
-                Touya: "Menganggap Touya seperti adik kecil. Paling sering menenangkan Touya saat panik. Suka menggoda Touya karena reaksinya lucu, tapi langsung protektif jika ada yang mengejek Touya."
+                Haruno: "Salah satu sedikit orang yang tidak takut pada Haruno. Suka menggoda dan memaksa Haruno ikut trend.",
+                Juun: "Sering mengajak Juun nongkrong. Juun jarang benar-benar menolak.",
+                Touya: "Menganggap Touya seperti adik kecil. Paling sering menenangkan Touya saat panik."
             },
             stats: { intelligence: 95, luck: 55, curseResistance: 65, hintCost: 5 }
         },
         Juun: {
-            image: CHARACTER_IMAGES.Juun, name: 'Juun', julukan: 'Silent Prince', umur: 19, tinggi: 188,
+            id: 'Juun', name: 'Juun', julukan: 'Silent Prince', umur: 19, tinggi: 188,
             personality: 'Pendiam, tenang, blak-blakan, cerdas, peka terhadap situasi',
             ability: 'Genius akademik, atlet serba bisa, observasi tajam',
             hobbies: 'Membaca artikel astronomi, mendengarkan musik tenang, makan donat',
             likes: 'Tempat sunyi, malam berbintang, kopi pahit, kucing',
             dislikes: 'Keramaian berisik, serangga, rumah hantu',
-            description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Murid paling pintar, tapi rivalitas dengan Haruno. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
-            quotes: ['"Berisik."', '"Itu keputusan yang buruk."', '"Aku tidak marah. Hanya malas bicara."', '"Donat terakhirku siapa yang ambil?"', '"...Kucing."', '"Panik tidak akan menyelesaikan masalah."'],
+            description: 'Sosok paling tenang. Wajah selalu datar bahkan dalam situasi berbahaya. Kalau melihat kucing, ekspresinya langsung berubah lembut.',
+            quotes: ['"Berisik."', '"Itu keputusan yang buruk."', '"Donat terakhirku siapa yang ambil?"', '"...Kucing."'],
             relationships: {
-                Haruno: "Rival terbesar dalam olahraga. Meski sering beradu pendapat, punya rasa percaya yang kuat satu sama lain.",
+                Haruno: "Rival terbesar dalam olahraga. Meski sering beradu pendapat, punya rasa percaya yang kuat.",
                 Katsumi: "Salah satu orang yang paling sering mengganggu ketenangan Juun, tapi juga yang paling bisa membuat suasana terasa ringan.",
-                Touya: "Rival akademik yang paling sering berusaha mengalahkannya. Juun cukup menghargai kemampuan Touya memecahkan teka-teki."
+                Touya: "Rival akademik yang paling sering berusaha mengalahkannya. Juun cukup menghargai kemampuan Touya."
             },
             stats: { intelligence: 85, luck: 80, curseResistance: 50, hintCost: 6 }
         },
         Touya: {
-            image: CHARACTER_IMAGES.Touya, name: 'Touya', julukan: 'Bocah Imut', umur: 18, tinggi: 158,
+            id: 'Touya', name: 'Touya', julukan: 'Bocah Imut', umur: 18, tinggi: 158,
             personality: 'Polos, pemalu, ceroboh, panikan, banyak bicara dengan orang dekat',
             ability: 'Ahli teka-teki, cepat memecahkan misteri, genius bahasa dan sastra kuno',
             hobbies: 'Eksplor tempat angker, baca misteri kuno, nonton anime, mengoleksi teori konspirasi',
             likes: 'Teka-teki sulit, sejarah, barang antik, ramen murah, pelukan hangat',
             dislikes: 'Orang menyeramkan, suasana tegang, jumpscare mendadak',
-            description: 'Cowok mungil dengan wajah imut. Sering dikira anak SMP. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
-            quotes: ['"A-Aku nggak takut kok... cuma kaget dikit!"', '"Teori ku benar! Aku tahu ada sesuatu di sini!"', '"JANGAN TINGGALIN AKU SENDIRIAN!!"', '"Su-suara tadi itu apaan...?"', '"H-Haruno, tungguin aku jalannya jangan cepat-cepat!"'],
+            description: 'Cowok mungil dengan wajah imut. Otak paling encer saat situasi kacau. Ahli memecahkan teka-teki. Tapi penakut luar biasa!',
+            quotes: ['"A-Aku nggak takut kok... cuma kaget dikit!"', '"Teori ku benar! Aku tahu ada sesuatu di sini!"', '"JANGAN TINGGALIN AKU SENDIRIAN!!"'],
             relationships: {
-                Haruno: "Awalnya benar-benar takut, sekarang jadi 'tameng hidup' favorit Touya saat suasana menegangkan. Haruno sering mengomel tapi selalu melindungi.",
-                Katsumi: "Orang yang paling sering menenangkan Touya saat panik. Touya sangat nyaman berada di dekat Katsumi. Sering bercerita panjang lebar tentang teori misterinya.",
-                Juun: "Rival akademik terbesar yang paling ingin dikalahkan. Sering gugup saat Juun muncul. Diam-diam sangat kagum pada kemampuan Juun."
+                Haruno: "Awalnya benar-benar takut, sekarang jadi 'tameng hidup' favorit Touya.",
+                Katsumi: "Orang yang paling sering menenangkan Touya saat panik. Touya sangat nyaman berada di dekat Katsumi.",
+                Juun: "Rival akademik terbesar yang paling ingin dikalahkan. Sering gugup saat Juun muncul."
             },
             stats: { intelligence: 98, luck: 70, curseResistance: 45, hintCost: 8 }
         }
@@ -189,12 +352,17 @@
         if(currentModal) { currentModal.remove(); currentModal = null; }
         const overlay = document.createElement('div'); overlay.className = 'overlay';
         const modal = document.createElement('div'); modal.className = 'char-modal';
+        const currentImage = getCharacterImage(id);
+        const currentName = getCharacterDisplayName(id);
+        const isUsingSkin = (activeSkin === id && ownedSkins[id]);
+        
         modal.innerHTML = `
             <div class="modal-close"><button onclick="closeModal()">✕</button></div>
             <div style="text-align:center;">
-                <img src="${char.image}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ff88aa; margin-bottom:10px;">
+                <img src="${currentImage}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ff88aa; margin-bottom:10px; cursor:pointer;" onclick="window.open('${currentImage}', '_blank')">
+                ${isUsingSkin ? `<div style="background:#ffcc66; color:#1a0a2a; padding:4px 12px; border-radius:20px; display:inline-block; font-size:0.7rem; margin-bottom:10px;">✨ Skin: ${SKIN_DATA[id].skinName} ✨</div>` : ''}
             </div>
-            <h2 style="text-align:center; color:#ffccaa;">${char.name}</h2>
+            <h2 style="text-align:center; color:#ffccaa;">${currentName}</h2>
             <p style="text-align:center; font-style:italic;">"${char.julukan}"</p>
             <hr>
             <h3>📌 Identitas</h3>
@@ -213,6 +381,7 @@
             ${Object.entries(char.relationships).map(([name, rel]) => `<p><strong>${name}:</strong> ${rel}</p>`).join('')}
             <hr>
             <p style="font-size:0.8rem;">🧠 Intelijen: ${char.stats.intelligence} | 🍀 Keberuntungan: ${char.stats.luck} | 🛡️ Resistansi Kutukan: ${char.stats.curseResistance} | 💡 Biaya Hint: ${char.stats.hintCost} stamina</p>
+            ${isUsingSkin ? `<p style="margin-top:10px;"><button class="reset-skin-btn" onclick="resetToOriginal('${id}'); closeModal();">🔄 Kembali ke Original</button></p>` : ''}
         `;
         document.body.appendChild(overlay); document.body.appendChild(modal);
         currentModal = { overlay, modal };
@@ -220,9 +389,14 @@
 
     window.closeModal = () => { if(currentModal) { currentModal.overlay.remove(); currentModal.modal.remove(); currentModal = null; } };
     window.showDetail = showDetail;
+    window.resetToOriginal = resetToOriginal;
 
     function render() {
+        loadSkinStatus();
         const app = document.getElementById('app');
+        const activeSkinChar = activeSkin ? activeSkin : 'Tidak ada';
+        const activeSkinInfo = activeSkin && ownedSkins[activeSkin] ? SKIN_DATA[activeSkin] : null;
+        
         app.innerHTML = `
             <div class="glass-panel">
                 <div class="nav-buttons">
@@ -230,36 +404,71 @@
                     <a href="daily.html" class="nav-btn">🎁 Daily & Shop</a>
                     <a href="events.html" class="nav-btn">🎪 Events</a>
                 </div>
-                <h1>👥 Profil Karakter YUREI KAKU</h1>
-                <p style="color:#ccbbaa; margin-bottom:20px;">Klik pada kartu untuk melihat profil lengkap setiap karakter</p>
+                <h1>👥 Profil Karakter & Kustomisasi Skin</h1>
+                <p style="color:#ccbbaa; margin-bottom:20px;">✨ Skin yang sudah dibuka di Events bisa digunakan di sini! ✨</p>
+                
+                <!-- Active Skin Display -->
+                <div class="skin-customization">
+                    <h3>🎨 Skin Aktif Saat Ini</h3>
+                    <div class="active-skin-display">
+                        ${activeSkinInfo ? `
+                            <img src="${activeSkinInfo.image}" class="active-skin-image" alt="${activeSkinInfo.skinName}">
+                            <div class="active-skin-info">
+                                <h4>✨ ${activeSkinInfo.skinName} ✨</h4>
+                                <p>Karakter: ${activeSkin}</p>
+                                <p>Skin ini sedang digunakan dalam permainan!</p>
+                            </div>
+                            <button class="reset-skin-btn" onclick="resetToOriginal('${activeSkin}')">🔄 Reset ke Original</button>
+                        ` : `
+                            <div style="text-align:center; padding:20px;">
+                                <p>🌸 Tidak ada skin yang sedang aktif</p>
+                                <p style="font-size:0.8rem;">Buka skin di menu Events lalu aktifkan!</p>
+                            </div>
+                        `}
+                    </div>
+                </div>
+                
                 <div class="char-grid">
-                    ${Object.entries(CHARACTERS_FULL).map(([id, char]) => `
-                        <div class="char-card" onclick="showDetail('${id}')">
-                            <div class="char-header">
-                                <img src="${char.image}" class="char-image" alt="${char.name}" onerror="this.src='https://placehold.co/120x120/2a1a3a/ffaa88?text=${char.name.charAt(0)}'">
-                                <div class="char-name">${char.name}</div>
-                                <div class="char-julukan">"${char.julukan}"</div>
+                    ${Object.entries(CHARACTERS_FULL).map(([id, char]) => {
+                        const hasSkin = ownedSkins[id];
+                        const isActive = activeSkin === id;
+                        const skinName = hasSkin ? SKIN_DATA[id].skinName : null;
+                        const currentImage = getCharacterImage(id);
+                        const currentDisplayName = getCharacterDisplayName(id);
+                        return `
+                            <div class="char-card ${hasSkin ? 'has-skin' : ''}" onclick="showDetail('${id}')">
+                                ${hasSkin ? `<div class="skin-badge">✨ Skin: ${skinName}</div>` : ''}
+                                <div class="char-header">
+                                    <img src="${currentImage}" class="char-image" alt="${id}" onerror="this.src='https://placehold.co/120x120/2a1a3a/ffaa88?text=${id.charAt(0)}'">
+                                    <div class="char-name">${currentDisplayName}</div>
+                                    <div class="char-julukan">"${char.julukan}"</div>
+                                </div>
+                                <div class="stats-mini">
+                                    <span class="stat-badge">🧠 Intel: ${char.stats.intelligence}</span>
+                                    <span class="stat-badge">🍀 Luck: ${char.stats.luck}</span>
+                                    <span class="stat-badge">🛡️ Resist: ${char.stats.curseResistance}</span>
+                                    <span class="stat-badge">💡 Hint: ${char.stats.hintCost} stam</span>
+                                </div>
+                                <div class="info-section">
+                                    <h4>📌 Identitas</h4>
+                                    <p>${char.umur} tahun · ${char.tinggi} cm</p>
+                                </div>
+                                <div class="info-section">
+                                    <h4>💭 Kepribadian</h4>
+                                    <p>${char.personality.substring(0,80)}...</p>
+                                </div>
+                                <div class="relationship-box">
+                                    <h4>💞 Hubungan Singkat</h4>
+                                    ${Object.entries(char.relationships).slice(0,2).map(([name, rel]) => `<div class="relationship-item"><strong>${name}:</strong> ${rel.substring(0,80)}...</div>`).join('')}
+                                </div>
+                                ${hasSkin && !isActive ? `<div style="margin-top:10px; text-align:center;"><span style="background:#3a6a3a; padding:4px 12px; border-radius:20px; font-size:0.7rem;">✨ Skin tersedia! Aktifkan di menu Events ✨</span></div>` : ''}
+                                ${isActive ? `<div style="margin-top:10px; text-align:center;"><span style="background:#ffcc66; color:#1a0a2a; padding:4px 12px; border-radius:20px; font-size:0.7rem;">✦ SKIN AKTIF ✦</span></div>` : ''}
                             </div>
-                            <div class="stats-mini">
-                                <span class="stat-badge">🧠 Intel: ${char.stats.intelligence}</span>
-                                <span class="stat-badge">🍀 Luck: ${char.stats.luck}</span>
-                                <span class="stat-badge">🛡️ Resist: ${char.stats.curseResistance}</span>
-                                <span class="stat-badge">💡 Hint: ${char.stats.hintCost} stam</span>
-                            </div>
-                            <div class="info-section">
-                                <h4>📌 Identitas</h4>
-                                <p>${char.umur} tahun · ${char.tinggi} cm</p>
-                            </div>
-                            <div class="info-section">
-                                <h4>💭 Kepribadian</h4>
-                                <p>${char.personality.substring(0,80)}...</p>
-                            </div>
-                            <div class="relationship-box">
-                                <h4>💞 Hubungan Singkat</h4>
-                                ${Object.entries(char.relationships).slice(0,2).map(([name, rel]) => `<div class="relationship-item"><strong>${name}:</strong> ${rel.substring(0,80)}...</div>`).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
+                </div>
+                <div style="text-align:center; margin-top:20px; font-size:0.75rem; color:#aa9988;">
+                    💡 Tips: Klik gambar karakter untuk memperbesar! Skin yang dibeli di Events akan muncul di sini.
                 </div>
             </div>
         `;
