@@ -1,44 +1,46 @@
-// FILE: pages/index.js
-
 import { useState } from "react";
 
-export default function Home() {
+export default function Home(){
 
-  const [started, setStarted] = useState(false);
+  const [started,setStarted]=useState(false);
 
-  return (
+  return(
     <>
-      <div className={`screen start ${started ? "fade" : ""}`}>
 
-        <video autoPlay muted loop playsInline className="bg">
-          <source src="https://files.catbox.moe/k0x9h1.mp4" />
+      {/* START SCREEN */}
+
+      <div className={`screen start-screen ${started ? "fade-out" : ""}`}>
+
+        <video autoPlay muted loop playsInline className="bg-video">
+          <source src="https://files.catbox.moe/k0x9h1.mp4"/>
         </video>
 
         <div className="overlay"/>
 
         <img
-          className="logo"
-          src="https://files.catbox.moe/09zcs2.png"
-        />
+        className="logo"
+        src="https://files.catbox.moe/09zcs2.png"/>
 
         <img
-          className="startBtn"
-          src="https://files.catbox.moe/x4st1d.png"
-          onClick={()=>setStarted(true)}
-        />
+        className="tap-start"
+        src="https://files.catbox.moe/x4st1d.png"
+        onClick={()=>setStarted(true)}/>
 
       </div>
 
-      {started && (
-        <div className="screen lobby">
+      {/* LOBBY */}
 
-          <video autoPlay muted loop playsInline className="bg">
-            <source src="https://files.catbox.moe/82malf.mp4" />
+      {started && (
+
+        <div className="screen lobby-screen">
+
+          <video autoPlay muted loop playsInline className="bg-video">
+            <source src="https://files.catbox.moe/82malf.mp4"/>
           </video>
 
           <div className="overlay"/>
 
-          <div className="profile">
+          <div className="profile-card">
 
             <img src="https://files.catbox.moe/5tkiti.png"/>
 
@@ -50,7 +52,7 @@ export default function Home() {
 
           </div>
 
-          <div className="topBar">
+          <div className="top-bar">
 
             <div className="currency">
               <img src="https://files.catbox.moe/m1el12.png"/>
@@ -70,235 +72,259 @@ export default function Home() {
           </div>
 
           <img
-            className="character"
-            src="https://files.catbox.moe/wowim7.png"
-          />
+          className="character"
+          src="https://files.catbox.moe/wowim7.png"/>
 
-          <div className="features">
-
-            <Feature
-              icon="https://files.catbox.moe/gtj2an.png"
-              title="Shop"
-            />
+          <div className="right-buttons">
 
             <Feature
-              icon="https://files.catbox.moe/t4u1jm.png"
-              title="Gacha"
-            />
+            icon="https://files.catbox.moe/gtj2an.png"
+            title="Shop"/>
 
             <Feature
-              icon="https://files.catbox.moe/n2xxtz.png"
-              title="Event"
-            />
+            icon="https://files.catbox.moe/t4u1jm.png"
+            title="Gacha"/>
 
             <Feature
-              icon="https://files.catbox.moe/g5bg2d.png"
-              title="Story"
-            />
+            icon="https://files.catbox.moe/n2xxtz.png"
+            title="Event"/>
+
+            <Feature
+            icon="https://files.catbox.moe/g5bg2d.png"
+            title="Story"/>
 
           </div>
 
-          <div className="banners">
+          <div className="banner-slider">
 
             <img src="https://files.catbox.moe/ayzel7.jpg"/>
+
             <img src="https://files.catbox.moe/qw3xtr.png"/>
+
             <img src="https://files.catbox.moe/tnd2up.png"/>
+
             <img src="https://files.catbox.moe/6zjdt9.png"/>
+
             <img src="https://files.catbox.moe/rz95eo.png"/>
 
           </div>
 
           <img
-            className="quest"
-            src="https://files.catbox.moe/8kfqeu.png"
-          />
+          className="quest-btn"
+          src="https://files.catbox.moe/8kfqeu.png"/>
 
         </div>
+
       )}
 
-      <style jsx global>{`
+<style jsx global>{`
 
-        *{
-          margin:0;
-          padding:0;
-          box-sizing:border-box;
-          font-family:Segoe UI;
-        }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
 
-        body{
-          overflow:hidden;
-          background:black;
-        }
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:black;
+}
 
-        .screen{
-          width:100%;
-          height:100vh;
-          position:relative;
-        }
+.screen{
+  width:100%;
+  height:100dvh;
+  position:relative;
+  overflow:hidden;
+}
 
-        .bg{
-          position:absolute;
-          inset:0;
-          width:100%;
-          height:100%;
-          object-fit:cover;
-        }
+.bg-video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-        .overlay{
-          position:absolute;
-          inset:0;
-          background:rgba(0,0,0,.2);
-        }
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.25);
+}
 
-        .start{
-          display:flex;
-          flex-direction:column;
-          justify-content:center;
-          align-items:center;
-        }
+.start-screen{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
 
-        .logo{
-          width:500px;
-          z-index:2;
-        }
+.logo{
+  width:min(520px,90vw);
+}
 
-        .startBtn{
-          width:340px;
-          cursor:pointer;
-          z-index:2;
-          animation:pulse 2s infinite;
-        }
+.tap-start{
+  width:min(320px,80vw);
+  margin-top:20px;
+  cursor:pointer;
+  animation:pulse 2s infinite;
+}
 
-        .fade{
-          animation:fadeOut 1s forwards;
-        }
+@keyframes pulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+}
 
-        @keyframes fadeOut{
-          to{
-            opacity:0;
-            visibility:hidden;
-          }
-        }
+.fade-out{
+  animation:fadeOut 1s forwards;
+}
 
-        @keyframes pulse{
-          0%,100%{transform:scale(1);}
-          50%{transform:scale(1.05);}
-        }
+@keyframes fadeOut{
+  to{
+    opacity:0;
+    visibility:hidden;
+  }
+}
 
-        .profile{
-          position:absolute;
-          top:20px;
-          left:20px;
-          display:flex;
-          gap:14px;
-          align-items:center;
-          background:rgba(0,0,0,.4);
-          padding:14px;
-          border-radius:20px;
-          color:white;
-          z-index:2;
-        }
+.profile-card{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(10px);
+  padding:10px;
+  border-radius:18px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  color:white;
+  z-index:10;
+}
 
-        .profile img{
-          width:70px;
-          height:70px;
-          border-radius:50%;
-        }
+.profile-card img{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+}
 
-        .topBar{
-          position:absolute;
-          top:20px;
-          left:50%;
-          transform:translateX(-50%);
-          display:flex;
-          gap:10px;
-          z-index:2;
-        }
+.top-bar{
+  position:absolute;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:10;
+}
 
-        .currency{
-          background:rgba(0,0,0,.5);
-          padding:10px 18px;
-          border-radius:18px;
-          display:flex;
-          align-items:center;
-          gap:8px;
-          color:white;
-        }
+.currency{
+  background:rgba(0,0,0,.5);
+  padding:8px 14px;
+  border-radius:14px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  color:white;
+}
 
-        .currency img{
-          width:28px;
-        }
+.currency img{
+  width:22px;
+}
 
-        .character{
-          position:absolute;
-          bottom:0;
-          left:50%;
-          transform:translateX(-50%);
-          height:90%;
-          z-index:1;
-        }
+.character{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  height:88%;
+}
 
-        .features{
-          position:absolute;
-          right:40px;
-          top:50%;
-          transform:translateY(-50%);
-          display:flex;
-          flex-direction:column;
-          gap:18px;
-          z-index:2;
-        }
+.right-buttons{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:10;
+}
 
-        .feature{
-          width:140px;
-          height:140px;
-          border-radius:30px;
-          background:rgba(255,255,255,.15);
-          display:flex;
-          flex-direction:column;
-          justify-content:center;
-          align-items:center;
-          color:white;
-          cursor:pointer;
-          backdrop-filter:blur(10px);
-        }
+.feature{
+  width:110px;
+  height:110px;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(10px);
+  border-radius:22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:white;
+}
 
-        .feature img{
-          width:64px;
-          margin-bottom:10px;
-        }
+.feature img{
+  width:46px;
+  margin-bottom:8px;
+}
 
-        .feature span{
-          font-size:22px;
-          font-weight:bold;
-        }
+.banner-slider{
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:12px;
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+}
 
-        .banners{
-          position:absolute;
-          left:120px;
-          bottom:20px;
-          display:flex;
-          gap:15px;
-          overflow:auto;
-          width:58%;
-          z-index:2;
-        }
+.banner-slider img{
+  width:280px;
+  height:155px;
+  object-fit:cover;
+  border-radius:20px;
+  flex-shrink:0;
+}
 
-        .banners img{
-          width:320px;
-          border-radius:24px;
-        }
+.quest-btn{
+  position:absolute;
+  right:16px;
+  bottom:22px;
+  width:min(220px,36vw);
+  animation:pulse 2s infinite;
+}
 
-        .quest{
-          position:absolute;
-          right:40px;
-          bottom:40px;
-          width:220px;
-          z-index:2;
-          animation:pulse 2s infinite;
-        }
+@media(max-width:768px){
 
-      `}</style>
+  .character{
+    height:60%;
+  }
+
+  .feature{
+    width:78px;
+    height:78px;
+  }
+
+  .feature img{
+    width:30px;
+  }
+
+  .banner-slider img{
+    width:200px;
+    height:110px;
+  }
+
+  .quest-btn{
+    width:140px;
+    bottom:120px;
+  }
+
+}
+
+`}</style>
+
     </>
   );
 }
@@ -310,5 +336,6 @@ function Feature({icon,title}){
       <img src={icon}/>
       <span>{title}</span>
     </div>
-  )
+  );
+
 }
