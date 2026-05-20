@@ -1,0 +1,43 @@
+.start-container{
+  width:100vw;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.bg-video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.2);
+}
+
+.start-btn{
+  position:absolute;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  width:320px;
+  transition:0.3s;
+}
+
+.start-btn:hover{
+  transform:translateX(-50%) scale(1.05);
+}
+
+.start-btn img{
+  width:100%;
+}
+
+@media(max-width:768px){
+
+  .start-btn{
+    width:70vw;
+  }
+
+}
