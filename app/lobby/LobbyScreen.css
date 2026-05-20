@@ -1,0 +1,159 @@
+.lobby-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.lobby-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+}
+
+.top-bar {
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  right: 2%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-card {
+  width: 180px;
+}
+
+.currency-group {
+  display: flex;
+  gap: 12px;
+}
+
+.currency {
+  width: 150px;
+}
+
+.left-menu {
+  position: absolute;
+  left: 1%;
+  top: 18%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-btn img {
+  width: 75px;
+}
+
+.right-menu {
+  position: absolute;
+  right: 2%;
+  top: 28%;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.circle-btn img {
+  width: 95px;
+}
+
+.banner-area {
+  position: absolute;
+  right: 2%;
+  top: 12%;
+
+  width: 28vw;
+}
+
+.banner {
+  width: 100%;
+  border-radius: 14px;
+}
+
+.small-banners {
+  margin-top: 10px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.small-banner {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.quest-btn {
+  position: absolute;
+  right: 4%;
+  bottom: 6%;
+
+  width: 220px;
+}
+
+.quest-btn img {
+  width: 100%;
+}
+
+.clickable {
+  transition: 0.2s;
+}
+
+.clickable:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+
+  .profile-card {
+    width: 120px;
+  }
+
+  .currency {
+    width: 90px;
+  }
+
+  .menu-btn img {
+    width: 55px;
+  }
+
+  .circle-btn img {
+    width: 70px;
+  }
+
+  .banner-area {
+    width: 42vw;
+  }
+
+  .quest-btn {
+    width: 150px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .right-menu {
+    top: auto;
+    bottom: 18%;
+  }
+
+  .banner-area {
+    width: 50vw;
+  }
+
+  .quest-btn {
+    width: 130px;
+  }
+}
