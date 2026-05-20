@@ -1,0 +1,91 @@
+.ui-container{
+  position:absolute;
+  inset:0;
+  z-index:20;
+}
+
+/* SEMUA ICON */
+.ui-container img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+
+  /* bikin lebih menyatu */
+  filter:
+    drop-shadow(0 0 10px rgba(255,255,255,0.25))
+    drop-shadow(0 0 20px rgba(173,120,255,0.25));
+
+  transition:0.25s;
+}
+
+/* HOVER */
+.ui-container button:hover img{
+  transform:scale(1.05);
+}
+
+/* PROFILE */
+.profile-btn{
+  position:absolute;
+  top:2%;
+  left:2%;
+  width:220px;
+}
+
+/* MENU KIRI */
+.left-menu{
+  position:absolute;
+  left:1%;
+  top:20%;
+
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.menu-btn{
+  width:70px;
+}
+
+/* MENU KANAN */
+.right-menu{
+  position:absolute;
+  right:3%;
+  top:35%;
+
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.circle-btn{
+  width:90px;
+}
+
+/* QUEST */
+.quest-btn{
+  position:absolute;
+  right:4%;
+  bottom:5%;
+  width:220px;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+  .profile-btn{
+    width:150px;
+  }
+
+  .menu-btn{
+    width:50px;
+  }
+
+  .circle-btn{
+    width:65px;
+  }
+
+  .quest-btn{
+    width:140px;
+  }
+
+}
